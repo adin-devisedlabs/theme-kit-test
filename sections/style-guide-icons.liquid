@@ -1,0 +1,38 @@
+<div class="style-guide-icons-container">
+  {%- for block in section.blocks -%}
+    {% if block.settings.icon %} <img class="icon" src="{{block.settings.icon | img_url: 'master' }}" /> {% endif %}
+  {%- endfor -%}
+</div>
+
+{% stylesheet %}
+  .style-guide-icons-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-evenly;
+  }
+  .style-guide-icons-container .icon {
+    margin: 5px;
+    padding: 1rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Icons",
+  "settings": [],
+  "blocks": [
+    {
+      "name": "Icon",
+      "type": "icons",
+      "settings": [
+      {
+        "id": "icon",
+        "type": "image_picker",
+        "label": "Icon"
+      }
+    ]
+    }
+  ]
+}
+{% endschema %}

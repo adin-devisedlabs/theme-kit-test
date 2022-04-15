@@ -1,0 +1,152 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<div class="checkbox-container" data-gift-note-html>
+  <h2 class="section__title" style="margin-bottom: .75em">Gift Options</h2>
+  <input type="checkbox" class="input-checkbox" id="gift-message" {% if checkout.attributes.gift_message %}checked{% endif %}>
+  <label for="gift-message"><span>{% if checkout.attributes.gift_message %}Edit{% else %}Add{% endif %} Gift Message</span></label>
+  <div id="msg_text">
+    <div class="gift_info_wrapper">
+      <input type="text" class="field__input gift_recipient" id="gift_recipient" maxlength = "40" placeholder="Recipient name" value="{% if checkout.attributes.gift_recipient %}{{checkout.attributes.gift_recipient}}{% endif %}"/>
+    </div>
+    <div class="gift_info_wrapper">
+      <input type="text" class="field__input gift_sender" id="gift_sender" maxlength = "40" placeholder="Sender name" value="{% if checkout.attributes.gift_sender %}{{checkout.attributes.gift_sender}}{% endif %}"/>
+    </div>
+    <textarea class="field__input gift_message_text" id="gift_message_text" placeholder="Gift message. 100 character limit." maxlength = "100">{% if checkout.attributes.gift_message %}{{checkout.attributes.gift_message}}{% endif %}</textarea>
+    <br />
+    <div class="btn add_msg">{% if checkout.attributes..gift_message %}Edit{% else %}Add{% endif %} Gift Message</div>
+  </div>
+</div>
+
+<script>
+if ($('.section--shipping-address').length) {
+  $('.section--contact-information').before($('[data-gift-note-html]'));
+}
+
+var saveCartNote = function() {
+  var cartNote = $('#msg_text textarea').val();
+  var senderName = $('.gift_sender').val();
+  var recipientName = $('.gift_recipient').val();
+  
+  $('#msg_text .btn').addClass('loading');
+
+  $.ajax({
+    url: '/cart/update.js',
+    method: 'POST',
+    dataType: 'json',
+    data: {
+      attributes: {
+        'gift_message': cartNote,
+        'gift_recipient': recipientName,
+        'gift_sender': senderName
+      }
+    },
+    success:function(data) {
+      $('#msg_text textarea').addClass('note_saved');
+      $('#msg_text textarea').css('cursor', 'not-allowed');
+      $('#msg_text textarea').prop('disabled', 'true');
+      $('#msg_text .btn').removeClass('loading');
+      window.location.reload();
+    },
+    error: function(err) {
+      console.log('error:', err)
+    }
+  })
+};
+
+
+$('#gift-message').on('click', function() {
+  if (!(this).checked) {
+    $('#msg_text textarea').removeClass('note_saved');
+    $('#msg_text textarea').css('cursor', 'default');
+    $('#msg_text textarea').prop('disabled', '');
+    $.post(window.location.origin + '/cart/update.js', {note: ''}, function() {
+      
+    }, 'json');
+  }
+});
+
+$('.add_msg').on('click', function() {
+  saveCartNote();
+});
+  
+  
+</script>
+
+<style>
+#msg_text {
+  display: none;
+  padding-top: 1.5em;
+}
+#msg_text textarea {
+  height: 150px;
+}
+#msg_text textarea.note_saved {
+  resize: none;
+}
+.checkbox-container {
+  padding-top: 1.5em;
+  padding-bottom: 1.5em;
+}
+.checkbox-container label {
+  cursor: pointer;
+  padding-top: 1.5em;
+}
+.checkbox-container input[type=checkbox]:checked ~ #msg_text {
+  display: block;
+}
+.og_btn {
+  display: inline-block;
+  border-radius: 4px;
+  font-weight: 500;
+  padding: 1.4em 1.7em;
+  box-sizing: border-box;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  background: #222;
+  color: white;
+}
+.og_btn:hover {
+  background: #090909;
+  color: white;
+}
+.edit_msg {
+  display: none;
+}
+#msg_text .btn.loading:before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    border: 2px solid #084b6d;
+    border-top: 2px solid #fffefb;
+    border-bottom: 2px solid #fffefb;
+    -webkit-animation: spinner 0.6s linear infinite;
+            animation: spinner 0.6s linear infinite;
+    z-index: 2; }
+#msg_text .btn.loading:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fffefb;
+    opacity: 0.5; }
+  .checkbox-container {
+  	display: none;
+  }
+  .step__sections .checkbox-container { display: block; }
+  
+  .gift_info_wrapper {
+    display: inline-block;
+    width: 49%;
+    margin-bottom: 10px;
+  }
+  
+  .gift_info_wrapper .field__input {
+  	margin: 10px 0;
+  }
+</style>

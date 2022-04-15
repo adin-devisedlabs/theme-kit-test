@@ -1,0 +1,231 @@
+{%- for block in section.blocks -%}
+  {%- assign _block = block.settings -%}
+  {%- case block.type -%}
+
+    {%- when 'intro' -%}
+      {%- assign block_subtitle = _block.subtitle -%}
+      {%- assign block_title = _block.title -%}
+      {%- assign block_content = _block.content -%}
+
+      <div class="page-intro animate">
+        <div class="bee">
+          <div class="inner">
+            <div class="head">
+              <div class="right-head"></div><!-- /.right-head -->
+              <div class="eye eye--left"></div><!-- /.eye -->
+              <div class="eye eye--right"></div><!-- /.eye -->
+              <div class="mouth"></div><!-- /.mouth -->
+            </div><!-- /.head -->
+            <div class="wings">
+              <div class="wing wing--left"></div><!-- /.wing -->
+              <div class="wing wing--right"></div><!-- /.wing -->
+            </div><!-- /.wings -->
+            <div class="body">
+              <div class="behind">
+                <div class="semi semi--left"></div><!-- /.semi -->
+                <div class="semi semi--right"></div><!-- /.semi -->
+              </div><!-- /.behind -->
+              <div class="legs">
+                <div class="leg leg--left"></div><!-- /.leg -->
+                <div class="leg leg--right"></div><!-- /.leg -->
+              </div><!-- /.legs -->
+            </div><!-- /.body -->
+          </div><!-- /.intro -->
+        </div><!-- /.bee -->
+        {%- if block_subtitle != blank -%}
+          <h6>{{block_subtitle}}</h6>  
+        {%- endif -%}
+        {%- if block_title != blank -%}
+          <h2>{{block_title}}</h2>
+        {%- endif -%}
+        {{ block_content }}
+      </div><!-- /.page-intro -->
+
+    {%- when 'text_image' -%}
+      {%- assign block_layout = _block.layout -%}
+      {%- assign block_subtitle = _block.subtitle -%}
+      {%- assign block_title = _block.title -%}
+      {%- assign block_icon = _block.icon | img_url: '122x' | img_tag | prepend: "<span>" | append: '</span>' -%}
+      {%- assign block_content = _block.content -%}
+      {%- assign block_button_text = _block.button_text -%}
+      {%- assign block_button_link = _block.button_link -%}
+      {%- assign block_image = _block.image -%}
+      {%- assign block_mobile_image = _block.mobile_image -%}
+      {%- assign block_bgcolor = _block.bgcolor -%}
+      {%- assign block_pattern = _block.hide_pattern -%}
+      <div class="page-text-image animate layout-{{block_layout}}{% if block_pattern %} hide-pattern{% endif %}" {%- include 'inline-style' bgcolor: block_bgcolor -%}>
+        <div class="image">
+          <img src="{{ block_image | img_url: '1024x' }}" data-img-desktop="{{ block_image | img_url: '1024x' }}" data-img-mobile="{{ block_mobile_image | img_url: '600x' }}" alt="" />
+        </div><!-- /.image -->
+        <div class="content">
+          {%- if block_subtitle != blank -%}
+            <h6>{{block_subtitle}}</h6>
+          {%- endif -%}
+          {%- if block_title != blank -%}
+            <h2>{{block_title | replace: '[icon]', block_icon }}</h2>
+          {%- endif -%}
+          {%- if block_content != blank -%}
+            <p>{{block_content}}</p>  
+          {%- endif -%}
+          {%- include 'link' text: block_button_text url: block_button_link -%}
+        </div><!-- /.content -->
+      </div><!-- /.page-text-image -->
+    {%- when 'ingredients' -%}
+      {%- assign block_subtitle = _block.subtitle -%}
+      {%- assign block_title = _block.title -%}
+      {%- assign block_content = _block.content -%}
+      {%- assign block_button_text = _block.button_text -%}
+      {%- assign block_button_link = _block.button_link -%}
+      {%- assign block_scratched = _block.scratched -%}
+      <div class="ingredients animate">
+        <div class="box box--left">
+          {%- if block_subtitle != blank -%}
+            <h6>{{block_subtitle}}</h6>  
+          {%- endif -%}
+          {%- if block_title != blank -%}
+            <h3>{{block_title}}</h3>
+          {%- endif -%}
+          {{ block_content }}
+          {%- include 'link' text: block_button_text url: block_button_link -%}
+        </div><!-- /.box -->
+        <div class="box box--right">
+          {{ block_scratched | newline_to_br }}
+        </div><!-- /.box -->
+      </div><!-- /.ingredients -->
+  {%- endcase -%}
+{%- endfor -%}
+
+{% schema %}
+{
+  "name": "Learn",
+  "class": "page-learn",
+  "blocks": [
+    {
+      "type": "intro",
+      "name": "Intro",
+      "settings": [
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        }
+      ]
+    },
+    {
+      "type": "text_image",
+      "name": "Text Image",
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "hide_pattern",
+          "label": "Hide Pattern",
+          "default": true
+        },
+        {
+          "type": "radio",
+          "id": "layout",
+          "label": "Layout",
+          "options": [
+            { "value": "text_image", "label": "Text Image" },
+            { "value": "image_text", "label": "Image Text" }
+          ],
+          "default":   "text_image"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon",
+          "info": "In order to show the icon use the shortcode [icon] in the title text"
+        },
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Content"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_image",
+          "label": "Mobile Image"
+        },
+        {
+          "type": "color",
+          "id": "bgcolor",
+          "label": "Background Color",
+          "default": "#ffffff"
+        }
+      ]
+    },
+    {
+      "type": "ingredients",
+      "name": "Ingredients",
+      "settings": [
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        },
+        {
+          "type": "text",
+          "id": "button_text",
+          "label": "Button Text"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button Link"
+        },
+        {
+          "type": "textarea",
+          "id": "scratched",
+          "label": "Scratched List"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

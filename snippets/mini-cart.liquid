@@ -1,0 +1,374 @@
+{%- assign gift_wrap = all_products[settings.gift_product] -%}
+
+{%- assign gift_wrap_added = false -%}
+
+<!-- GWP Promo Code -->
+{%- assign gwp_variantID = cart.attributes.discounted_product | plus: 0 -%}
+{%- assign gwp_code = cart.attributes.discount_code -%}
+
+<!-- GWP Auto Add  -->
+{%- assign gwp_variantID_auto_add = cart.attributes.discounted_product_auto_add | plus: 0 -%}
+<!-- GWP Auto Add w/ Threshold -->
+{%- assign gwp_variantID_auto_add_threshold = cart.attributes.discounted_product_auto_add_threshold | plus: 0 -%}
+<!-- GWP Auto Add w/ Threshold -->
+{%- assign gwp_variantID_auto_add_threshold_2 = cart.attributes.discounted_product_auto_add_threshold_2 | plus: 0 -%}
+<!-- GWP Auto Add w/ Qualifying product -->
+{%- assign gwp_variantID_auto_add_qualifying_product = cart.attributes.discounted_product_auto_add_qualifying_product | plus: 0 -%}
+<!-- GWP Auto Add w/ Qualifying collection -->
+{%- assign gwp_variantID_auto_add_qualifying_collection = cart.attributes.discounted_product_auto_add_qualifying_collection | plus: 0 -%}
+
+<!-- TODO: replace product -->
+{% assign custom_bundle_in_cart = false %}
+{% assign bundle_addon_in_cart = false %}
+{% for item in cart.items %}
+  {% if item.title contains 'Custom Bundle' %}
+    {% assign custom_bundle_in_cart = true %}
+  {% endif %}
+{% endfor %}
+
+{% include 'subscription-cart-footer' %}
+
+<div class="mini-cart">
+  <form id="mini_cart_form" action="/cart/checkout">
+    <div class="mini-cart__inner">
+      <div class="mini-cart__head">
+        <h4 id="mini-cart__title" tabindex="0">{{ 'cart.general.title' | t }}</h4>
+        <a href="#" class="mini-cart__close" aria-label="Close mini-cart">
+          <span></span><!-- /.mini-cart__close -->
+         </a>
+        {%- if cart.items.size > 0 -%}
+          {%- assign shipping_price = settings.price_free_shipping | times: 100 -%}
+          {%- assign cart_total = cart.total_price -%}
+          {%- assign non_shippable_total = 0 -%}
+          {% for item in cart.items %}
+            {% if item.requires_shipping == false %}
+              {%- assign non_shippable_lineitem_total = item.price | times: item.quantity -%}
+              {%- assign non_shippable_total = non_shippable_total | plus: non_shippable_lineitem_total -%}
+            {% endif %}
+          {% endfor %}
+          {% if non_shippable_total > 0 %}
+            {%- assign cart_total = cart_total | minus: non_shippable_total -%}
+          {% endif %}
+          {%- if cart_total < shipping_price -%}
+            {%- assign price_diff = shipping_price | minus: cart_total | money -%}
+            <p class="shipping-text">{{ 'layout.cart.shipping_price' | t: price: price_diff }}</p>
+          {%- else -%}
+            <p class="shipping-text">{{ 'layout.cart.shipping_free' | t }}</p>
+          {%- endif -%}
+        {%- else -%}
+          <p class="shipping-text">{{ 'cart.general.empty' | t }}</p>
+        {%- endif -%}
+
+        {% if settings.enable_gwp_pick_threshold == true %}
+          {% assign gwp_pick_threshold_amount = settings.gwp_pick_threshold_amount | times: 100 %}
+          {% if cart_total > gwp_pick_threshold_amount %}
+            {% assign checkout_subtotal_over_pick_gwp_threshold = true %}
+          {% else %}
+            {% assign checkout_subtotal_over_pick_gwp_threshold = false %}
+          {% endif %}
+        {% endif %}
+        {% unless checkout_subtotal_over_pick_gwp_threshold == true %}
+          <div class="continue-shopping"><a href="https://pipettebaby.com/collections/bestsellers-1" class="btn btn--border">Continue Shopping</a></div>
+        {% endunless %}
+      </div><!-- /.mini-cart__head -->
+
+      {%- include 'gwp-promocode-minicart', checkout_subtotal_over_pick_gwp_threshold: checkout_subtotal_over_pick_gwp_threshold, miniCart: true -%}
+
+      {%- if cart.items.size > 0 -%}
+        <hr class="mini-cart__divider top">
+        <div class="mini-cart__items">
+          <table>
+            <tbody>
+              {%- for line_item in cart.items -%}
+                {%- if gift_wrap.id == line_item.product.id -%}
+                  {%- assign gift_wrap_added = true -%}
+                {%- endif -%}
+                {% assign line_item_url = line_item.url %}
+                {% if line_item.product.type == 'hidden'%}
+                  {% assign line_item_url = '#' %}
+                {% endif %}
+                <tr>
+                  <td>
+                    <a href="{{line_item_url}}" class="item-image" style="background-image: url({{line_item.image | img_url: '220x'}});" aria-label="{{line_item.title}} Image"></a>
+                  </td>
+                  <td>
+                    {% if line_item.title contains 'Custom Bundle' %}
+                      {% assign productTitle = line_item.title | split: ' - ' %}
+                      {% assign variantsArray = productTitle[1] | split: ', ' %}
+                      {% assign bundleID = '' %}
+
+                      {% for property in line_item.properties %}
+                        {% if property[0] == 'bundle_id' %}
+                          {% assign bundleID = property[1] %}
+                        {% endif %}
+                      {% endfor %}
+                      {% assign bundleURL = "/pages/build-your-bundle?bundle-id=" | append: bundleID %}
+                      <a href="{{bundleURL}}" class="mini-cart__bundle-link">Edit your Bundle</a>
+                      <h5>
+                        <a href="#" class="line-item__title">{{ productTitle[0] }}</a>
+                      </h5>
+                      <div class="mini-cart__bundle-items">
+                        {% for variant in variantsArray %}
+                          <p class="mini-cart__bundle-item">{{variant}}</p>
+                        {% endfor %}
+                      </div>
+                    {% else %}
+                      <h5>
+                        {% if line_item.title contains '- Ships' or line_item.title contains 'Order' or line_item.title contains 'ship' or line_item.title contains 'Night Kit' %}
+                          {% assign productTitle = line_item.title | split: ' - ' %}
+                          <a href="{{ line_item_url }}" class="line-item__title">{{ productTitle[0] }}</a>
+                        {% else %}
+                          <a href="{{ line_item_url }}" class="line-item__title">{{ line_item.title }}</a>
+                        {% endif %}
+                      </h5>
+                    {% endif %}
+
+                    {%- if line_item.variant_id == gwp_variantID and gwp_code.size > 1 -%}
+                      <p class="gwp_cart_item_note">Free Gift w/ code {{gwp_code}}<br>Discount applied at Checkout</p>
+                    {%- endif -%}
+
+                    {%- if line_item.variant_id == gwp_variantID_auto_add_qualifying_product-%}
+                      <p class="gwp_cart_item_note">{{settings.gwp_auto_add_specific_product_cart_message}}</p>
+                    {%- elsif line_item.variant_id == gwp_variantID_auto_add_threshold -%}
+                      <p class="gwp_cart_item_note">Free gift for orders {{settings.gwp_auto_add_threshold_amount | plus: 0.01 | times: 100 | money_without_trailing_zeros}}+</p>
+                    {%- elsif line_item.variant_id == gwp_variantID_auto_add_threshold_2 -%}
+                      <p class="gwp_cart_item_note">Free gift for orders {{settings.gwp_auto_add_threshold_amount_2 | plus: 0.01 | times: 100 | money_without_trailing_zeros}}+</p>
+                    {%- elsif line_item.variant_id == gwp_variantID_auto_add_qualifying_collection -%}
+                      <p class="gwp_cart_item_note">{{settings.gwp_auto_add_specific_collection_cart_message}}</p>
+                    {%- elsif line_item.variant_id == gwp_variantID_auto_add_qualifying_collection_2 -%}
+                      <p class="gwp_cart_item_note">{{settings.gwp_auto_add_specific_collection_cart_message_2}}</p>
+                    {%- elsif line_item.product.handle == 'day-to-night-kit' -%}
+                      <p class="gwp_cart_item_note" style="margin-bottom: 5px;">{{line_item.product.variants[0].title}}</p>
+                      <!-- <p class="gwp_cart_item_note" style="font-weight: bold;">Cannot ship to PO Boxes</p> -->
+                    {%- elsif line_item.product.template_suffix contains 'prepay' -%}
+                      <!-- <p class="gwp_cart_item_note" style="font-weight: bold;margin-bottom: 5px;">Cannot ship to PO Boxes</p> -->
+                      <p class="gwp_cart_item_note" style="font-weight: bold;">Pre-Order. Credit card will be charged immediately. Order will ship 6/19.</p>
+                    {%- endif -%}
+
+                    <p class="price{% if line_item.properties.subscription_id != blank %} ship-text{% endif %}">
+                      {% if line_item.original_line_price > line_item.final_line_price %}
+                        <span class="was-price">{{line_item.original_line_price | money}}</span>
+                      {% endif %}
+                      {{ line_item.final_line_price | money }}{% if line_item.properties.subscription_id != blank %}/mo{% endif %}
+                    </p>
+                    {% if line_item.properties.subscription_id != blank %}
+                      <p class="ship-text">
+                        <small>{{ 'layout.cart.ship_every' | t: days: line_item.properties.shipping_interval_frequency }}</small>
+                      </p>
+                    {% endif %}
+                    {%- unless gift_wrap.id == line_item.product.id -%}
+                      {%- unless line_item.product.type == 'hidden' or line_item.product.type == 'hidden-displayATC' -%}
+                        {% if line_item.title contains 'Fragrance Free' %}
+                          <div class="qty">
+                            <a href="#!" class="qty-minus qty-edit" aria-label="Decrease quantity" tabindex="0">
+                              <span></span>
+                            </a>
+                            <input class="mini-cart-qty" type="text" name="updates[{{line_item.variant_id}}]" data-mirror="true" value="{{ line_item.quantity }}" aria-label="Quantity" disabled="true"/>
+                            <a href="#!" class="qty-plus qty-edit" aria-label="Increase quantity" tabindex="0">
+                              <span></span>
+                            </a>
+                          </div><!-- /.qty -->
+                          {% elsif line_item.title contains 'Free' %}
+                          {% else %}
+                            <div class="qty">
+                              <a href="#!" class="qty-minus qty-edit" aria-label="Decrease quantity" tabindex="0">
+                                <span></span>
+                              </a>
+                              <input class="mini-cart-qty" type="text" name="updates[{{line_item.variant_id}}]" data-mirror="true" value="{{ line_item.quantity }}" aria-label="Quantity" disabled="true"/>
+                              <a href="#!" class="qty-plus qty-edit" aria-label="Increase quantity" tabindex="0">
+                                <span></span>
+                              </a>
+                            </div><!-- /.qty -->
+                          {% endif %}
+                        {%- endunless -%}
+                    {%- endunless -%}
+                  </td>
+                  <td>
+                    <a href="/cart/change?line={{- forloop.index -}}&amp;quantity=0" class="remove-product js-remove" aria-label="Remove {{line_item.title}} from cart"></a><!-- /.remove-product -->
+                  </td>
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+          {%- if settings.gift_product != blank and gift_wrap.available -%}
+            {%- unless gift_wrap_added -%}
+              <div class="gift-wrap">
+                <a class="checkbox add-btn js-add" href="/cart/add?id={{gift_wrap.first_available_variant.id}}" >
+                  <span></span>
+                  {%- assign git_wrap_price = gift_wrap.price | money -%}
+                  {{ 'layout.cart.gift_text' | t: price: git_wrap_price }}
+                </a><!-- /.checkbox -->
+              </div><!-- /.gift-wrap -->
+            {%- endunless -%}
+          {%- endif -%}
+        </div><!-- /.mini-cart__items -->
+
+      {%- endif -%}
+    </div><!-- /.mini-cart__inner -->
+      <div class="total-box">
+        <hr class="mini-cart__divider">
+        {% if  settings.gwp_cart_message != '' %}
+          <div class="cart-messaging">
+            <div class="cart-gwp-messaging">
+              <p>{{settings.gwp_cart_message}}</p>
+              <span>*<a href="/pages/offers">Details</a></span>
+            </div>
+            <div class="cart-icon-wrapper">
+              <img src="https://cdn.shopify.com/s/files/1/0140/8847/0614/files/GiftIcon260x260.png?v=1632736791" class="gift-icon" alt="gift icon" />
+            </div>
+          </div>
+        {% endif %}
+        {%- if cart.items.size > 0 -%}
+        <div class="total--container">
+          <div class="total_row">
+            <h6>{{ 'layout.cart.subtotal' | t }}</h6>
+            <p class="total_price">{{ cart.total_price | money }}</p><!-- /.total_price -->
+          </div><!-- /.total_row -->
+          <button type="submit" class="btn btn--border btn--checkout" name="checkout">{{ 'layout.cart.checkout' | t }}</button>
+        </div>
+        {%- endif -%}
+      </form>
+        {% if settings.enable_upsell %}
+        <div class="cart__footer-impulse" aria-label="accordion content">
+          <div class="cart__footer-impulse-header">
+            <h6>{{-settings.upsell_title-}}</h6>
+            <button aria-controls="upsell-items" aria-expanded="true" id="accordion-control"></button>
+          </div>
+          <div class="cart__footer-impulse-wrapper" aria-hidden="false" id="upsell-items">
+            {% for i in (1..6) %}
+              {% capture upsellProdHandle %}upsell_product_{{i}}{% endcapture %}
+              {% unless settings[upsellProdHandle] == blank %}
+                {% assign upsellProd = all_products[settings[upsellProdHandle]] %}
+                {% capture upsellVariant %}upsell_product_id_{{i}}{% endcapture %}
+                {% assign upsellVarId = settings[upsellVariant] | plus: 0 %}
+                {% for variant in upsellProd.variants %}
+                  {% if variant.id == upsellVarId %}
+                    {% assign variantSku = variant.sku %}
+                    {% assign variantPrice = variant.price %}
+                    {% assign variantSubtitle = '' %}
+                    {% unless variant.title == 'Default Title' %}
+                      {% assign variantSubtitle = variant.title %}
+                    {% endunless %}
+                    {% if variant.featured_image == null %}
+                      {% assign imageUrl = upsellProd | img_url: '110x', scale: 2 %}
+                    {% else %}
+                      {% assign imageUrl = variant.featured_image | img_url: '110x', scale: 2 %}
+                    {% endif %}
+                    {% if variant.available == true %}
+                    <div class="cart__footer-impulse-item">
+                      <div class="cart__footer-impulse-img">
+                        <img src="{{ imageUrl}}" alt="{{ upsellProd.title | escape }}" />
+                      </div>
+                      <div class="cart__footer-impulse-info">
+                        <h5>{{ upsellProd.title }}{% if variantSubtitle != '' %} - {{variantSubtitle}}{% endif %}</h5>
+                        <div class="container--bottom">
+                          <span class="price">{{ variantPrice | money -}}</span>
+                          {%- form 'product', upsellProd, class: "product__form upsell", data-productid: upsellProd.id  -%}
+                            <input type="hidden"  name="quantity" id="quantity"  class="quantity" value="1">
+                            <input type="hidden" name="id" value="{{ upsellVarId }}">
+                            <input type="hidden" name="product_name" value="{{ upsellProd.title }}">
+                            <input type="hidden" name="product_sku" value="{{ variantSku }}">
+                            <input type="hidden" name="product_price" value="{{ variantPrice }}">
+                            <button
+                              type="submit"
+                              class="upsell"
+                              >
+                              Add to Cart
+                              <span class="icon-plus">{%- include 'svg-icons' with 'plus-circle' -%}</span>
+                            </button>
+                          {%- endform -%}
+                        </div>
+                      </div>
+                    </div>
+                    {% endif %}
+                    {% break %}
+                  {% endif %}
+                {% endfor %}
+              {% endunless %}
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+      </div><!-- /.total-box -->
+</div><!-- /.mini-cart -->
+
+<div class="modal-gwp micromodal-slide results" id="modal-gwp" aria-hidden="true">
+  <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+    <div class="modal__wrapper" data-micromodal-close>
+      <div class="modal__container" role="dialog" aria-modal="true">
+        <div class="modal__header">
+          <h3 class="section__subtitle">Pick <span class="bold">2 FREE <br>FULL-SIZE</span> Products</h3>
+          <button id="modal_cls_btn" class="modal__close close" aria-label="Close modal" data-micromodal-close></button>
+        </div>
+        <div class="modal__content" id="modal-results-content">
+          <article class="section__article">
+            <h4>Choose any <span class="bold">TWO</span>:</h4>
+            <ul class="gwp-list">
+            </ul>
+          </article>
+        </div>
+          <div class="button__wrapper">
+            <button class="btn btn--border minicart" id="pick-gwp-btn">
+              ADD TO CART
+              <br>
+              (FOR FREE)
+            </button>
+          </div>
+      </div>
+  </div>
+  </div>
+</div>
+
+{%- include 'mini-cart-gwp-recharge' -%}
+
+{% assign cart_has_subscriptions = false %}
+{% for i in cart.items %}
+	{% for p in i.properties %}
+		{% if p.first == 'shipping_interval_frequency' %}
+			{% assign cart_has_subscriptions = true %}
+		{% endif %}
+	{% endfor %}
+{% endfor %}
+
+{%- if cart_has_subscriptions == false %}
+  {%- if settings.enable_upsell_mini_cart -%}
+    {%- include 'mini-cart-upsell-popup-ada' -%}
+  {%- endif -%}
+{%- endif -%}
+
+<script>
+  $(document).ready(function() {
+    $('.cart__footer-impulse-header button#accordion-control').on('click', function(e) {
+      e.preventDefault();
+      const isAriaExp = $(this).attr('aria-expanded');
+      let newAriaExp = (isAriaExp == "false") ? "true" : "false";
+      $(this).attr('aria-expanded', newAriaExp);
+      const isAriaHid = $('#upsell-items').attr('aria-hidden');
+      if (isAriaHid == "true") {
+        $('#upsell-items').attr('aria-hidden', "false");
+        $('#upsell-items').css('height', 'auto').css('padding-bottom', '5px');
+      } else {
+        $('#upsell-items').attr('aria-hidden', "true");
+        $('#upsell-items').css('height', 0).css('padding-bottom', 0);
+      }
+    });
+
+    const targetNode = $('.mini-cart')[0];
+    const config = { attributes: true };
+    const callback = function(mutationsList, observer) {
+      for(const mutation of mutationsList) {
+          if (mutation.type === 'attributes' && mutation.attributeName == 'class') {
+              if ($('.mini-cart').hasClass('show')) {
+                $('div.overlay').addClass('active');
+                $(document.body).addClass('no-scroll');
+              } else {
+                $('div.overlay').removeClass('active');
+                $(document.body).removeClass('no-scroll');
+              }
+          }
+      }
+    };
+    const observer = new MutationObserver(callback);
+    observer.observe(targetNode, config);
+  });
+</script>

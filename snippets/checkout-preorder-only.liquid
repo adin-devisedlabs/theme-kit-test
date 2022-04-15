@@ -1,0 +1,73 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+  if (window.location.pathname.indexOf('order') == -1) {
+  // Remove all non-preorder items if preorder item in cart
+  {% assign preorder_in_cart = false %}
+  {% assign preorder_quantity = 0 %}
+  {% assign regularproduct_in_cart = false %}
+
+  {% assign preorder_variantID = 32747327324246 %}
+
+  {% for line_item in checkout_line_items %}
+    {% if line_item.product.variants[0].id == preorder_variantID %}
+      {% assign preorder_in_cart = true %}
+      {% assign preorder_quantity = line_item.quantity %}
+    {% else %}
+      {% assign regularproduct_in_cart = true %}
+    {% endif %}
+  {% endfor %}
+  
+  {% if preorder_in_cart == true %}
+    appendPreorderWarning();
+    {% if regularproduct_in_cart == true %}
+      clearThenUpdateCart();
+    {% endif %}
+  {% endif %}
+
+  function updateCart() {
+    $.ajax({
+      url: '/cart/update.js',
+      method: 'POST',
+      dataType: 'json',
+      data: {
+        updates: { 
+          {{- preorder_variantID -}} : {{- preorder_quantity -}}
+        },
+        attributes: {
+          'discounted_product_auto_add_qualifying_product': ''
+        }
+      },
+      success:function() {
+        window.location.reload();
+        
+      },
+      error: function(err) {
+        console.log('error:', err)
+      }
+    })
+  }
+
+  function clearThenUpdateCart() {
+    $.ajax({
+      url: '/cart/clear.js',
+      method: 'POST',
+      dataType: 'json',
+      success:function() {
+        setTimeout(function() {
+          updateCart();
+        }, 1000);
+        
+      },
+      error: function(err) {
+        console.log('error:', err)
+      }
+    })
+  }
+
+  function appendPreorderWarning() { 
+    setTimeout(function() {
+      $('.main__header nav').after('<p class="preorder-warning">Pre-Order may not be combined with any other items.</p><p class="preorder-warning">Credit card will be charged immediately. Order will ship 6/19.</p>')
+    }, 300);
+  } 
+  }
+</script>

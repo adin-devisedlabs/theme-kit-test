@@ -1,0 +1,217 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+{% if settings.flyout_active == true %}
+  <div id="welcome-popup"></div>
+  <div id="popup-flyout" role="dialog" aria-labelledby="flyout-title">
+      <p id="popup-flyout-close" aria-label="Close flyout dialog">&#10005;</p>
+      <div class="popup-flyout-form">
+        <h1 class="headline" id="flyout-title" tabindex="0">{{settings.flyout_text}}</h1>
+        <p class="fineprint">New subscribers only. By signing up for emails, I accept the <span><a href="/pages/privacy-policy">Privacy Policy</a></span> and the <span><a href="/pages/terms-of-service">Terms of Service.</span></a></p>
+        <form id="popup-flyout-form" action="https://manage.kmail-lists.com/subscriptions/subscribe?a=PXQZTm&g=KhCGpp" data-ajax-submit="https://manage.kmail-lists.com/subscriptions/subscribe?a=PXQZTm&g=QQ57A8" method="POST" novalidate="novalidate"> 
+          <input type="hidden" name="g" value="KhCGpp">
+          <input type="hidden" name="$fields" value="$consent">
+          <input type="hidden" name="$list_fields" value="$consent">
+          <input type="email" value="" name="email" id="k_id_email" placeholder="Your email" aria-label="Enter email to sign up for Pipette emails" /> 
+          <button type="submit" class="btn btn--secondary-alternate">Sign Up</button>
+        </form> 
+      </div>
+      <div class="popup-flyout-confirmation">
+        <h1 class="headline" id="flyout-confirmation-title" tabindex="0">Thanks for joining us!</h1>
+        <p class="info">{{settings.flyout_confirmation}}</p>
+        <p class="fineprint">Auto-replenish subscriptions and eGift cards are excluded. May not be combined with other offers.</p>
+      </div> 
+  </div>
+{% endif %} 
+
+<style>
+  #welcome-popup {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #333;
+    filter: alpha(opacity=80);
+	  opacity: 0.8;
+    display: none;
+    z-index: 9999;
+    display: none !important;
+  }
+
+  #popup-flyout {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    background-color: #F2F7FA;
+    color: #084B6D;
+    width: 100%;
+    /* padding: 50px; */
+    display: none;
+    z-index: 9999;
+  }
+
+  #popup-flyout-close {
+    position: absolute;
+    top: 15px;
+    right: -5px;
+    cursor: pointer;
+    width: 40px;
+    font-size: 20px;
+  }
+
+  #popup-flyout form {
+    margin-bottom: 10px;
+  } 
+
+  #popup-flyout input {
+    width: 70%;
+    border-radius: 0;
+    border: 2px solid #084B6D;
+    background: transparent;
+    font-size: 16px;
+    padding: 13px;
+  }
+
+  #popup-flyout button {
+    width: 29%;
+    border: 2px solid #084B6D;
+    border-radius: 0;
+    padding: 14px;
+    margin-top: -3px;
+    background: transparent;
+  }
+
+  #popup-flyout button:hover::before, #popup-flyout button:hover::after {
+    border: none;
+  }
+
+  #popup-flyout .headline {
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    margin: 20px;
+  }
+
+  #popup-flyout .fineprint {
+    font-size: 14px;
+    text-align: center;
+    margin: 0 0 30px;
+  }
+
+  .popup-box-text {
+    margin: 20px 0;
+  }
+
+  .popup-flyout-form {
+    padding: 40px;
+    border-radius: 0 0 20px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .popup-flyout-form .popup-fineprint {
+    color: white;
+    text-align: center;
+    margin-top: 35px;
+  }
+
+  .popup-fineprint a {
+    text-decoration: underline;
+  }
+
+  .popup-flyout-confirmation {
+    display: none;
+    padding: 40px;
+    text-align: center;
+  }
+
+  .popup-flyout-confirmation .headline {
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    margin: 20px;
+  }
+
+  .popup-flyout-confirmation .headline3-primary {
+    color: #ff508b;
+    margin-bottom: 20px;
+  }
+
+  .popup-flyout-confirmation .popup-box-link {
+    font-size: 16px;
+  }
+
+  @media screen and (max-width: 767px) {
+    #popup-flyout {
+      overflow: scroll;
+    }
+
+    #popup-flyout button, #popup-flyout input {
+      width: 100%;
+      margin: 0 auto;
+      margin-bottom: 10px;
+    }
+
+    #popup-flyout-form {
+      text-align: center;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+  }
+</style>
+
+<script type="text/javascript" src="//www.klaviyo.com/media/js/public/klaviyo_subscribe.js"></script>
+<script>
+  $(document).ready(function() {
+    let delay= {{settings.flyout_delay | times: 1000}}; //ms
+    let cookie_expire = {{settings.flyout_cookie_expiration | plus: 0}}; //days
+
+    let signedUp = localStorage.getItem('welcome-accepted');
+
+    let focusedElBeforeOpen;
+
+    if (signedUp == undefined || signedUp == null) {
+      let cookie = localStorage.getItem('welcome-popup');
+      if (cookie == undefined || cookie == null) {
+        cookie = 0;
+      }
+
+      if (((new Date()).getTime() - cookie) / (1000 * 60 * 60 * 24) > cookie_expire ) {
+        focusedElBeforeOpen = document.activeElement;
+
+        $('#welcome-popup').delay(delay).fadeIn('fast', function() {
+          $('#popup-flyout').fadeIn('fast');
+          $('#flyout-title').focus(); 
+        });
+      }
+
+      $('#popup-flyout-form').on('submit', function() {
+        localStorage.setItem('welcome-popup', (new Date()).getTime());
+        localStorage.setItem('welcome-accepted', true);
+      })
+    }
+    
+    $('#popup-flyout-close').click(function() {
+      $('#welcome-popup, #popup-flyout').hide();
+      $('.header__bar a').focus();
+
+      localStorage.setItem('welcome-popup', (new Date()).getTime());
+
+      if (window.location.search.indexOf('customer_opt_in') > -1) {
+        let newLocation = window.location.href.indexOf('?') > -1 ? window.location.href.split('?')[0] : widnow.location.href;
+        window.location.href = newLocation;
+      }
+    })
+
+    if (window.location.search.indexOf('customer_opt_in') > -1) {
+      let param = window.location.search.split('=')[1];
+      if (param == 'true') {
+        $('#welcome-popup').show();
+        $('#popup-flyout').show();
+        $('.popup-flyout-form').hide();
+        $('.popup-flyout-confirmation').show();
+        $('#flyout-confirmation-title').focus();
+      }
+    }
+  })
+</script>

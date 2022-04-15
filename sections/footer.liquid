@@ -1,0 +1,245 @@
+{%- assign _section = section.settings -%}
+{%- assign section_footer_bg = _section.footer_bg -%}
+{%- assign section_copy = _section.copy -%}
+
+<footer class="footer" {%- include 'inline-style' bgcolor: section_footer_bg -%}>
+  <div class="container">
+    <div class="flex-row justify">
+      {%- for block in section.blocks -%}
+        <div class="footer__box footer__box--{{block.type}}">
+          {%- assign _block = block.settings -%}
+
+          {%- case block.type -%}
+            {%- when 'content' -%}
+              {%- assign block_title = _block.title -%}
+              {%- assign block_show_icon = _block.show_icon -%}
+              {%- assign block_content = _block.content -%}
+              {%- assign block_link_text = _block.link_text -%}
+              {%- assign block_link_url = _block.link_url -%}
+
+              {%- if block_title != blank -%}
+                <h4{% if block_show_icon %} class="has-icon"{% endif %}>
+                  {{- block_title -}}
+                  {%- if block_show_icon -%}
+                    <span class="icon">
+                      {%- include 'svg-icons' with 'thumb' -%}
+                    </span>
+                  {%- endif -%}
+                </h4>
+              {%- endif -%}
+              {{block_content}}
+              {%- if block_link_text != blank and block_link_url != blank -%}
+                <a href="{{block_link_url}}">
+                  {{ block_link_text }}
+                </a>
+              {%- endif -%}
+              <div class="logo">
+                <a href="/" aria-label="Pipette Baby Logo" class="logo">
+                  <span class="logo--wrapper">
+                    {%- include 'svg-icons' with 'logo' -%}
+                  </span>
+                </a>
+              </div><!-- /.logo -->
+
+            {%- when 'newsletter' -%}
+              {%- assign block_title = _block.title -%}
+              {%- assign block_content = _block.content -%}
+              {%- assign block_facebook = _block.facebook -%}
+              {%- assign block_twitter = _block.twitter -%}
+              {%- assign block_instagram = _block.instagram -%}
+
+              {%- if block_title != blank -%}
+                <h6>{{block_title}}</h6>
+              {%- endif -%}
+
+              {%- if block_content != blank -%}
+                <p>{{block_content}}</p>
+              {%- endif -%}
+
+              <div class="newsletter-form">
+                {%- assign formId = 'Contact_' | append: section.id -%}
+                {% form 'customer', id: formId, novalidate: 'novalidate', class: 'contact-form form-single-field' %}
+                  {%- if form.posted_successfully? -%}
+                    <script>window.location.href = '/pages/thank-you'; </script>
+                    <p class="success">Thank you! Your email has been submitted.</p>
+                  {% else %}
+                    <input type="hidden" name="contact[tags]" value="newsletter">
+                    <div class="input-group {% if form.errors %} input-group--error{% endif %}">
+                      <input type="email" name="contact[email]" class="field" placeholder="{{ 'layout.footer.email' | t }}" aria-label="Newsletter Email Input" {% if form.errors %}aria-invalid="true" aria-describedby="{{ formId }}-email-error" data-form-status {% endif %}>
+                      <button type="submit" class="form-btn" aria-label="Newsletter Submit Button">
+                        <span></span>
+                      </button>
+                      <input type="hidden" name="customer[accepts_marketing]" value="true" id="marketing" />
+                    </div>
+                  {% endif %}
+                  {%- if form.errors contains 'email' -%}
+                    <span id="{{ formId }}-email-error" class="input-error-message">
+                      {% comment %}{% include 'icon-error' %}{% endcomment %} {{ form.errors.translated_fields['email'] | capitalize }} {{ form.errors.messages['email'] }}.
+                    </span>
+                  {%- endif -%}
+                {% endform %}
+                <p class="newsletter-disclaimer">By signing up for emails, I accept the <span><a href="/pages/privacy-policy" target="_blank">Privacy Policy</a></span> and the <span><a href="/pages/terms-of-service" target="_blank">Terms of Service</a></span>.</p>
+              </div><!-- /.newsletter-form -->
+
+              {%- if block_facebook != blank or block_twitter != blank or block_instagram != blank -%}
+                <ul class="socials">
+                  {%- if block_facebook != blank -%}
+                    <li>
+                      <a href="{{block_facebook}}" target="_blank" aria-label="Facebook Logo">
+                        {%- include 'svg-icons' with 'facebook' -%}
+                      </a>
+                    </li>
+                  {%- endif -%}
+                  {%- if block_twitter != blank -%}
+                    <li>
+                      <a href="{{block_twitter}}" target="_blank" aria-label="Twitter Logo">
+                        {%- include 'svg-icons' with 'twitter' -%}
+                      </a>
+                    </li>
+                  {%- endif -%}
+                  {%- if block_instagram != blank -%}
+                    <li>
+                      <a href="{{block_instagram}}" target="_blank" aria-label="Instagram Logo">
+                        {%- include 'svg-icons' with 'instagram' -%}
+                      </a>
+                    </li>
+                  {%- endif -%}
+                </ul><!-- /.socials -->
+              {%- endif -%}
+
+            {%- when 'menu' -%}
+              {%- assign block_title = _block.title -%}
+              {%- assign block_menu = _block.menu -%}
+
+              {%- if block_title != blank -%}
+                <h6>{{block_title}}</h6>
+              {%- endif -%}
+              {%- if block_menu != blank -%}
+                {%- include 'menu' handle: block_menu -%}
+              {%- endif -%}
+          {%- endcase -%}
+        </div><!-- /.footer__box -->
+      {%- endfor -%}
+    </div><!-- /.flex-row -->
+    <div class="flex-row footer__bottom-section">
+      <div class="copy">
+        {{ section_copy }}
+      </div><!-- /.copy -->
+      <div class="grid__item site-footer__payment-icons">
+        <span class="visually-hidden">{{ 'general.payment.method' | t }}</span>
+        {% assign payments = "afterpay" | concat: shop.enabled_payment_types %}
+        <ul class="payment-icons list--inline site-footer__icon-list">
+          {%- for type in payments -%}
+            <li class="payment-icon">
+              {{ type | payment_type_svg_tag: class: 'icon icon--full-color' }}
+            </li>
+          {%- endfor -%}
+        </ul>
+      </div>
+    </div>
+  </div><!-- /.container -->
+</footer><!-- /.footer -->
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "color",
+      "id": "footer_bg",
+      "label": "Footer Background Color"
+    },
+    {
+      "type": "richtext",
+      "id": "copy",
+      "label": "Copyright"
+    }
+  ],
+  "max_blocks": 5,
+  "blocks": [
+    {
+      "type": "content",
+      "name": "Content",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "checkbox",
+          "id": "show_icon",
+          "label": "Show Icon",
+          "default": true
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link Text"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Link URL"
+        }
+      ]
+    },
+    {
+      "type": "newsletter",
+      "name": "Newsletter & Social",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Content"
+        },
+        {
+          "type": "header",
+          "content": "Socials"
+        },
+        {
+          "type": "url",
+          "id": "facebook",
+          "label": "Facebook"
+        },
+        {
+          "type": "url",
+          "id": "twitter",
+          "label": "Twitter"
+        },
+        {
+          "type": "url",
+          "id": "instagram",
+          "label": "Instagram"
+        }
+      ]
+    },
+    {
+      "type": "menu",
+      "name": "Menu",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "link_list",
+          "id": "menu",
+          "label": "Menu"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

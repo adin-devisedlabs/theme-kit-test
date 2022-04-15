@@ -1,0 +1,350 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+{% if productTemplate == true %}
+  {% assign productHandle = product.handle %}
+{% endif %}
+
+<div class="recently-viewed-section gifts">
+  <div class="container">
+    <h2>Recently Viewed</h2>
+    <div class="flex-row">
+
+    </div>
+  </div>
+</div>
+
+<script>
+  function getProducts() { 
+    let existingProducts = localStorage.getItem('recentlyViewed') !== null ? JSON.parse(localStorage.getItem('recentlyViewed')) : [];
+
+    {% if productTemplate == true %}
+      let otherExistingProducts = existingProducts.filter(function(product) {
+        return product.handle != {{productHandle | json}};
+      })
+    {% else %}
+      let otherExistingProducts = existingProducts;
+    {% endif %}
+
+    if (otherExistingProducts.length > 4) {
+      otherExistingProducts = otherExistingProducts.slice(0, 4);
+    }
+
+    if (otherExistingProducts.length > 0) {
+      if (otherExistingProducts.length < 4) {
+        {% assign bestSellers = collections['bestsellers'].products %} 
+        let productsNeeded = 4 - otherExistingProducts.length;
+        {% for product in bestSellers limit: 4 %}
+
+          {% if product.variants.size > 1 %}
+            {% assign variantID = null %}
+          {% else %}
+            {% assign variantID = product.variants[0].id %}
+          {% endif %}
+
+          var bestSellersToAdd = {
+            id: {{product.id | json}},
+            title: {{product.title | json}},
+            handle: {{product.handle | json}},
+            price: {{product.price | money | json}},
+            img: {{product.featured_image | json}},
+            url: {{product.url | json}},
+            icon: {{product.metafields.product.icon[0] | json}},
+            variantId: {{variantID | json}},
+            tags: {{product.tags | json}}
+          }
+          otherExistingProducts.push(bestSellersToAdd);
+        {% endfor %}
+        
+      }
+      //Remove duplicates:
+      let filteredExistingProducts = removeDuplicates(otherExistingProducts, 'id');
+      appendProducts(filteredExistingProducts);
+    } else {
+      $('.recently-viewed-section').hide();
+
+      {% if productTemplate == true %}
+        saveProduct({{productHandle | json}});
+      {% endif %}
+    }
+    
+  }
+
+  function appendProducts(products) {
+    let limit = products.length > 4 ? 4 : products.length;
+
+    {% unless productTemplate == true and hideOnPDP == true %}
+      for (let i = 0; i < limit; i++) {
+        const product = products[i];
+        const title = product.title;
+        const price = product.price;
+        const url = product.url ? product.url : '/products/' + product.handle;
+        const img = product.img ? product.img : product.featured_image;
+        const id = product.id;
+        const icon = product.icon;
+        const variantId = product.variantId;
+        const tags = product.tags;
+        const customCTA = "{{settings.enable_custom_cta}}";
+        const customCTAText = "{{settings.cta_text}}";
+        let addToCartCTA = 'ADD TO CART';
+        if (customCTA == 'true' && !tags.includes('cta-exclude')) {
+          addToCartCTA = customCTAText;
+        }
+
+        const html = `
+          <div class="flex-box">
+            <a href="${url}" class="product-link" id="${id}">
+              <div class="icons-wrapper">
+                <div class="icons">
+                  <img src="${icon}" alt="ewg icon" class="icon" />
+                </div>
+              </div>
+              <div class="image-wrapper">
+                <img src="${img}" alt="${title}" class="rv-product-image" />
+              </div>
+              <h4>${title}</h4>
+              <span class="stamped-product-reviews-badge stamped-main-badge" data-id="${id}" style="display: block;"></span>
+              <p class="price">${price}</p>
+            </a>
+            <div class="overlay-product">
+              <div class="qty">
+                <a href="#!" class="qty-minus qty-edit" aria-label="Decrease quantity">
+                  <span tabindex="0"></span>
+                </a>
+                <input type="text" name="quantity" data-mirror="true" value="1" aria-label="quantity value" />
+                <a href="#!" class="qty-plus qty-edit" aria-label="Increase quantity">
+                  <span tabindex="0"></span>
+                </a>
+              </div>
+              <input type="hidden" name="variant_id" value="${variantId}" class="overlay-product__variantId">
+              <input type="hidden" name="id" value="${id}" class="overlay-product__productId">
+              <input type="hidden" name="product_name" value="${title}" class="overlay-product__name">
+              <input type="hidden" name="product_price" value="${price}" class="overlay-product__price">
+              <button type="submit" class="btn btn--border cart rv-atc-btn">${addToCartCTA}</button>
+            </div>
+          </div>
+        `;
+        // SITE-WIDE PROMO TEXT - insert above
+        if (title.toLowerCase().includes('free') == false) {
+          $('.recently-viewed-section .flex-row').append(html);
+        }
+
+        if (icon == null) {
+          $(`#${id} .icon`).hide();
+        }
+      }
+    {% endunless %}
+
+    {% if productTemplate == true %}
+      saveProduct({{productHandle | json}});
+    {% endif %}
+  }
+
+  function saveProduct(handle) {
+    let existingProducts = localStorage.getItem('recentlyViewed') !== null ? JSON.parse(localStorage.getItem('recentlyViewed')) : [];
+
+    existingProducts.length > 4 ? existingProducts.pop() : '';
+
+    {% if product.variants.size > 1 %}
+      {% assign variantID = null %}
+    {% else %}
+      {% assign variantID = product.variants[0].id %}
+    {% endif %}
+
+    let formatProductToAdd = {
+      id: {{product.id | json}},
+      title: {{product.title | json}},
+      handle: {{product.handle | json}},
+      price: {{product.price | money | json}},
+      img: {{product.featured_image | json}},
+      url: {{product.url | json}},
+      icon: {{product.metafields.product.icon[0] | json}},
+      variantId: {{variantID | json}},
+      tags: {{product.tags | json}}
+    }
+
+    if (productExists({{productHandle | json}}, existingProducts) == false) {
+      let newExistingProducts = [formatProductToAdd].concat(existingProducts);
+
+      try {
+        localStorage.setItem('recentlyViewed', JSON.stringify(newExistingProducts));
+      } catch (domException) {
+        if (
+          ['QuotaExceededError', 'NS_ERROR_DOM_QUOTA_REACHED'].includes(
+            domException.name
+          )
+        ) {
+          console.log('Error: Quota Exceeded', domException.name)
+        }
+      }
+    } else {
+      try {
+        localStorage.setItem('recentlyViewed', JSON.stringify(newExistingProducts));
+      } catch (domException) {
+        if (
+          ['QuotaExceededError', 'NS_ERROR_DOM_QUOTA_REACHED'].includes(
+            domException.name
+          )
+        ) {
+          console.log('Error: Quota Exceeded', domException.name)
+        }
+      }
+    }
+  }
+
+  function productExists(handle, existingProducts) {
+    return existingProducts.some(function(existingProduct) {
+      return existingProduct.handle == handle;
+    })
+  }
+
+  function removeDuplicates(myArr, prop) {
+    return myArr.filter((obj, pos, arr) => {
+        return arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos;
+    });
+  }
+
+  function updateHtml($html) {
+    const $miniCart = $('.mini-cart');
+    const $cartBag = $('.util-cart a');
+
+    $cartBag.html($html.find('.util-cart a').html());
+    $miniCart.html($html.find('.mini-cart').html());
+
+    $miniCart.removeClass('loading');
+    $miniCart.addClass('show');
+    $('.overlay-product').removeClass('loading');
+  }
+
+  function updateMiniCart(callback) {
+    $.ajax({
+      url: '/cart'
+    }).done(function (data) {
+      updateHtml($(data));
+    });
+  }
+
+  $(document).ready(function() {
+    {% if productTemplate == true %}
+      {% if hideOnPDP == true %}
+        $('.recently-viewed-section').hide();
+        saveProduct({{productHandle | json}});
+      {% else %}
+        getProducts();
+      {% endif %}
+    {% else %}
+      getProducts();
+    {% endif %}
+
+    $('.rv-atc-btn').click(function() {
+      const overlayProduct = $(this).closest('.overlay-product');
+      const variantId = $(this).closest('.overlay-product').find('.overlay-product__variantId').val();
+
+      if (variantId && variantId != 'null' && variantId != 'undefined') {
+        const quantity = $(this).closest('.overlay-product').find('.qty input').val();
+        overlayProduct.addClass('loading');
+
+        $.ajax({
+          url: '/cart/add.js',
+          method: 'POST',
+          dataType: 'json',
+          data: {
+            quantity: quantity,
+            id: variantId
+          },
+          success:function(data) {
+            updateMiniCart();
+          },
+          error: function(err) {
+            console.log('error:', err)
+          }
+        })
+      } else {
+        window.location.href = $(this).closest('.flex-box').find('.product-link').attr('href');
+      }
+    })
+  })
+</script>
+
+<style>
+  .recently-viewed-section {
+    text-align: center;
+    padding: 128px 0 140px;
+  }
+
+  .recently-viewed-section .flex-row {
+    align-items: baseline;
+  }
+
+  .recently-viewed-section .icons-wrapper {
+    position: relative;
+  }
+
+  .recently-viewed-section .icons-wrapper .icons {
+    position: absolute;
+    width: 44px;
+    right: 1rem;
+    top: 1rem;
+    z-index: 2;
+  }
+
+  .recently-viewed-section .image-wrapper {
+    background: #f6f8f0;
+  }
+
+  .recently-viewed-section .image-wrapper img {
+    object-fit: cover;
+  }
+
+  .recently-viewed-section .flex-box {
+    flex-basis: 25%;
+    width: 25%;
+    text-align: center;
+  }
+
+  .recently-viewed-section .flex-box .rv-product-image {
+    position: relative;
+    display: block;
+    height: 336px;
+    background-size: cover;
+    background-position: center center;
+    margin: 0 auto;
+    margin-bottom: 28px;
+  }
+
+  .recently-viewed-section .overlay-product {
+    margin-top: 25px;
+    visibility: hidden;
+    position: relative;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    text-align: center;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
+
+  .recently-viewed-section .flex-box:hover .overlay-product {
+    visibility: visible;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
+
+  .recently-viewed-section .overlay-product .qty input {
+    background: transparent;
+  }
+
+  @media (max-width: 767px) {
+    .recently-viewed-section .overlay-product {
+      visibility: visible;
+      display: block;
+    }
+
+    .recently-viewed-section .overlay-product .btn {
+        max-width: 250px;
+        flex-basis: 250px;
+        margin: 0 auto;
+      }
+  }
+</style>

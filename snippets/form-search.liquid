@@ -1,0 +1,17 @@
+{%- assign search_idx = search_idx | default: 0 | plus: 1 -%}
+
+<div class="form-search">
+  <form action="/search" method="get">
+    <input type="hidden" name="type" value="product">
+    <input type="search" name="q" id="q-{{ search_idx }}" value="{{ search.terms | escape }}" placeholder="What are you searching for?" class="field">
+
+    <button type="submit" class="search-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20.323" height="20.795" viewBox="0 0 20.323 20.795">
+        <g id="Search" transform="translate(0.5 0.188)">
+          <path id="Stroke_1" data-name="Stroke 1" d="M14.952,7.476A7.476,7.476,0,1,1,7.476,0,7.476,7.476,0,0,1,14.952,7.476Z" transform="translate(0 0.312)" fill="none" stroke="#004c70" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+          <path id="Stroke_5" data-name="Stroke 5" d="M4.432,0l3.4,3.4A2.073,2.073,0,0,1,4.9,6.331L0,1.43" transform="translate(10.884 13.014)" fill="none" stroke="#004c70" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" stroke-width="1"/>
+        </g>
+      </svg>
+    </button>
+  </form>
+</div><!-- /.form__search -->

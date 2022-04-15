@@ -1,0 +1,125 @@
+{%- assign _section = section.settings -%}
+{%- assign section_title = _section.title -%}
+{%- assign section_background = _section.background -%}
+
+<div class="page-heading animate" {%- include 'inline-style' bgimage: section_background, wh: '2048x' -%}>
+  <span>
+    <h2>{{ section_title }}</h2>
+    {%- if _section.hero_text != blank -%}
+      {{ _section.hero_text }}
+    {%- endif -%}
+  </span>
+</div><!-- /.page-heading -->
+
+<div class="container shipping-page">
+  <div class="flex-row justify">
+    <div class="sidebar">
+      <ul>
+        {%- for block in section.blocks -%}
+          {%- assign _block = block.settings -%}
+          {%- case block.type -%}
+            {%- when 'heading' -%}
+              {%- assign block_title = _block.title -%}
+              <li{% if forloop.first %} class="active"{% endif %}>
+                <a href="#{{block_title | handle }}">{{block_title}}</a>
+              </li>
+          {%- endcase -%}
+        {%- endfor -%}
+      </ul>
+    </div><!-- /.sidebar -->
+    <div class="content">
+      {%- assign class_type = 'odd' -%}
+      {%- for block in section.blocks -%}
+        {%- assign _block = block.settings -%}
+        {%- case block.type -%}
+          {%- when 'heading' -%}
+            {%- assign heading = _block.title -%}
+            {%- assign class_type = 'odd' -%}
+            <h3 id="{{heading | handle }}" class="animate" data-delay="50">{{ heading }}</h3>
+
+          {%- when 'question' -%}
+            {%- assign block_title = _block.title -%}
+            {%- assign block_content = _block.content -%}
+            <div class="qa-row animate" data-heading="{{heading | handle}}">
+              {{block_content}}
+            </div><!-- /.qa-row -->
+        {%- endcase -%}
+      {%- endfor -%}
+    </div><!-- /.content -->
+  </div><!-- /.flex-row -->
+</div><!-- /.container -->
+
+{%- unless _section.backgroundMob == empty -%}
+<style>
+  .shipping-page .sidebar a {
+    font-size: 17px;
+  }
+@media all and (max-width: 599px) {
+  .page-heading {
+    background-image: url('{{ _section.backgroundMob | img_url: '2x' }}') !important;
+    height: 80vw;
+    position: relative;
+  }
+  
+  .page-heading > span {
+    position: absolute;
+    top: 50%; left: 0;
+    transform: translateY(-50%);
+    width: 100%;
+  }
+}
+</style>
+{%- endunless -%}
+
+{% schema %}
+{
+  "name": "Shipping",
+  "class": "faq-page",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "image_picker",
+      "id": "background",
+      "label": "Background Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "backgroundMob",
+      "label": "Mobile Background Image"
+    },
+    {
+      "type": "richtext",
+      "id": "hero_text",
+      "label": "Hero Content"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "Heading",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        }
+      ]
+    },
+    {
+      "type": "question",
+      "name": "Content",
+      "settings": [
+        {
+          "type": "html",
+          "id": "content",
+          "label": "Content"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

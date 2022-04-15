@@ -1,0 +1,143 @@
+{%- assign _section = section.settings -%}
+
+{%- for block in section.blocks -%}
+  {%- if block.type == 'carousel' -%}
+    {%- assign carouselCount = carouselCount | plus: 1 -%}
+  {%- endif -%}
+  {%- if block.type == 'testimonial' -%}
+    {%- assign testimonialCount = testimonialCount | plus: 1 -%}
+	{%- if firstTestimonial == blank %}
+	  {%- assign firstTestimonial = forloop.index0 -%}
+	{%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- for block in section.blocks -%}
+  {%- if block.type == 'testimonial' %}
+	{%- if testimonialCount > 0 and forloop.index0 == firstTestimonial -%}
+      <div class="lp-carousel__testimonials" id="testimonialCarousel">
+    {%- endif -%}
+    <div class="carousel__img">
+      <div class="carousel__text">
+        <small>What Parents Are Saying</small>
+        <div class="testimonial__rating">
+          {%- for i in (1..block.settings.rating) -%}
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 306 306"><path d="M153 230.8l94.3 68.8-35.6-112.2 94.3-66.3H191.3L153 6.4l-38.2 114.7H0l94.3 66.3-35.7 112.2z"/></svg>
+          {%- endfor -%}
+        </div>
+        <h2>{{ block.settings.heading }}</h2>
+        {{ block.settings.content }}
+        <h4>{{ block.settings.source }}</h4>
+      </div>
+    </div>
+	{%- if testimonialCount > 0 and forloop.index == section.blocks.size -%}
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.1/tiny-slider.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.1/min/tiny-slider.js"></script>
+<script>
+  $(document).ready(function(){
+    var testimonialSlider = tns({
+      container: '.lp-carousel__testimonials',
+      items: 1,
+      controls: false,
+      responsive: {
+      }
+    });
+  });  
+</script>
+
+{% stylesheet %}
+.lp-carousel__testimonials {
+	display: flex;
+}
+
+.lp-carousel__testimonials .carousel__img .carousel__text {
+	background: #f2f7fa;
+	color: #094a6e;
+	padding: 4em 2em 5em;
+}
+
+.lp-carousel__testimonials .carousel__img .carousel__text p {
+	max-width: 50%;
+	margin: 0 auto;
+	margin-bottom: 25px;
+}
+
+#testimonialCarousel-ow .tns-nav {
+	bottom: 3em;
+}
+
+#testimonialCarousel-ow .carousel__text {
+	padding-bottom: 7em;
+}
+
+#testimonialCarousel-ow .tns-nav > [aria-controls] {
+	margin: 5px !important;
+	width: 18px !important;
+	height: 18px !important;
+	background: #cdcdcd !important;
+}
+
+#testimonialCarousel-ow .tns-nav > .tns-nav-active {
+	background: #084b6d !important;
+}
+
+@media screen and (max-width: 1023px) {
+	.lp-carousel__testimonials .carousel__img .carousel__text p {
+		max-width: 100%;
+	}
+}
+{% endstylesheet %}
+
+{% schema %}
+  {
+    "name": "Testimonials",
+    "settings": [
+    ],
+	"blocks": [
+	  {
+        "name": "Parent Testimonial",
+	      "type": "testimonial",
+        "settings": [
+          {
+            "id": "rating",
+            "type": "range",
+            "label": "Rating",
+            "min": 1,
+            "max": 5,
+            "default": 5
+          },
+          {
+            "id": "heading",
+            "type": "text",
+            "label": "Heading"
+          },
+          {
+            "id": "content",
+            "type": "textarea",
+            "label": "Content"
+          },
+          {
+            "id": "source",
+            "type": "text",
+            "label": "Name"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Testimonials",
+        "category": "Dynamic"
+      }
+    ]
+  }
+{% endschema %}
+
+{% javascript %}
+{% endjavascript %}

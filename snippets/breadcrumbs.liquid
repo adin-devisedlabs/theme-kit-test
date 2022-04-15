@@ -1,0 +1,138 @@
+{%- assign divider = divider | default: '/' -%}
+{%- assign has_divider = has_divider | default: true -%}
+
+{%- if has_divider -%}
+    {%- capture divider_html -%}
+        <span class="breadcrumbs__divider">{{ divider }}</span>
+    {%- endcapture -%}
+{%- endif -%}
+
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+    {%- if template.name == "product" -%}
+        {% unless product.title contains 'Free' or product.title contains 'FREE' or product.type == 'hidden' %}
+            {%- if product.type != blank -%}
+                {% if product.type == 'bundles' %}
+                    {% capture collection_url %}
+                        {{shop.url}}/collections/gifts/bundles
+                    {% endcapture %}
+                {% else %}
+                    {% capture collection_url %}
+                        {{shop.url}}/collections/{{product.type}}
+                    {% endcapture %}
+                {% endif %}
+				<a href="/" title="{{ 'general.breadcrumbs.home_link_title' | t }}">
+					{{ 'general.breadcrumbs.home' | t }}
+					{{ divider_html }}
+				</a>
+                {{product.type | capitalize | link_to: collection_url}}
+                {{ divider_html }}
+            {%- endif -%}
+        {% endunless %}
+
+    {%- elsif template.name == "article" -%}
+        {{ blog.title | link_to: blog.url }}
+        {{ divider_html }}
+
+    {%- elsif template.name == "page" -%}
+        {%- if page.handle == 'squalane' or page.handle == 'ingredients' or page.handle == 'press' -%}
+            {% capture story_url %}
+                {{shop.url}}/pages/our-story
+            {% endcapture %}
+            {{ 'Our Story' | link_to: story_url }}
+            {{ divider_html }}
+        {%- else -%}
+            <a href="/" title="{{ 'general.breadcrumbs.home_link_title' | t }}">
+                {{ 'general.breadcrumbs.home' | t }}
+                {{ divider_html }}
+            </a>
+        {%- endif -%}
+    {%- else -%}
+        <a href="/" title="{{ 'general.breadcrumbs.home_link_title' | t }}">
+            {{ 'general.breadcrumbs.home' | t }}
+            {{ divider_html }}
+        </a>
+    {%- endif -%}
+
+    <span class="current breadcrumb-item">
+        {%- if template.name == "product" -%}
+            <h1>{{- product.title -}}</h1>
+        {%- elsif template.name == "article" -%}
+            <h1>{{- page_title -}}</h1>
+        {%- elsif template.name == "collection" -%}
+            {%- if collection.title == "Baby" -%}
+                <h1>Baby Skincare Products</h1>
+            {%- elsif collection.title == "Mom" -%}
+                <h1>Maternity Skincare Products</h1>
+            {%- elsif collection.title == "Family" -%}
+                <h1>Nontoxic and Clean Skincare Products for the Family</h1>
+            {%- elsif collection.title == "Pregnancy Care" -%}
+                <h1>Pregnanacy Safe Skincare</h1>
+            {%- else -%}
+                <h1>{{- collection.title -}}</h1>
+            {%- endif -%}
+        {% elsif search %}
+            <h1>Search:
+                {{ search }}
+                results found</h1>
+        {%- elsif page.title == blank -%}
+            <h1>{{ page_title }}</h1>
+        {%- else -%}
+            <h1>{{ page.title }}</h1>
+        {%- endif -%}
+    </span>
+</nav><!-- /.breadcrumbs -->
+
+{%- assign divider = '' -%}
+{%- assign divider_html = '' -%}
+{%- assign has_divider = '' -%}
+
+<style>
+	nav.breadcrumbs {
+    display: flex;
+		font-size: 14px;
+		letter-spacing: 0.03rem;
+		padding: 0 0 5px 3px;
+	}
+  nav.breadcrumbs h1 {
+    font-size: 14px;
+		letter-spacing: 0.03rem;
+    font-weight: 600;
+    font-family: "Basis Grotesque Pro", Arial, Helvetica, sans-serif;
+    line-height: 1.5;
+    padding-left: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+	nav.breadcrumbs a {
+		text-decoration: none;
+	}
+
+	nav.breadcrumbs a:hover {
+		font-weight: 600;
+		letter-spacing: 0.018rem;
+	}
+
+	nav.breadcrumbs span.current.breadcrumb-item {
+		font-weight: 600;
+        flex: 1;
+        min-width: 0;
+	}
+
+	nav.breadcrumbs .breadcrumbs__divider {
+		padding: 0 0.4rem;
+	}
+
+	nav.breadcrumbs:not(.product__container .breadcrumbs) {
+  		margin-left: 1rem;
+	}
+
+	@media (max-width: 767px) {
+		nav.breadcrumbs:not(.product__container .breadcrumbs), nav.breadcrumbs {
+			padding-left: 1rem;
+			margin-left: 5px;
+            max-width: 100vw;
+		}
+	}
+</style>

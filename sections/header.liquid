@@ -1,0 +1,394 @@
+{%- assign _section = section.settings -%}
+{%- assign section_main_menu = _section.main_menu -%}
+{%- assign section_header_color = _section.header_color -%}
+{%- assign promo_slider_enabled = _section.enable_promo_slider -%}
+{%- assign section_promo_color = _section.promo_color -%}
+
+<header class="header">
+  <a class="sr-only" href="/pages/accessibility-statement-and-assistance">Click to view our Accessibility Statement or contact us with accessibility related questions</a>
+  {% if _section.promo_banner_desktop != blank %}
+    <a href="{{_section.promo_banner_url}}">
+      <img src="{{_section.promo_banner_desktop | img_url: 'master'}}" class="hidden-xs promo_banner_image" alt={{section.promo_banner_alt_text}} />
+    </a>
+  {% endif %}
+  {% if _section.promo_banner_mobile != blank %}
+    <a href="{{_section.promo_banner_url}}">
+      <img src="{{_section.promo_banner_mobile | img_url: 'master'}}" class="visible-xs-block promo_banner_image" alt={{section.promo_banner_alt_text}} />
+    </a>
+  {% endif %}
+  {%- if promo_slider_enabled == true -%}
+    <div class="header__bar" {%- include "inline-style" bgcolor: section_promo_color -%}>
+      <div class="container">
+        <div id="promoSlider" class="promo-slider">
+          {% for block in section.blocks %}
+            {%- assign _block = block.settings -%}
+            <a href="{{_block.promo_url}}">{{_block.promo_text}}<span class="details-link">Details</span></a>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+  <div class="header__inner" {%- include "inline-style" bgcolor: section_header_color -%}>
+    <div class="container">
+      <div class="flex-row justify">
+        <div class="nav-trigger visible-xs-block">
+          <a href="#" aria-label="Nav Trigger">
+            <div class="nav-trigger__icon" style="padding-top: 0;">
+              {%- include 'svg-icons' with 'menu' -%}
+            </div>
+            <div class="nav-trigger__icon-close" style="top: 10px;">
+            </div>
+          </a>
+        </div><!-- /.nav-trigger -->
+        {%- include 'megamenu' -%}
+          <div class="logo">
+            <a href="/" aria-label="Pipette Baby Logo">
+              <span>
+                {%- include 'svg-icons' with 'logo' -%}
+              </span>
+            </a>
+          </div><!-- /.logo -->
+        <ul class="util-nav" style="display: flex;">
+          <li class="util-store-locator">
+            <a href="/pages/store-locator" aria-label="Store Locator Icon">
+              <img src="https://cdn.shopify.com/s/files/1/0140/8847/0614/files/store_locator_icon-07.png?v=1614144994" alt="store locator icon" class="store-locator-icon" style="width: 22px;margin-bottom: 0;"/>
+            </a>
+          </li>
+          <li class="util-search__form">
+            <form action="/search" method="get" role="search">
+              <a href="#" class="close" aria-label="Close Search Form">{% include 'svg-icons' with 'close' %}</a>
+              <input type="hidden" name="type" value="product">
+              <input type="search" name="q" id="q-{{ search_idx }}" value="{{ search.terms | escape }}" placeholder="{{ 'general.search.placeholder' | t }}" class="field" aria-label="Search Input">
+            </form>
+          </li>
+          <li class="util-search">
+            <a href="/search" aria-label="Search Icon">
+              {%- include 'svg-icons' with 'search' -%}
+            </a>
+          </li>
+          
+          <li class="util-account">
+            <a href="/account" aria-label="My Account Icon">
+              {%- include 'svg-icons' with 'user' -%}
+            </a>
+          </li>
+          
+          <li class="util-cart">
+            <a href="/cart" class="header__cart-icon" aria-label="Open mini-cart">
+              {%- include 'svg-icons' with 'cart' -%}
+              <span class="cart-count{% if cart.item_count > 0 %} visible{% endif %}">{{cart.item_count}}</span>
+            </a>
+          </li>
+        </ul><!-- /.util-nav -->
+      </div><!-- /.flex-row -->
+    </div><!-- /.container -->
+    {%- include 'mini-cart' -%}
+  </div><!-- /.header__inner -->
+  <div class="header__bottom visible-xs-block">
+    {%- assign section_menu = _section.menu -%}
+    {%- if section_menu != blank -%}
+      {%- include 'menu' handle: section_menu -%}
+    {%- endif -%}
+  </div>
+</header><!-- /.header -->
+
+<style>
+.header__bar .tns-outer {
+  max-width: {{ section.settings.max_width }}px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.header a.sr-only {
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.header .header__bottom {
+  overflow: auto;
+  width: 100%;
+  background-color: #fffefb;
+}
+
+.header .header__bottom ul {
+  display: flex;
+  list-style: none;
+  width: 100%;
+  margin-left: 10px;
+  padding-bottom: 5px;
+}
+.header .header__bottom ul li {
+  padding: 0 10px;
+}
+.header .header__bottom ul li a {
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.promo_banner_image {
+  width: 100%;
+  margin: 0;
+}
+
+#promoSlider > .tns-item {
+  font-size: 27px;
+  color: red;
+  font-weight: bold;
+  padding: 0 20px;
+}
+
+.promo-slider .details-link {
+  font-weight: normal;
+  text-decoration: underline;
+  padding-left: 0.5rem;
+}
+
+.header__bar [data-controls] {
+  border: 0;
+  padding: 10px;
+  position: absolute;
+  font-size: 14px;
+  margin-top: -6px;
+  z-index: 1;
+  background: transparent;
+}
+
+.header__bar [data-controls="prev"] {
+  left: 20px;
+}
+
+.header__bar [data-controls="next"] {
+  right: 20px;
+}
+
+.promo--arrow {
+  border: solid #778d87;
+  border-width: 0 3px 3px 0;
+  display: inline-block;
+  padding: 4px;
+}
+
+.promo--arrow.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.promo--arrow.left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+@media screen and (max-width: 499px) {
+  .header__bar .container {
+    padding: 0;
+  }
+
+  .header__inner .nav-trigger__icon svg {
+    max-width: 24px;
+  }
+
+  .promo-slider .details-link {
+    margin-right: 18px;
+  }
+
+  #promoSlider > .tns-item {
+    font-size: 12.5px;
+    padding: 0 5px;
+  }
+
+  .header__bar .tns-outer [data-controls] {
+    margin-top: -8px;
+    margin-right: 5px;
+  }
+
+  .header__bar .tns-outer [data-controls="prev"] {
+    left: 0;
+  }
+
+  .header__bar .tns-outer [data-controls="next"] {
+    right: 0;
+  }
+  .header .logo a svg {
+    max-width: 105px;
+  }
+}
+@media screen and (max-width: 370px) {
+  #promoSlider > .tns-item {
+    font-size: 12px;
+    padding: 0 4px;
+  }
+}
+
+</style>
+
+
+{% if section.settings.promo_banner_hide_hp %}
+<script>
+  if (window.location.pathname == '/') {
+    // console.log('home')
+    $('.header .promo_banner_image').hide();
+    $('.header .promo_banner_image').removeClass('visible-xs-block');
+  }
+</script>
+{% endif %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/tiny-slider.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/min/tiny-slider.js"></script>
+<script>
+  $(document).ready(function(){
+    var promoSlider = tns({
+      container: '#promoSlider',
+      items: 1,
+      controls: true,
+      controlsText: ['<i aria-label="Previous"></i>', '<i class="promo--arrow right" aria-label="Next"></i>'],
+      nav: false,
+      autoplay: {{section.settings.enable_autoslide}},
+      autoplayButtonOutput: false,
+      autoplayTimeout: {{section.settings.autoslide_time | times: 1000}},
+      autoplayHoverPause: {{section.settings.autoplayHoverPause}}
+    });
+  });  
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Mobile Sticky Top Nav"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Mobile Top Nav"
+    },
+    {
+      "type": "header",
+      "content": "Promo Bar Slider"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_promo_slider",
+      "label": "Enable Promo Slider",
+      "default": true
+    },
+    {
+      "type": "color",
+      "id": "promo_color",
+      "label": "Promo Background Color"
+    },
+    {
+      "id": "max_width",
+      "type": "range",
+      "min":       350,
+      "max":       750,
+      "step":      50,
+      "label": "Slider Max Width (pixels)",
+      "default":   500
+    },
+    {
+      "type":      "select",
+      "id":        "font_size_mob",
+      "label":     "Font Size (Mobile)",
+      "options": [
+        { "value": "11", "label": "11px"},
+        { "value": "12", "label": "12px"},
+        { "value": "13", "label": "13px"},
+        { "value": "14", "label": "14px"},
+        { "value": "15", "label": "15px"}
+      ],
+      "default":   "13"
+    },
+    {
+      "id": "enable_autoslide",
+      "type": "checkbox",
+      "label": "Enable Autoslide",
+      "default": true
+    },
+    {
+      "id": "autoslide_time",
+      "type": "range",
+      "min":       4,
+      "max":       12,
+      "step":      1,
+      "label": "Autoslide Time (seconds)",
+      "default":   5
+    },
+    {
+      "id": "autoplayHoverPause",
+      "type": "checkbox",
+      "label": "Pause Autoslide on hover",
+      "default": true
+    },
+    {
+      "type": "header",
+      "content": "Header"
+    },
+    {
+      "type": "link_list",
+      "id": "main_menu",
+      "label": "Main Menu"
+    },
+    {
+      "type": "color",
+      "id": "header_color",
+      "label": "Header Background Color"
+    },
+    {
+      "type": "header",
+      "content": "Promo Banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_banner_desktop",
+      "label": "Promo Banner (Desktop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "promo_banner_mobile",
+      "label": "Promo Banner (Mobile)"
+    },
+    {
+      "type": "text",
+      "id": "promo_banner_alt_text",
+      "label": "Promo Banner Alt Text"
+    },
+    {
+      "type": "checkbox",
+      "id": "promo_banner_hide_hp",
+      "label": "Hide Banner on HP"
+    },
+    {
+      "type": "url",
+      "id": "promo_banner_url",
+      "label": "Promo Banner URL"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Promo Bar Slide",
+      "type": "carousel",
+      "settings": [
+        {
+          "type": "text",
+          "id": "promo_text",
+          "label": "Slide text"
+        },
+        {
+          "type": "url",
+          "id": "promo_url",
+          "label": "Slide URL"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

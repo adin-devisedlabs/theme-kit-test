@@ -1,0 +1,24 @@
+{%- assign exclude = 'frontpage' | split: ',' -%}
+
+<div class="flex-row">
+	{%- include 'breadcrumbs' -%}
+</div>
+<div class="collections--default">
+	<div class="collection__head">
+		<h2>
+			{{- 'collections.general.title' | t -}}
+		</h2>
+	</div><!-- /.collection__head -->
+
+	<div class="collection__items">
+		{%- paginate collections by 10 -%}
+			{%- for collection in collections -%}
+				{%- if exclude contains collection.handle -%}
+					{%- continue -%}
+				{%- endif -%}
+
+				{%- include 'collection-item' _collection: collection -%}
+			{%- endfor -%}
+		{%- endpaginate -%}
+	</div><!-- /.collection__list -->
+</div>

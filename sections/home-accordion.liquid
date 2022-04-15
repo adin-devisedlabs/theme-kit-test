@@ -1,0 +1,198 @@
+
+<div class="accordion-section accordion-section--{{section.id}} animate">
+  {% if section.blocks.size > 1 %}
+    <span class="arrow"></span>
+    <span class="arrow arrow--prev"></span>
+  {% endif %}
+  <div class="flex-row justify">
+    {%- for block in section.blocks -%}
+      {%- assign _block = block.settings -%}
+      {%- assign block_top_title = _block.top_title -%}
+      {%- assign block_title = _block.title -%}
+      {%- assign block_product = all_products[_block.product] -%}
+      {%- assign block_price = _block.price -%}
+      {%- assign block_volume_size = _block.volume_size -%}
+      {%- assign block_content = _block.content -%}
+      {%- assign block_image = _block.image -%}
+      {%- assign block_background_color = _block.background_color -%}
+
+      <div class="accordion-item{% if forloop.first %} active{% endif %}" {%- include 'inline-style' bgcolor: block_background_color -%}>
+        <div class="inner">
+          <div class="side-text">
+            <span class="text">
+              <span>{{block_title}}</span>
+            </span>
+          </div><!-- /.side-text -->
+          <div class="accordion-item__content">
+            {%- if block_top_title != blank -%}
+              <h6>{{ block_top_title }}</h6>
+            {%- endif -%}
+            {%- if block_title != blank -%}
+              <a href="{{block_product.url}}">
+                <h2>{{ block_title }}</h2>
+              </a>
+            {%- endif -%}
+            <div class="mobile-image visible-xs-block">
+              {%- if forloop.first -%}
+                {%- assign prev_block = section.blocks | last -%}
+              {%- else -%}
+                {%- assign prev_index = forloop.index0 | minus: 1 -%}
+                {%- assign prev_block = section.blocks[prev_index] -%}
+              {%- endif -%}
+              {%- assign prev_image = prev_block.settings.mobile_arrow -%}
+              {%- if prev_image != blank -%}
+                <span class="arrow-prev" style="background-image: url({{ prev_image | img_url: '300x' }})"></span>
+              {%- else -%}
+                <span class="arrow-prev"></span>
+              {%- endif -%}
+                
+              
+
+              <a href="{{block_product.url}}">
+                {%- include 'lazyload-image' _image: block_image, original_width: '600' -%}
+              </a>
+
+              {%- if forloop.last -%}
+                {%- assign next_block = section.blocks | first -%}
+              {%- else -%}
+                {%- assign next_index = forloop.index0 | plus: 1 -%}
+                {%- assign next_block = section.blocks[next_index] -%}
+              {%- endif -%}
+              {%- assign next_image =  next_block.settings.mobile_arrow -%}
+              {%- if next_image != blank -%}
+                <span class="arrow-next" style="background-image: url({{ next_image | img_url: '300x' }})"></span>
+              {%- else -%}
+                <span class="arrow-next"></span>
+              {%- endif -%}
+            </div><!-- /.mobile-image -->
+            <span class="stamped-product-reviews-badge stamped-main-badge" data-id="{{block_product.id}}" style="display: block;"></span>
+            
+            <div class="price">
+              <strong>{{ block_price | default: block_product.price | money_without_trailing_zeros }}</strong>
+              {%- if block_volume_size != blank -%}
+                <span>{{ block_volume_size }}</span>
+              {%- endif -%}
+            </div><!-- /.price -->
+            <div class="accordion-content-wrapper">
+              {{block_content}}
+            </div>
+            {%- assign shop_now = 'products.product.shop_now' | t -%}
+            {%- include 'link' url: block_product.url, text: shop_now, btn_border: true -%}
+          </div><!-- /.accordion-item__content -->
+          <div class="accordion-item__image">
+            <a href="{{block_product.url}}">
+              {%- include 'lazyload-image' _image: block_image, original_width: '1024'-%}
+            </a>
+          </div><!-- /.accordion-item__image -->
+        </div><!-- /.inner -->
+      </div><!-- /.accordion-item -->
+    {%- endfor -%}
+  </div><!-- /.flex-row -->
+</div><!-- /.accordion-section -->
+
+<style type="text/css" media="screen">
+  .accordion-section--{{section.id}} .accordion-item.active {
+    flex-basis: calc(100% - 129*{{section.blocks.size | minus: 1}}px);
+    max-width: calc(100% - 129*{{section.blocks.size | minus: 1}}px);
+  }
+
+  .accordion-section--{{section.id}} .inner {
+    width: calc(100vw - 129*{{section.blocks.size}}px - 17px); 
+  }
+
+  .accordion-section--{{section.id}} .accordion-item__content a {
+    text-decoration: none;
+  }
+
+  .accordion-content-wrapper {
+    margin-bottom: 40px;
+  }
+
+  .accordion-content-wrapper p {
+    margin-bottom: 10px;
+  }
+
+  .accordion-content-wrapper p:first-child {
+    margin-bottom: 0;
+  }
+  
+
+  @media screen and (max-width: 1024px) {
+    .accordion-section--{{section.id}} .accordion-item.active {
+      flex-basis: calc(100% - 60*{{section.blocks.size | minus: 1}}px);
+      max-width: calc(100% - 60*{{section.blocks.size | minus: 1}}px);
+    }
+
+    .accordion-section--{{section.id}} .inner {
+      width: calc(100vw - 60*{{section.blocks.size}}px - 17px); 
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Accordion",
+  "blocks": [
+    {
+      "type": "accordion",
+      "name": "Accordion",
+      "settings": [
+        {
+          "type": "text",
+          "id": "top_title",
+          "label": "Top Title"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "info": "Enter amount in cents ($5 = 500)"
+        },
+        {
+          "type": "text",
+          "id": "volume_size",
+          "label": "Volume"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "color",
+          "id": "background_color",
+          "label": "Background Color"
+        },
+        {
+          "type": "image_picker",
+          "id": "mobile_arrow",
+          "label": "Mobile Arrow Image",
+          "info": "This image will be used for the slider arrow preview"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Accordion",
+      "category": "Dynamic"
+    }
+  ]
+}
+
+{% endschema %}

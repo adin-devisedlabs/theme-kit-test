@@ -1,0 +1,202 @@
+<div class="locations__main">
+  <header class="locations__head">
+    {%- if section.settings.banner_mobile -%}
+      <div class="locations__image" style="background: url('{{ section.settings.banner_desktop | img_url: '2x' }}') center top no-repeat;">
+        {{ section.settings.banner_mobile | img_url: '500x' | img_tag: section.settings.banner_mobile.alt }}
+      </div>
+    {% endif %}
+
+    <div class="locations__meta">
+      <div class="locations__meta__inner">
+        <img src="https://cdn.shopify.com/s/files/1/0140/8847/0614/files/Pipette_CVS_Logo.png?v=1612814941" alt="Pipette CVS Logo" />
+        <h2 class="locations__title">
+          Buy Pipette at your local CVS.
+        </h2>
+
+        <a href="/pages/store-locator">
+          <button class="btn btn--border">Check out our Store Locator</button>
+        </a>
+
+      </div>
+    </div><!-- /.locations__meta -->
+  </header>
+  <div class="locations__grid">
+    <div class="locations__grid__inner">
+      {% for block in section.blocks %}
+        <div class="locations__listing {% if forloop.last == true %}full-width-mobile{% endif %}" style="background-color: {{block.settings.location_bg}}">
+          <img src="https://cdn.shopify.com/s/files/1/0140/8847/0614/files/cvs_logo.png?v=1613755972" alt="CVS logo" class="locations__cvs-logo" />
+          <h6 class="locations__listing-name">{{block.settings.location_name}}</h6>
+          <p class="locations__listing-info">{{block.settings.location_info}}</p>
+          <img src="https://cdn.shopify.com/s/files/1/0140/8847/0614/files/pipette_logo_0715e02f-ac02-4708-b1e2-bddf482582af.png?v=1614192401" alt="Pipette Logo" class="locations__pipette-logo" />
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="locations__cta-wrapper">
+    <a href="/pages/store-locator">
+      <button class="btn btn--border">Check out our Store Locator</button>
+    </a>
+  </div>
+</div>
+
+<style>
+  .locations__head {
+    display: grid;
+  }
+  .locations__image img {
+    display: none;
+  }
+  .locations__meta {
+    align-items: center;
+    background: #fafaf2;
+    display: flex;
+    text-align: center;
+  }
+  .locations__meta__inner {
+    font-size: .875em;
+    padding: 2em;
+    position: relative;
+    width: 100%;
+  }
+  .locations__meta__inner a {
+    text-decoration: none;
+  }
+  .locations__title {
+    margin-top: 20px;
+    margin-bottom: 30px !important;
+  }
+  .locations__eyebrow {
+    margin: 20px 0;
+  }
+  .locations__meta .btn {
+    background: transparent;
+  }
+  .locations__grid {
+    /* max-width: 1600px;
+    margin: 0 auto; */
+  }
+  .locations__grid__inner {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .locations__listing {
+    flex-basis: 33.33%;
+    width: 33.33%;
+    text-align: center;
+    padding: 50px 20px;
+  }
+  .locations__cvs-logo {
+    max-width: 80px;
+    margin-bottom: 20px;
+  }
+  .locations__pipette-logo {
+    max-width: 90px;
+    margin-top: 10px;
+  }
+  .locations__cta-wrapper {
+    text-align: center;
+    padding: 50px 30px;
+    background: #f6f8f0;
+  }
+  .locations__cta-wrapper a { 
+    text-decoration: none;
+  }
+  .locations__cta-wrapper .btn {
+    background: transparent
+  }
+
+  @media screen and (min-width: 2000px) {
+    .locations__image {
+      height: 50vh;
+    }
+    .locations__listing {
+      padding: 4vw 2vw;
+    }
+  }
+  
+  @media screen and (min-width: 900px) {
+    .locations__head {
+      grid-template-columns: 65% 35%;
+    }
+  }
+  @media screen and (min-width: 768px) {
+    .locations__image {
+      background-size: cover !important;
+      height: 75vh;
+    }
+    .locations__listing-name, .locations__listing-info {
+      font-size: 1em;
+    }
+    .locations__grid {
+      /* margin: 70px; */
+    }
+  }
+  @media screen and (max-width: 767px) {
+    .locations__image {
+      background-image: none !important;
+    }
+    .locations__image img {
+      display: block;
+      margin-bottom: 0;
+      width: 100%;
+    }
+    .locations__listing {
+      flex-basis: 50%;
+      width: 50%;
+    }
+    .locations__listing-name {
+      font-size: 14px;
+    }
+    .locations__listing-info {
+      font-size: .75em;
+    }
+    .locations__cvs-logo {
+      max-width: 50px;
+    }
+    .full-width-mobile {
+      flex-basis: 100%;
+      max-width: 100%;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "CVS Locations",
+  "settings": [
+    {
+      "id": "banner_desktop",
+      "type": "image_picker",
+      "label": "Desktop Image"
+    },
+    {
+      "id": "banner_mobile",
+      "type": "image_picker",
+      "label": "Mobile Image"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Location",
+      "type": "location",
+      "settings": [
+        {
+          "type": "text",
+          "id": "location_name",
+          "label": "Location Name"
+        },
+        {
+          "type": "textarea",
+          "id": "location_info",
+          "label": "Location Info"
+        },
+        {
+          "type": "color",
+          "id": "location_bg",
+          "label": "Background Color"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

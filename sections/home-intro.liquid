@@ -1,0 +1,97 @@
+{%- assign _section = section.settings -%}
+{%- assign section_background_color = _section.background_color -%}
+{%- assign section_image = _section.image -%}
+{%- assign section_mobile_image = _section.mobile_image | default: section_image -%}
+{%- assign section_title = _section.title -%}
+{%- assign section_content = _section.content -%}
+{%- assign section_link_url = _section.link_url -%}
+{%- assign section_link_text = _section.link_text -%}
+{%- assign section_bottom_text = _section.bottom_text -%}
+
+<div class="intro animate lazyload" {%- include 'inline-style' bgcolor: section_background_color -%} data-bg="url({{section_image | img_url: '2048x'}})">
+  {%- if section_mobile_image -%}
+    <div class="mobile-image visible-xs-block">
+      {%- include 'lazyload-image' _image: section_mobile_image, original_width: '600' -%}
+    </div><!-- /.mobile-image -->
+  {%- endif -%}
+  <div class="intro__content left-padding">
+    {%- if section_title != blank -%}
+      <h2 class="title--large">{{section_title}}</h2>
+    {%- endif -%}
+    {{ section_content }}
+    {%- include 'link' url: section_link_url, text: section_link_text, btn_border: true -%}
+  </div><!-- /.intro__content -->
+  {%- if section_bottom_text != blank -%}
+    <div class="intro__bottom">
+      <span class="cloud">
+        {%- include 'svg-icons' with 'cloud' -%}
+      </span>
+      <div class="intro__text">
+        {{ section_bottom_text }}
+      </div>
+      <div class="frog">
+        <span class="eye eye--left">
+          <i></i>
+        </span>
+        <span class="eye eye--right">
+          <i></i>
+        </span>
+      </div><!-- /.frog -->
+    </div><!-- /.intro__bottom -->
+  {%- endif -%}
+</div><!-- /.intro -->
+
+{% schema %}
+{
+  "name": "Intro",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#fffefb"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile Image"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link Text"
+    },
+    {
+      "type": "textarea",
+      "id": "bottom_text",
+      "label": "Bottom Text"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Intro",
+      "category": "Static"
+    }
+  ]
+}
+{% endschema %}

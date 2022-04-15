@@ -1,0 +1,43 @@
+{%- assign output = '' -%}
+{%- assign echo = echo | default: true -%}
+{%- assign __product = price | default: _product -%}
+
+{%- if __product != empty -%}
+	{%- if echo == true -%}
+    {% if __product.compare_at_price > __product.price %}
+      <del class="price__amount was-price">
+        <span class="money">
+          {{- __product.compare_at_price | money_without_trailing_zeros -}}
+        </span>
+      </del>
+    {%- endif -%}
+    <ins class="price__amount current">
+      <span class="money">
+        {% if __product.price_varies == true %}
+          {{ __product.price | money_without_trailing_zeros}} - {{ __product.price_max | money_without_trailing_zeros}}
+        {% else %}
+          {{- __product.price | money_without_trailing_zeros -}}
+        {% endif %}
+      </span>
+    </ins>
+    <del class="price__amount meta_price_value">
+        <span class="money">
+          {% if product.variants.size > 1 and  _product.metafields.variant.price_value != blank %}
+            (Value:&nbsp;{{- _product.metafields.variant.price_value | times: 100 | money_without_trailing_zeros -}})
+          {% elsif product.metafields.product.price_value != blank %}
+            (Value:&nbsp;{{- product.metafields.product.price_value | times: 100 | money_without_trailing_zeros -}})
+          {% elsif _product.metafields.product.price_value != blank %}
+            (Value:&nbsp;{{- _product.metafields.product.price_value | times: 100 | money_without_trailing_zeros -}})
+          {%- endif -%}
+        </span>
+    </del>
+	{%- else -%}
+		{%- capture output -%}
+			{%- include 'price' with __product, echo: true -%}
+		{%- endcapture -%}
+
+		{%- assign output = output | strip_newlines | remove: '	' | replace: '"', "'" -%}
+	{%- endif -%}
+{%- endif -%}
+
+{%- assign __product = '' -%}

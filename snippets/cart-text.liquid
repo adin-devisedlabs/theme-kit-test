@@ -1,0 +1,15 @@
+{% unless settings.cart_options == 'none' %}
+	<a href="/cart">
+		{% if settings.cart_options == 'icon_with_qunatity'  %}
+			<i class='fa fa-shopping-bag' aria-hidden='true'></i>
+			<span class="cart-quantity">{{ cart.item_count }}</span>
+		{% else %}
+			Cart 
+			{% unless settings.cart_options == 'only_text' %}
+				{% if cart.item_count > 0 %}
+					({{ cart.item_count }} {{ cart.item_count | pluralize: 'item', 'items' }} {% if settings.cart_options == 'text_with_price_quantity'  %}{{ cart.total_price | money }}{% endif %})
+				{% endif %}
+			{% endunless %}
+		{% endif %}
+	</a>
+{% endunless %}

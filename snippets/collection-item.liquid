@@ -1,0 +1,13 @@
+{%- assign collection_image = _collection.image | default: _collection.products.first.featured_image -%}
+
+<div class="collection__item">
+	<a href="{{ _collection.url }}" class="collection__item-link">
+		<span class="collection__item-image" style="background-image: url({{ collection_image | img_url: '600x' }})"></span>
+	</a>
+
+	<h4 class="collection__item-title">
+		<a href="{{ _collection.url }}">
+			{{- _collection.title -}}
+		</a>
+	</h4>
+</div><!-- /.collection__item -->

@@ -1,0 +1,657 @@
+
+{%- assign _section = section.settings -%}
+
+{%- for block in section.blocks -%}
+  {%- if block.type == 'carousel' -%}
+    {%- assign carouselCount = carouselCount | plus: 1 -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- if _section.show_afterpay -%}
+  <div class="afterpay promo__banner" style="background-color: {{_section.promoBgColor}};">
+    <img src="{{ _section.promo_logo | img_url: 'master' }}" alt="Afterpay logo" class="logo">
+    <p>is here. Upgrade the way you pay. </p>
+    {%- include 'link' url: _section.promo_link_url, text: _section.promo_link_text, tabindex: true, custom_class: 'afterpay' -%}
+  </div>
+{%- endif -%}
+
+{%- for block in section.blocks -%}
+  {%- assign _block = block.settings -%}
+  {%- if carouselCount > 0 and forloop.index == 1 -%}
+    <div class="carousel-alt carousel--hero offers" id="hpHeroCarouselAlt" role="banner">
+  {%- endif -%}
+  <div class="carousel__img" onClick="linkHeroBanner('{{_block.link_url}}')" onkeyup="linkHeroBanner('{{_block.link_url}}')">
+    <div
+      class="intro animate animated offers lazyload"
+      data-bg="url({{_block.image | img_url: '2048x'}})"
+      {% if _block.text_align == 'right' %}
+        style="justify-content: flex-end;background-position:right;"
+      {% elsif _block.text_align == 'center' %}
+        style="justify-content: center"
+      {% endif %}
+    >
+        {%- if _block.imageMob -%}
+          <div class="mobile-image visible-xs-block">
+            {%- include 'lazyload-image' _image: _block.imageMob, original_width: '600' -%}
+          </div><!-- /.mobile-image -->
+        {%- endif -%}
+        <!-- <div class="intro__content left-padding {% if _block.align_right %}right-padding right-text-align{% endif %} {% if _block.hide_text_desktop %}visible-xs-block{% endif %}"> -->
+        <div
+          class="intro__content
+          {% if _block.text_align == 'left' %}
+            left-padding
+          {% elsif _block.text_align == 'right' %}
+            right-padding
+            {% if _block.text_align_left == false%}right-text-align{% endif %}
+          {% elsif _block.text_align == 'center' %}
+              center-text-align
+          {% endif %}
+          {% if _block.text_align_left %}
+            left-text-align
+          {% endif %}
+          {% if _block.hide_text_desktop %}
+            visible-xs-block
+          {% endif %}"
+          style="color: {{block.settings.text_color}};"
+        >
+          {%- if _block.eyebrow != blank -%}
+            <h1 class="ada-fix">{{_block.eyebrow}}</h1>
+          {%- endif -%}
+          {%- if _block.title != blank or _block.title_bold != blank -%}
+            <h2 class="hidden-xs title--large">
+              {%- if _block.title_bold != blank -%}
+                <span class="hidden-xs bold">{{_block.title_bold}}</span>
+              {%- endif -%}
+              {%- if _block.title != blank -%}
+                {{_block.title}}
+              {%- endif -%}
+            </h2>
+          {%- endif -%}
+          {%- if _block.title_mobile != blank or _block.title_mobile_bold != blank -%}
+            <h2 class="visible-xs-block title--large">
+              {%- if _block.title_mobile_bold != blank -%}
+                <span class="visible-xs-block bold">{{_block.title_mobile_bold}}</span>
+              {%- endif -%}
+              {%- if _block.title_mobile != blank -%}
+                {{_block.title_mobile}}
+              {%- endif -%}
+            </h2>
+          {%- endif -%}
+          {%- if _block.subheader_text != blank -%}
+            <h3>{{_block.subheader_text}}</h3>
+          {%- endif -%}
+
+          {%- if _block.promo_above != blank -%}
+            <p class="intro__promo hidden-xs">{{ _block.promo_above }}</p>
+          {%- endif -%}
+          {%- if _block.promo_above_mobile != blank -%}
+            <p class="intro__promo visible-xs-block">{{ _block.promo_above_mobile }}</p>
+          {%- endif -%}
+
+          <p class="{% if _block.content_mobile != blank %}hidden-xs{% endif %} {% if _block.align_right != blank %}right-float{% endif %}">{{ _block.content }}</p>
+
+          {%- if _block.promo != blank -%}
+            <p class="intro__promo">{{ _block.promo }}</p>
+          {%- endif -%}
+          {% if _block.disclaimer_text_2 != blank %}
+            <p class="intro__disclaimer no-top-margin">{{_block.disclaimer_text_2}}</p>
+          {% endif %}
+
+          <div class="clear-both"></div>
+          {%- include 'link' url: _block.link_url, text: _block.link_text, tabindex: true, btn_border: true, border_color: {{block.settings.text_color}} -%}
+          {% if _block.content_mobile != blank %}
+            <p class="visible-xs-block {% if _block.align_right != blank %}right-float{% endif %}">{{ _block.content_mobile }}</p>
+          {% endif %}
+          {% if _block.disclaimer_text != blank %}
+            <p class="intro__disclaimer">{{_block.disclaimer_text}}</p>
+          {% endif %}
+        </div><!-- /.intro__content -->
+        {%- if _block.bottom_text != blank -%}
+          <div class="intro__bottom {% if _block.align_right %}right-float{% endif %}" {% if _block.align_right %}style="margin-right: {{_block.bottom_section_margin_right}}% !important;"{% endif %}>
+            <span class="cloud">
+              {%- include 'svg-icons' with 'cloud' -%}
+            </span>
+            <div class="intro__text">
+              {{ _block.bottom_text }}
+            </div>
+            <div class="frog">
+              <span class="eye eye--left">
+                <i></i>
+              </span>
+              <span class="eye eye--right">
+                <i></i>
+              </span>
+            </div><!-- /.frog -->
+          </div><!-- /.intro__bottom -->
+        {%- endif -%}
+      </div><!-- /.intro -->
+  </div>
+
+  {%- if carouselCount > 0 and forloop.index == carouselCount -%}
+    </div>
+  {%- endif -%}
+{%- endfor -%}
+
+<style>
+/* custom styles to fix ADA hierarchical RED issue */
+h1.ada-fix {
+  font-size: 20px;
+  font-weight: 900;
+  font-family: "Basis Grotesque Pro",Arial,Helvetica,sans-serif;
+  letter-spacing: 1.8px;
+  margin-bottom: 40px;
+}
+.afterpay.promo__banner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: black;
+}
+.afterpay.promo__banner img.logo {
+  width: 110px;
+  margin-bottom: 0;
+  margin-right: 0.5rem;
+}
+.afterpay.afterpay.promo__banner p {
+  margin-bottom: 0;
+  font-size: 15px;
+}
+.afterpay.promo__banner .afterpay.btn {
+  border-left: none;
+  text-decoration: underline;
+  padding: 14px 0.5rem 12px;
+  font-size: 15px;
+}
+.afterpay.promo__banner .afterpay.btn:hover {
+  color: black;
+}
+.afterpay.promo__banner .afterpay.btn:hover {
+  text-decoration: none;
+}
+.afterpay.promo__banner .afterpay.btn:hover::after, .afterpay.promo__banner .afterpay.btn:hover::before {
+  border: unset;
+}
+.carousel-alt .intro {
+  display: flex;
+  padding: 0;
+  height: 900px;
+  min-height: 100vh;
+}
+
+.carousel-alt .intro .intro__content {
+  align-self: center;
+  max-width: 50%;
+}
+
+.carousel-alt .intro h2.title--large {
+  margin-bottom: 25px;
+}
+
+.carousel-alt .intro h2.title--large span.bold {
+  font-weight: normal;
+}
+
+.carousel-alt .intro h2.title--large span.bold.hidden-xs {
+  padding-right: 15px;
+}
+
+.intro__content h3 {
+  font-family: "Basis Grotesque Pro", Arial, Helvetica, sans-serif;
+}
+
+#hpHeroCarouselAlt > .tns-item {
+  font-size: 20px;
+}
+
+.intro__promo {
+  margin-top: 40px;
+  font-size: 25px;
+  line-height: 35px;
+}
+
+.intro__disclaimer {
+  font-size: .75em;
+  margin-top: 40px;
+}
+
+.intro .intro__disclaimer.no-top-margin {
+  margin-top: -10px;
+}
+
+.carousel__img {
+  cursor: pointer;
+}
+
+.tns-outer {
+  position: relative;
+}
+
+.tns-nav {
+  margin: 10px 0 !important;
+  position: absolute !important;
+  text-align: center !important;
+  transform: translateX(-50%) !important;
+  z-index: 1 !important;
+  bottom: unset !important;
+  left: unset !important;
+  right: 1% !important;
+  display: grid !important;
+  top: 42% !important;
+}
+
+.tns-nav > [aria-controls] {
+  padding: 0 !important;
+  border-radius: 50% !important;
+  border: 0 !important;
+  margin: 5px !important;
+  width: 18px !important;
+  height: 18px !important;
+  background: #cdcdcd !important;
+}
+
+.tns-nav > .tns-nav-active {
+  background: #084b6d !important;
+}
+
+.intro__bottom {
+  visibility: hidden;
+}
+
+.tns-nav > .tns-nav-active {
+  background: #084b6d !important;
+}
+.right-text-align {
+  text-align: right;
+}
+.left-text-align {
+  text-align: left;
+}
+.right-float {
+  float: right;
+}
+.center-text-align {
+  text-align: center;
+  margin: 0 auto 40px;
+}
+.carousel__img .intro {
+  background-position: center;
+}
+.intro p {
+  max-width: 440px;
+}
+.intro__content.left-padding {
+  text-align: left;
+}
+.intro__content h6 {
+  margin-bottom: 45px;
+  font-size: 27px;
+}
+
+@media screen and (min-width: 768px) and (max-width: 1300) {
+  .carousel-alt .intro .intro__content {
+    align-self: flex-end;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .intro__content h6 {
+    font-size: 20px;
+  }
+  .carousel-alt .intro h2.title--large {
+    font-size: 64px;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .carousel-alt .into .intro__content {
+    max-width: 500px;
+  }
+}
+
+@media screen and (min-width: 768px) and (max-width: 850px) {
+  .intro h2.title--large {
+    font-size: 70px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .intro.offers {
+    background-image: none !important;
+  }
+  .intro.offers .intro__content {
+    padding-top: 0.5rem;
+  }
+  .carousel-alt .intro.offers .intro__content {
+    padding-bottom: 2rem;
+  }
+  .intro__content h2 {
+    font-size: 32px;
+  }
+  .intro__content h3 {
+    font-size: 22px;
+  }
+  .tns-outer#hpHeroCarouselAlt-ow {
+    padding-bottom: 30px !important;
+  }
+
+  .tns-nav {
+    top: 63vw !important;
+    bottom: unset !important;
+    left: 50% !important;
+    right: unset !important;
+    display: block !important;
+  }
+
+  .tns-nav > [aria-controls] {
+    border: 1px solid #084b6d !important;
+    background: transparent !important;
+    width: 9px !important;
+    height: 9px !important;
+    padding: 0 !important;
+    margin: 0 5px !important;
+    border-radius: 50% !important;
+  }
+
+  .tns-nav > .tns-nav-active {
+    border: 1px solid #084b6d !important;
+    background: #084b6d !important;
+  }
+
+  .carousel__img .intro__bottom {
+    display: none;
+  }
+
+  .carousel-alt .intro {
+    display: block;
+    height: auto;
+    min-height: unset;
+  }
+
+  .carousel-alt .intro .intro__content {
+    max-width: 100%;
+    text-align: left;
+    color: #084b6d !important;
+  }
+
+  .intro__content .intro__promo {
+    font-size: 20px;
+    line-height: 32px;
+    margin-top: -10px;
+  }
+
+  .intro__content {
+    padding-top: 21px;
+  }
+  .carousel-alt .intro .intro__content.center-text-align {
+    text-align: center;
+  }
+  .carousel-alt .intro .intro__content.right-text-align {
+    text-align: center;
+  }
+  .carousel-alt .intro .intro__content.left-text-align {
+    text-align: left;
+  }
+
+  .intro__content {
+    color: #084b6d !important;
+  }
+
+  .intro__content h6 {
+    display: none;
+  }
+  .intro__content h2.title--large, .carousel-alt .intro h2.title--large {
+    font-size: 32px;
+    margin-bottom: 1rem !important;
+  }
+  .intro__content h3 {
+    font-size: 20px;
+    font-family: "Basis Grotesque Pro", Arial, Helvetica, sans-serif;
+  }
+  .intro__content .intro__promo {
+    margin-top: -10px;
+  }
+  .intro .mobile-image {
+    margin-bottom: 10px;
+  }
+  .intro p {
+    margin-bottom: 20px;
+    margin-top: 1.5rem;
+  }
+  .afterpay.promo__banner .afterpay.btn {
+    width: unset;
+    border: none;
+  }
+}
+@media screen and (max-width: 500px) {
+    .afterpay.promo__banner {
+      flex-wrap: wrap;
+    }
+    .afterpay.promo__banner img.logo, .afterpay.afterpay.promo__banner p {
+      padding-top: 1rem;
+    }
+    .afterpay.promo__banner .afterpay.btn {
+      padding-top: 0;
+    }
+  }
+
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.1/tiny-slider.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.1/min/tiny-slider.js"></script>
+<script>
+  $(document).ready(function(){
+    var heroSlider = tns({
+      container: '.carousel-alt',
+      items: 1,
+      controls: false,
+      autoplay: {{section.settings.enable_autoslide}},
+      autoplayButtonOutput: false,
+      autoplayTimeout: {{section.settings.autoslide_time | times: 1000}},
+      autoplayHoverPause: {{section.settings.autoplayHoverPause}}
+    });
+
+    const url = window.location.href
+    const hasSlideParam = url.indexOf('promo-slide=') !== -1;
+    if (hasSlideParam) {
+      const slideNumber = url.split('promo-slide=')[1] - 1;
+      heroSlider.goTo(slideNumber);
+    }
+
+  });
+
+  function linkHeroBanner(link) {
+    window.location.href = link;
+  }
+</script>
+
+{% schema %}
+{
+  "name": "HP Carousel Alt",
+  "settings": [
+    {
+      "id": "show_afterpay",
+      "type": "checkbox",
+      "label": "Show Afterpay Banner",
+      "default": false
+    },
+    {
+      "id": "promoBgColor",
+      "type": "color",
+      "label": "Promo Banner Background Color"
+    },
+    {
+      "id": "promo_logo",
+      "type": "image_picker",
+      "label": "Promo Logo"
+    },
+    {
+      "type": "url",
+      "id": "promo_link_url",
+      "label": "Promo Banner Link URL"
+    },
+    {
+      "type": "text",
+      "id": "promo_link_text",
+      "label": "Promo Banner Link Text",
+      "default": "Learn more"
+    },
+    {
+      "id": "enable_autoslide",
+      "type": "checkbox",
+      "label": "Enable Autoslide"
+    },
+    {
+      "id": "autoslide_time",
+      "type": "range",
+      "min":       2,
+      "max":       12,
+      "step":      1,
+      "label": "Autoslide Time (Seconds)",
+      "default":   5
+    },
+    {
+      "id": "autoplayHoverPause",
+      "type": "checkbox",
+      "label": "Pause Autoslide on hover"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Carousel image",
+      "type": "carousel",
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Image"
+        },
+        {
+          "id": "imageMob",
+          "type": "image_picker",
+          "label": "Image (Mobile)"
+        },
+        {
+          "id": "bgColor",
+          "type": "color",
+          "label": "Background Image Color"
+        },
+        {
+          "id": "text_color",
+          "type": "color",
+          "label": "Text Color",
+          "default": "#094A6E"
+        },
+        {
+          "id": "eyebrow",
+          "type": "text",
+          "label": "Eyebrow Text"
+        },
+        {
+          "id": "title_bold",
+          "type": "text",
+          "label": "Title (Desktop) - Bold"
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Title (Desktop)"
+        },
+        {
+          "id": "title_mobile_bold",
+          "type": "text",
+          "label": "Title (Mobile) - Bold"
+        },
+        {
+          "id": "title_mobile",
+          "type": "text",
+          "label": "Title (Mobile)"
+        },
+        {
+          "type": "text",
+          "id": "subheader_text",
+          "label": "Subheader Text"
+        },
+        {
+          "id": "promo_above",
+          "type": "textarea",
+          "label": "Promo (Desktop Only)"
+        },
+        {
+          "id": "promo_above_mobile",
+          "type": "textarea",
+          "label": "Promo (Mobile Only)"
+        },
+        {
+          "id": "content",
+          "type": "textarea",
+          "label": "Content (Desktop)"
+        },
+        {
+          "id": "content_mobile",
+          "type": "textarea",
+          "label": "Content (Mobile)"
+        },
+        {
+          "id": "promo",
+          "type": "textarea",
+          "label": "Promo"
+        },
+        {
+          "type": "textarea",
+          "id": "disclaimer_text_2",
+          "label": "Disclaimer Text"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Link URL"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link Text"
+        },
+        {
+          "type": "textarea",
+          "id": "disclaimer_text",
+          "label": "Disclaimer Text"
+        },
+        {
+          "type":      "select",
+          "id":        "text_align",
+          "label":     "Text Position",
+          "options": [
+            { "value": "left", "label": "Left"},
+            { "value": "center", "label": "Center"},
+            { "value": "right", "label": "Right"}
+          ],
+          "default":   "left"
+        },
+        {
+          "type": "checkbox",
+          "id": "text_align_left",
+          "label": "Text Align Left?",
+          "default": true
+        },
+        {
+          "type": "checkbox",
+          "id": "hide_text_desktop",
+          "label": "Hide Text on Desktop",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "bottom_section_margin_right",
+          "label": "Bottom Animation Margin Right",
+          "unit": "%",
+          "min": 10,
+          "max": 70,
+          "step": 1,
+          "default": 13
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,107 @@
+
+<div class="container">
+  <h3>{{ section.settings.header }}</h3>
+  <div class="sl-icon-container">
+    {% for block in section.blocks %}
+    <div class="sl-icon-wrapper">
+      <a href="{{block.settings.icon_link}}" target="_blank" aria-label="Store Link {{forloop.index}}">
+        <img src="{{block.settings.icon_image | img_url: 'master'}}" {% if forloop.index == 2 %} style="max-width: 220px;" {% elsif forloop.index == 3 %} style="max-width: 120px;"{% endif %}>
+      </a>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% stylesheet %}
+#shopify-section-page-store-locator-template .container {
+	text-align: center;
+	padding: 80px 20px;
+	background: #d1e0c9;
+	max-width: none;
+}
+
+#shopify-section-page-store-locator-template .container .sl-icon-container {
+	max-width: 1400px;
+	margin: 0 auto;
+	margin-top: 80px;
+}
+
+#shopify-section-page-store-locator-template .container .sl-icon-wrapper {
+	display: inline-block;
+	width: 19%;
+}
+
+#shopify-section-page-store-locator-template .container .sl-icon-wrapper img {
+	max-width: 200px;
+}
+
+@media screen and (min-width: 1025px) {
+	#shopify-section-page-store-locator-template .container .sl-icon-wrapper:nth-child(3) {
+		width: 10%;
+	}
+}
+
+@media screen and (max-width: 1024px) {
+	#shopify-section-page-store-locator-template .container .sl-icon-wrapper {
+		width: 48%;
+		padding: 20px;
+	}
+}
+
+@media screen and (max-width: 767px) {
+	#shopify-section-page-store-locator-template .container {
+		padding-top: 50px;
+	}
+
+	#shopify-section-page-store-locator-template .container .sl-icon-wrapper {
+		width: 100%;
+		padding: 20px;
+	}
+
+	#shopify-section-page-store-locator-template .container .sl-icon-wrapper img {
+		width: 100%;
+    max-height: 100px;
+    object-fit: contain;
+	}
+}
+{% endstylesheet %}
+
+<script>
+  window.addEventListener('message', function(e) {
+	// message passed can be accessed in "data" attribute of the event object
+	var scroll_height = e.data;
+
+	document.getElementById('bullseye_iframe').style.height = scroll_height + 'px';
+} , false);
+</script>
+
+{% schema %}
+  {
+    "name": "Logos",
+    "settings": [
+      {
+        "type": "text",
+        "id": "header",
+        "label": "Header"
+      }
+    ],
+    "blocks": [
+      {
+        "name": "Logos section",
+		    "type": "content",
+        "settings": [
+          {
+            "id": "icon_image",
+            "type": "image_picker",
+            "label": "Image (Icon)"
+          },
+          {
+            "id": "icon_link",
+            "type": "text",
+            "label": "Image Link URL"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

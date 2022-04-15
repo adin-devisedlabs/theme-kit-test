@@ -1,0 +1,44 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    {% assign subscription_in_cart = false %}
+    {% assign gwp_in_cart = false %}
+    {% assign gwp_in_cart_variantID = '' %}
+    {%- for line_item in cart.items -%}
+      {%- assign line_item_title = line_item.title | downcase %}
+      {% if line_item_title contains 'auto renew' %}
+        {% assign subscription_in_cart = true %}
+      {%- endif -%}
+      // TODO: verify
+      {% unless line_item.title contains 'Custom Bundle' %}
+        {% if line_item.product.type == 'hidden' or line_item.product.type == 'hidden-displayATC'%}
+          {% assign gwp_in_cart = true %}
+          {% assign gwp_in_cart_variantID = line_item.variant_id %}
+        {% endif %}
+      {% endunless %}
+    {%- endfor -%}
+
+    {%- if subscription_in_cart and gwp_in_cart -%}
+      $.ajax({
+        url: '/cart/update.js',
+        method: 'POST',
+        dataType: 'json',
+        data: {
+          updates: { 
+            {{gwp_in_cart_variantID}}: 0
+          },
+          attributes: {
+            'discount_code': '',
+            'discounted_product': ''
+          }
+        },
+        success:function() {
+          window.location.reload();
+        },
+        error: function(err) {
+          console.log('error:', err)
+        }
+      });
+    {%- endif -%}
+  })
+</script>

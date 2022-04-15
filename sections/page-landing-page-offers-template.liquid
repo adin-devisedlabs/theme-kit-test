@@ -1,0 +1,1262 @@
+{% for block in section.blocks %}
+    {% assign _block = block.settings %}
+    {%- assign body_image = _block.bodyImage -%}
+    {%- assign body_image_mob = _block.bodyImageMob | default: body_image_mob -%}
+
+    {% if block.type == 'product_carousel' %}
+        <div class="offers bestsellers animate" {% if _block.bgColor != empty %} style="background:{{ _block.bgColor }}" {% endif %} id="section{{ block.id }}">
+            <div class="container">
+                <div class="offers__header">
+                    {%- if _block.heading != blank -%}
+                        <h2>{{_block.heading}}</h2>
+                    {% endif %}
+                </div>
+                {% if _block.collection == 'bestsellers-1'%}
+                    {% assign bestSellers = collections[_block.collection].products %}
+                    <div class="bestsellers-slider" id="bestsellersSlider">
+                        {%- for _product in bestSellers -%}
+                            <div class="product__item {% unless _product.available %}product__item--sold-out{% endunless %}">
+                                <a href="{% if override_url %}{{override_url}}{% else %}{{ _product.url | within: collection }}{% endif %}" class="product__item-link">
+                                    <div class="product__icons">
+                                        {%- for icon in _product.metafields.product.icon limit: 1 -%}
+                                            {{ icon | img_tag }}
+                                        {%- endfor -%}
+                                    </div>
+                                    {% if _product.metafields.product.badge != blank %}
+                                        <h6 class="product__badge {{_product.metafields.product.badge}}">
+                                            {% assign badgeName = _product.metafields.product.badge | replace: '-', ' ' %}
+                                            {{badgeName}}
+                                            {%- if _product.metafields.product.badge == 'new' -%}!
+                                            {%- endif -%}
+                                        </h6>
+                                    {% endif %}
+                                    <div class="product__item-image">
+                                        <img class="bestseller-img tns-lazy-img" src="{{ _product.featured_image | img_url: '600x' }}" data-src="{{ _product.featured_image | img_url: '600x' }}" alt="{{ _product.featured_image.alt | escape }}"/>
+                                    </div>
+                                    <h4 class="product__item-title">
+                                        {{- _product.title -}}
+                                    </h4>
+                                    <span class="stamped-product-reviews-badge stamped-main-badge" data-id="{% if override_id %}{{override_id}}{%else%}{{_product.id}}{% endif %}" style="display: block;"></span>
+                                    <p class="product__item-price">
+                                        {%- include 'price' with _product -%}
+                                    </p><!-- /.price -->
+                                </a>
+                                <div class="overlay-product">
+                                    {% if override_handle != blank %}
+                                        {% assign _product = all_products[override_handle] %}
+                                    {% endif %}
+                                    {%- if _product.available -%}
+                                        {%- form 'product', _product -%}
+                                            <div class="qty">
+                                                <a aria-label="Decrease quantity" class="qty-minus qty-edit" href="#!">
+                                                    <span tabindex="0"></span>
+                                                </a>
+                                                <input aria-label="quantity value" data-mirror="true" name="quantity" type="text" value="1"/>
+                                                <a aria-label="Increase quantity" class="qty-plus qty-edit" href="#!">
+                                                    <span tabindex="0"></span>
+                                                </a>
+                                            </div><!-- /.qty -->
+                                            {% assign variantID = _product.first_available_variant.id %}
+                                            {% assign variantSku = _product.first_available_variant.sku %}
+                                            {% assign variantPrice = _product.first_available_variant.price %}
+
+                                            {% if override_variant %}
+                                                {% case override_variant %}
+                                                    {% when 1 %}
+                                                        {% assign variantID = _product.variants[1].id %}
+                                                        {% assign variantSku = _product.variants[1].sku %}
+                                                        {% assign variantPrice = _product.variants[1].price %}
+                                                    {% when 2 %}
+                                                        {% assign variantID = _product.variants[2].id %}
+                                                        {% assign variantSku = _product.variants[2].sku %}
+                                                        {% assign variantPrice = _product.variants[2].price %}
+                                                    {% else %}
+                                                        {% assign variantID = _product.first_available_variant.id %}
+                                                        {% assign variantSku = _product.first_available_variant.sku %}
+                                                        {% assign variantPrice = _product.first_available_variant.price %}
+                                                {% endcase %}
+                                            {% endif %}
+                                            <input type="hidden" name="id" value="{{ variantID }}">
+                                            <input type="hidden" name="product_name" value="{{ _product.title }}">
+                                            <input type="hidden" name="product_sku" value="{{ variantSku }}">
+                                            <input type="hidden" name="product_price" value="{{ variantPrice }}">
+
+                                            {% if override_handle %}
+                                                <button class="btn btn--border cart" type="submit">
+                                                    {% if settings.enable_custom_cta %}
+                                                    <!-- SITE-WIDE PROMO TEXT -->
+                                                        <!-- CTA global tag exclusion -->
+                                                      {% if _tags contains "cta-exclude" %}
+                                                        {{- 'products.product.add_to_cart' | t -}}
+                                                      {% else %}
+                                                      <!-- SITE-WIDE PROMO TEXT -->
+                                                        {{settings.cta_text}}
+                                                    {% endif %}
+                                                  {% else %}
+                                                    Add to Cart
+                                                  {% endif %}
+                                                </button>
+                                            {% else %}
+                                                {% if _product.variants.size > 1 %}
+                                                    <a aria-label="Add {{ _product.title }} to cart" href="{% if override_url %}{{override_url}}{% else %}{{ _product.url | within: collection }}{% endif %}" class="btn btn--border cart">
+                                                        {% if settings.enable_custom_cta %}
+                                                        <!-- SITE-WIDE PROMO TEXT -->
+                                                            <!-- CTA global tag exclusion -->
+                                                          {% if _tags contains "cta-exclude" %}
+                                                            {{- 'products.product.add_to_cart' | t -}}
+                                                          {% else %}
+                                                          <!-- SITE-WIDE PROMO TEXT -->
+                                                            {{settings.cta_text}}
+                                                        {% endif %}
+                                                      {% else %}
+                                                        Add to Cart
+                                                      {% endif %}
+                                                    </a>
+                                                {% else %}
+                                                    <button class="btn btn--border cart" type="submit">
+                                                        {% if settings.enable_custom_cta %}
+                                                        <!-- SITE-WIDE PROMO TEXT -->
+                                                            <!-- CTA global tag exclusion -->
+                                                          {% if _tags contains "cta-exclude" %}
+                                                            {{- 'products.product.add_to_cart' | t -}}
+                                                          {% else %}
+                                                          <!-- SITE-WIDE PROMO TEXT -->
+                                                            {{settings.cta_text}}
+                                                        {% endif %}
+                                                      {% else %}
+                                                        Add to Cart
+                                                      {% endif %}
+                                                    </button>
+                                                {% endif %}
+                                            {% endif %}
+                                        {%- endform -%}
+                                    {%- else -%}
+                                        <p>
+                                            {{ 'products.product.sold_out' | t }}
+                                        </p>
+                                    {%- endif -%}
+                                </div><!-- /.overlay -->
+                            </div><!-- /.product__item -->
+                        {%- endfor -%}
+                    </div>
+                {% else %}
+                    {% assign prodCarousel = collections[_block.collection].products %}
+                    <div class="bestsellers-slider" id="prodItemsSlider">
+                        {%- for _product in prodCarousel -%}
+                            <div class="product__item {% unless _product.available %}product__item--sold-out{% endunless %}">
+                                <a href="{% if override_url %}{{override_url}}{% else %}{{ _product.url | within: collection }}{% endif %}" class="product__item-link">
+                                    <div class="product__icons">
+                                        {%- for icon in _product.metafields.product.icon limit: 1 -%}
+                                            {{ icon | img_tag }}
+                                        {%- endfor -%}
+                                    </div>
+                                    <h6 class="product__badge {{_product.metafields.product.badge}}">
+                                        {% assign badgeName = _product.metafields.product.badge | replace: '-', ' ' %}
+                                        {{badgeName}}
+                                        {%- if _product.metafields.product.badge == 'new' -%}!
+                                        {%- endif -%}
+                                    </h6>
+                                    <div class="product__item-image">
+                                        <img class="bestseller-img tns-lazy-img" src="{{ _product.featured_image | img_url: '600x' }}" data-src="{{ _product.featured_image | img_url: '600x' }}" alt="{{ _product.featured_image.alt | escape }}"/>
+                                    </div>
+                                    <h4 class="product__item-title">
+                                        {{- _product.title -}}
+                                    </h4>
+                                    <span class="stamped-product-reviews-badge stamped-main-badge" data-id="{% if override_id %}{{override_id}}{%else%}{{_product.id}}{% endif %}" style="display: block;"></span>
+                                    <p class="product__item-price">
+                                        {%- include 'price' with _product -%}
+                                    </p><!-- /.price -->
+                                </a>
+                                <div class="overlay-product">
+                                    {% if override_handle != blank %}
+                                        {% assign _product = all_products[override_handle] %}
+                                    {% endif %}
+                                    {%- if _product.available -%}
+                                        {%- form 'product', _product -%}
+                                            <div class="qty">
+                                                <a aria-label="Decrease quantity" class="qty-minus qty-edit" href="#!">
+                                                    <span tabindex="0"></span>
+                                                </a>
+                                                <input aria-label="quantity value" data-mirror="true" name="quantity" type="text" value="1"/>
+                                                <a aria-label="Increase quantity" class="qty-plus qty-edit" href="#!">
+                                                    <span tabindex="0"></span>
+                                                </a>
+                                            </div><!-- /.qty -->
+                                            {% assign variantID = _product.first_available_variant.id %}
+                                            {% assign variantSku = _product.first_available_variant.sku %}
+                                            {% assign variantPrice = _product.first_available_variant.price %}
+
+                                            {% if override_variant %}
+                                                {% case override_variant %}
+                                                    {% when 1 %}
+                                                        {% assign variantID = _product.variants[1].id %}
+                                                        {% assign variantSku = _product.variants[1].sku %}
+                                                        {% assign variantPrice = _product.variants[1].price %}
+                                                    {% when 2 %}
+                                                        {% assign variantID = _product.variants[2].id %}
+                                                        {% assign variantSku = _product.variants[2].sku %}
+                                                        {% assign variantPrice = _product.variants[2].price %}
+                                                    {% else %}
+                                                        {% assign variantID = _product.first_available_variant.id %}
+                                                        {% assign variantSku = _product.first_available_variant.sku %}
+                                                        {% assign variantPrice = _product.first_available_variant.price %}
+                                                {% endcase %}
+                                            {% endif %}
+                                            <input type="hidden" name="id" value="{{ variantID }}">
+                                            <input type="hidden" name="product_name" value="{{ _product.title }}">
+                                            <input type="hidden" name="product_sku" value="{{ variantSku }}">
+                                            <input type="hidden" name="product_price" value="{{ variantPrice }}">
+
+                                            {% if override_handle %}
+                                                <!-- <button type="submit" class="btn btn--border cart">
+                            Add to Cart
+                          </button> -->
+                                                                          <!-- SITE-WIDE PROMO TEXT -->
+                                                <button class="btn btn--border cart" type="submit">
+                                                    ADD TO CART
+                                                    <br>
+                                                    FOR 50% OFF
+                                                </button>
+                                            {% else %}
+                                                {% if _product.variants.size > 1 %}
+                                                    <!-- <a href="{% if override_url %}{{override_url}}{% else %}{{ _product.url | within: collection }}{% endif %}" class="btn btn--border cart">
+                                Add to Cart
+                            </a> -->
+                                                    <a aria-label="Add {{ _product.title }} to cart" href="{% if override_url %}{{override_url}}{% else %}{{ _product.url | within: collection }}{% endif %}" class="btn btn--border cart">
+                                                        ADD TO CART
+                                                        <br>
+                                                        FOR 50% OFF
+                                                    </a>
+                                                {% else %}
+                                                    <!-- <button type="submit" class="btn btn--border cart">
+                              Add to Cart
+                            </button> -->
+                                                    <button class="btn btn--border cart" type="submit">
+                                                        ADD TO CART
+                                                        <br>
+                                                        FOR 50% OFF
+                                                    </button>
+                                                {% endif %}
+                                            {% endif %}
+                                        {%- endform -%}
+                                    {%- else -%}
+                                        <p>
+                                            {{ 'products.product.sold_out' | t }}
+                                        </p>
+                                    {%- endif -%}
+                                </div><!-- /.overlay -->
+                            </div><!-- /.product__item -->
+                        {%- endfor -%}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
+    {% if block.type == 'signup' %}
+        <div class="offers signup animate" {% if _block.bgColor != empty %} style="background:{{ _block.bgColor }}" {% endif %} id="section{{ block.id }}">
+            <div class="container">
+                <div class="offers__header">
+                    <h2>{{_block.heading}}</h2>
+                </div>
+                <div class="offers__subheader">
+                    <h4>{{_block.subheading}}</h4>
+                </div>
+                <div class="signup-form__wrapper">
+                    <div class="flex-form">
+                        <form action="//manage.kmail-lists.com/subscriptions/subscribe" class="klaviyo_styling klaviyo_gdpr_embed_KhCGpp" data-ajax-submit="//manage.kmail-lists.com/ajax/subscriptions/subscribe" id="email_signup" method="GET" novalidate="novalidate" style="max-width: 100%;" target="_blank">
+                            <input name="g" type="hidden" value="KhCGpp">
+                            <input name="$fields" type="hidden" value="$consent">
+                            <input name="$list_fields" type="hidden" value="$consent">
+                            <input checked id="consent-email" name="$consent" style="display: none;" type="checkbox" value="email" title="consent-email">
+                            <div class="klaviyo_field_group">
+                                <input class="klaviyo_email" id="k_id_email" name="email" placeholder="Email address" type="text" value="" title="email"/>
+                                <div class="klaviyo_form_actions">
+                                    <button aria-label="Newsletter Submit Button" class="form-btn klaviyo_submit_button" type="submit">
+                                        <span class="submit_button_span"></span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="klaviyo_messages">
+                                <div class="success_message" style="display:none;">
+                                    <p style="font-weight:700;">Please check your inbox for your 30% promo code on your first order.</p>
+                                </div>
+                                <div class="error_message" style="display:none;"></div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="flex-form">
+                        <div class="sms-form-wrapper klaviyo_styling">
+                            <form class="sms-register">
+                                <input class="sms-signup" name="phone" placeholder="Phone" required type="tel" title="phone"/>
+                                <p class="errorMessage" style="display: none;color:red;">Something went wrong. Please make sure to enter a phone number in this format: xxx-xxx-xxxx</p>
+                                <div class="klaviyo_form_actions">
+                                    <button aria-label="Newsletter Submit Button" class="form-btn klaviyo_submit_button submitSMS" type="submit">
+                                        <span class="submit_button_span"></span>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <p class="successMessage" style="display: none">Check your texts. Reply "Y" to confirm your subscription.</p>
+                    </div>
+                </div>
+                <div class="icons--container">
+                    <div>
+                        <img src="{{ _block.shipIcon | img_url: 'master' }}" alt="" class="img--icon truck">
+                        <h6 class="subtitle">{{_block.shipTitle}}</h6>
+                    </div>
+                    <div>
+                        <img src="{{ _block.sampleIcon | img_url: 'master' }}" alt="" class="img--icon gift">
+                        <h6 class="subtitle">{{_block.sampleTitle}}</h6>
+                    </div>
+                </div>
+                <p class="attentive_disclaimer sms">{{_block.sms_newsletter_disclaimer}}</p>
+                <p class="attentive_disclaimer email">{{_block.email_newsletter_disclaimer}}</p>
+            </div>
+        </div>
+    {% endif %}
+    {% if block.type == 'banner' %}
+        <div class="intro animate lazyload afterpay-hero" data-bg="url({{_block.image | img_url: '2048x'}})" {% if _block.text_align == 'right' %} style="justify-content: flex-end;background-position:right;{% if _block.bgColor != empty %}background-color:{{ _block.bgColor }};{% endif %}" {% elsif _block.text_align == 'center' %} style="justify-content: center;{% if _block.bgColor != empty %}background-color:{{ _block.bgColor }};{% endif %}" {% else %} style="{% if _block.bgColor != empty %}background-color:{{ _block.bgColor }};{% endif %}background-position:right;" {% endif %}>
+            {%- if _block.imageMob -%}
+                <div class="mobile-image visible-xs-block">
+                    {%- include 'lazyload-image' _image: _block.imageMob, original_width: '600' -%}
+                </div><!-- /.mobile-image -->
+            {%- endif -%}
+            <div class="intro__content
+                        {% if _block.text_align == 'left' %}
+                          left-padding
+                        {% elsif _block.text_align == 'right' %}
+                          right-padding
+                          {% if _block.text_align_left == false%}right-text-align{% endif %}
+                        {% elsif _block.text_align == 'center' %}
+                            center-text-align
+                        {% endif %}
+                        {% if _block.text_align_left %}
+                          left-text-align
+                        {% endif %}
+                        {% if _block.hide_text_desktop %}
+                          visible-xs-block
+                        {% endif %}" style="color: {{block.settings.text_color}};">
+                {%- if _block.eyebrow != blank -%}
+                    <h1 class="ada-fix">{{_block.eyebrow}}</h1>
+                {%- endif -%}
+                {%- if _block.title != blank or _block.title_bold != blank -%}
+                    <h2 class="hidden-xs title--large">
+                        {%- if _block.title_bold != blank -%}
+                            <span class="hidden-xs bold">{{_block.title_bold}}</span>
+                        {%- endif -%}
+                        {%- if _block.title != blank -%}
+                            {{_block.title}}
+                        {%- endif -%}
+                    </h2>
+                {%- endif -%}
+                {%- if _block.title_mobile != blank or _block.title_mobile_bold != blank -%}
+                    <h2 class="visible-xs-block title--large">
+                        {%- if _block.title_mobile_bold != blank -%}
+                            <span class="visible-xs-block bold">{{_block.title_mobile_bold}}</span>
+                        {%- endif -%}
+                        {%- if _block.title_mobile != blank -%}
+                            {{_block.title_mobile}}
+                        {%- endif -%}
+                    </h2>
+                {%- endif -%}
+                {%- if _block.subheader_text != blank -%}
+                    <h3>{{_block.subheader_text}}</h3>
+                {%- endif -%}
+
+                {%- if _block.promo_above != blank -%}
+                    <p class="intro__promo hidden-xs">{{ _block.promo_above }}</p>
+                {%- endif -%}
+                {%- if _block.promo_above_mobile != blank -%}
+                    <p class="intro__promo visible-xs-block">{{ _block.promo_above_mobile }}</p>
+                {%- endif -%}
+
+                <p class="{% if _block.content_mobile != blank %}hidden-xs{% endif %} {% if _block.align_right != blank %}right-float{% endif %}">{{ _block.content }}</p>
+
+                {%- if _block.promo != blank -%}
+                    <p class="intro__promo">{{ _block.promo }}</p>
+                {%- endif -%}
+                {% if _block.disclaimer_text_2 != blank %}
+                    <p class="intro__disclaimer no-top-margin">{{_block.disclaimer_text_2}}</p>
+                {% endif %}
+
+                <div class="clear-both"></div>
+                {%- include 'link' url: _block.link_url, text: _block.link_text, tabindex: true, btn_border: true, border_color: {{block.settings.text_color}} -%}
+                {% if _block.content_mobile != blank %}
+                    <p class="visible-xs-block {% if _block.align_right != blank %}right-float{% endif %}">{{ _block.content_mobile }}</p>
+                {% endif %}
+                {% if _block.disclaimer_text != blank %}
+                    <p class="intro__disclaimer">{{_block.disclaimer_text}}</p>
+                {% endif %}
+            </div><!-- /.intro__content -->
+            {%- if _block.bottom_text != blank -%}
+                <div class="intro__bottom {% if _block.align_right %}right-float{% endif %}" {% if _block.align_right %} style="margin-right: {{_block.bottom_section_margin_right}}% !important;" {% endif %}>
+                    <span class="cloud">
+                        {%- include 'svg-icons' with 'cloud' -%}
+                    </span>
+                    <div class="intro__text">
+                        {{ _block.bottom_text }}
+                    </div>
+                    <div class="frog">
+                        <span class="eye eye--left">
+                            <i></i>
+                        </span>
+                        <span class="eye eye--right">
+                            <i></i>
+                        </span>
+                    </div><!-- /.frog -->
+                </div><!-- /.intro__bottom -->
+            {%- endif -%}
+        </div><!-- /.intro -->
+    {% endif %}
+
+    {% if block.type == 'text-img' %}
+        {%- assign _section = _block -%}
+        {%- assign section_layout = _section.layout -%}
+        {%- assign section_background_color = _section.background_color -%}
+        {%- assign section_top_title = _section.top_title -%}
+        {%- assign section_title = _section.title -%}
+        {%- assign section_title_icon = _section.title_icon -%}
+        {%- assign section_content = _section.content -%}
+        {%- assign section_link_text = _section.link_text -%}
+        {%- assign section_link_url = _section.link_url -%}
+        {%- assign section_image = _section.image | default: section_mobile_image -%}
+        {%- assign section_move_image = _section.move_image -%}
+        {%- assign section_mobile_image = _section.mobile_image -%}
+        {%- assign section_mobile_center_mobile = _section.center_mobile -%}
+
+        <div id="{{ block.settings.customAnchor }}" class="text-image animate" {%- include "inline-style" bgcolor: section_background_color -%}>
+                <div class="flex-row custom-container justify align--{{section_layout}}">
+                    <div class="text-image__image custom-styles-img {% if section_layout == "text-image" %} custom-media-query {% endif %} lazyload">
+                        <div class="custom_img lazyload" data-bg="url({{section_image | img_url: '600x'}})">
+                            {%- if section_mobile_image -%}
+                              <span class="mobile-image visible-xs-block">
+                                  {% assign imageUrl =  section_mobile_image | img_url: '600x' %}
+                                  <img class="custom_img_mob" src="{{ imageUrl }}" alt="{{ section_mobile_image.alt | default: 'container image' }}" />
+                              </span>
+                            {%- endif -%}
+                        </div><!-- /.text-image__image -->
+                    </div><!-- /.text-image__image -->
+                    <div class="text-image__content custom-styles-content left-padding{% if section_mobile_center_mobile %} align-center{% endif %}">
+                        {%- if section_top_title != blank -%}
+                            <h1 class="text-img" style="color: {{ _block.top_color}}">{{section_top_title}}</h1>
+                        {%- endif -%}
+                        {%- if section_title != blank -%}
+                            <h2 id="custom-section" style="color: {{ _block.title_color }}" {% if section_title_icon %} class="has-image" {% endif %}>
+                                {{ section_title }}
+                                {%- if section_title_icon -%}
+                                    <span class="icon" {%- include "inline-style" bgimage: section_title_icon, wh: "120x" -%}></span>
+                                {%- endif -%}
+                            </h2>
+                        {%- endif -%}
+                        <div class="text-img-content">
+                            {{ section_content }}
+                        </div>
+                        <div id="mobile_img_intercalate" class="custom_img lazyload" data-bg="url({{section_image | img_url: '600x'}})">
+                            {%- if section_mobile_image -%}
+                              <span class="mobile-image visible-xs-block">
+                                  {% assign imageUrl =  section_mobile_image | img_url: '600x' %}
+                                  <img class="custom_img_mob" src="{{ imageUrl }}" alt="{{ section_mobile_image.alt | default: 'container image' }}" />
+                              </span>
+                            {%- endif -%}
+                        </div><!-- /.text-image__image -->
+                        {%- if section_link_url != blank and section_link_text != blank -%}
+                            <a href="{{section_link_url}}" id="text-img-button" class="btn {% if true %}btn--border{% endif %} {% if custom_class %}{{custom_class}}{% endif %}" {% if template contains 'product' %} target="_blank" {% endif %} {% if tabindex %} tabindex="-1" {% endif %} {% if border_color %} style="border-color: {{_block.border_color}}; background-color: {{_block.bg_color}};" {% endif %}>
+                                <span>{{ section_link_text }}</span>
+                            </a>
+                        {%- endif -%}
+                        {% if _block.disclaimer_html != blank %}
+                        <div style="width: 100%; padding: 10px; margin-top: 10px; text-align: center;" class="disclaimer_html">
+                            {{ _block.disclaimer_html }}
+                        </div>
+                        {% endif %}
+
+                    </div><!-- /.text-image__content -->
+                </div><!-- /.flex-row -->
+        </div><!-- /.text-image -->
+    {% endif %}
+    {% if block.type == 'hero' %}
+	<div class="mchero" style="z-index: -10;">
+      <div class="mchero__content"{% if _block.bodyBgColor != empty %} style="background:{{ block.settings.bodyBgColor }}"{% endif %}>
+        <div class="mchero__content__text">
+          {%- if _block.headingSmall != blank -%}
+            <small>{{ _block.headingSmall }}</small>
+          {%- endif -%}
+          <h2 class="title--large">{{ _block.heading }}</h2>
+          {%- if _block.bodyText != blank -%}
+            {{ _block.bodyText }}
+          {%- endif -%}
+        </div>
+        {% if _block.bodyImage %}
+          {%- include 'lazyload-image' _image: body_image, image_params: '2x' -%}
+        {% endif %}
+      </div>
+	</div>
+  {% endif %}
+
+{% endfor %}
+
+
+<style>
+  html {
+    scroll-padding: 50px 0 0 0;
+    scroll-behavior: smooth;
+  }
+  h1.ada-fix {
+    font-size: 20px;
+    font-weight: 900;
+    font-family: "Basis Grotesque Pro",Arial,Helvetica,sans-serif;
+    letter-spacing: 1.8px;
+  }
+  h1.text-img {
+    font-size: 18px;
+    font-weight: 900;
+    font-family: "Basis Grotesque Pro",Arial,Helvetica,sans-serif;
+    letter-spacing: 1.8px;
+  }
+  a#text-img-button {
+    width: 100%;
+    transition: all ease 100ms;
+  }
+  h2#custom-section {
+    margin-bottom: 5px;
+    margin-top: 55px;
+  }
+  div.text-img-content {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  div.text-img-content p {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    padding: 20px 0 30px;
+  }
+  #mobile_img_intercalate {
+    display: none;
+  }
+  .mchero__content img {
+    z-index: -1;
+  }
+
+@media screen and (max-width: 1023px) {
+  .custom-media-query {
+    order: 2 !important;
+  }
+  a#text-img-button {
+    width: 70%;
+  }
+  h1.text-img {
+    font-size: 16px;
+    font-weight: 900;
+    font-family: "Basis Grotesque Pro",Arial,Helvetica,sans-serif;
+    letter-spacing: 1.2px;
+    margin-top: 10px;
+  }
+}
+  .custom-container {
+    max-width: 1200px;
+    margin: auto;
+    height: auto;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+
+  .custom-styles-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 40px !important;
+    max-width: 50%;
+    flex-basis: 50%;
+  }
+  .custom-styles-img {
+    max-width: 50%;
+    padding: 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .custom_img {
+    width: 100%;
+    height: 400px;
+    background-repeat: no-repeat;
+  }
+
+@media only screen and (max-width: 767px) {
+  .custom-container {
+    flex-direction: column-reverse;
+  }
+  .custom-container.moved_down {
+    flex-direction: column;
+  }
+  .custom_img {
+    height: 100%;
+  }
+  a#text-img-button {
+    width: 60%;
+  }
+  #mobile_img_intercalate {
+    display: initial;
+    margin: 0 0 30px 0;
+  }
+  .custom-styles-content {
+    display: flex;
+    max-width: 100vw;
+    padding: 20px !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    max-height: 50%;
+    font-size: 15px;
+  }
+  .custom-styles-img {
+    display: none;
+    max-width: 100%;
+    margin: 0;
+    padding: 10px;
+    order: 1 !important;
+  }
+  div.text-img-content p {
+    width: 100%;
+    margin: auto;
+    text-align: center;
+    padding: 10px 0 10px;
+  }
+  h2#custom-section {
+    margin-bottom: 5px;
+    margin-top: 40px;
+  }
+}
+  .signup .icons--container h6.subtitle {
+    font-size: 24px;
+    line-height: 1.54;
+    font-weight: 900;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .signup .icons--container {
+    display: flex;
+    padding: 0 0 4.5rem;
+    width: 100%;
+    max-width: 800px;
+    justify-content: space-evenly;
+  }
+
+  .signup .icons--container div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .signup .icons--container img.img--icon {
+    width: 150px;
+  }
+
+  .signup .icons--container img.img--icon.truck {
+    width: 200px;
+    height: 150px;
+    object-fit: cover;
+  }
+
+  .signup .offers__header h2 {
+    margin-bottom: 1rem;
+  }
+  .signup .offers__subheader h4 {
+    font-family: "Basis Grotesque Pro", Arial, Helvetica, sans-serif;
+    margin-bottom: 2rem;
+  }
+
+  .signup .offers__subheader h4 {
+    margin-bottom: 5rem;
+  }
+
+  .offers.signup .container {
+    color: white;
+    padding: 4rem 1.5rem;
+  }
+
+  .offers.signup .signup-form__wrapper {
+    display: flex;
+    width: 100%;
+    max-width: 600px;
+    justify-content: space-between;
+    padding-bottom: 0;
+  }
+
+  .offers.signup .klaviyo_condensed_styling .klaviyo_field_group, .offers.signup .klaviyo_styling .klaviyo_field_group {
+    margin-right: 2rem;
+  }
+
+  .offers.signup .klaviyo_email, .offers.signup .sms-signup {
+    height: 64px;
+    padding: 0 60px 0 24px;
+    border: solid 2px white;
+    color: white;
+    background: none;
+    border-radius: 3px;
+    width: 100%;
+    font-size: 18px;
+    line-height: 20px;
+  }
+
+  .offers.signup .klaviyo_submit_button {
+    background-color: transparent !important;
+    height: 70px !important;
+    position: absolute !important;
+    background: none;
+    width: 60px;
+    top: -66px;
+    right: 0;
+    border: none;
+  }
+
+  .offers.signup .submit_button_span {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 28px;
+    height: 11px;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+
+  .offers.signup .submit_button_span:before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background-color: white;
+  }
+
+  .offers.signup .submit_button_span:after {
+    content: "";
+    position: absolute;
+    left: 17px;
+    top: 50%;
+    width: 8px;
+    height: 8px;
+    border: 1px solid white;
+    -webkit-transform: rotate(45deg) translateY(-60%);
+    -ms-transform: rotate(45deg) translateY(-60%);
+    transform: rotate(45deg) translateY(-60%);
+    -webkit-transform-origin: center center;
+    -ms-transform-origin: center center;
+    transform-origin: center center;
+    border-left: 0;
+    border-bottom: 0;
+  }
+
+  .offers.signup .klaviyo_form_actions {
+    position: relative;
+  }
+
+  .offers.signup .attentive_disclaimer {
+    font-size: 14px;
+    text-align: center;
+  }
+
+  .offers.signup .attentive_disclaimer.sms {
+    padding-bottom: 4rem;
+  }
+
+  .offers.signup .attentive_disclaimer.email {
+    padding-bottom: 2rem;
+  }
+
+  .intro.afterpay-hero {
+    display: flex;
+    padding: 0;
+    height: 900px;
+    min-height: 100vh;
+    background-position: bottom right;
+  }
+
+  .intro.afterpay-hero .intro__content {
+    align-self: center;
+    max-width: 50%;
+  }
+
+  p.chance {
+    font-size: 25px;
+  }
+
+  p.chance.bold, span.bold {
+    font-weight: 600;
+  }
+
+
+  div.product__item.tns-item[aria-hidden=true] {
+    visibility: hidden;
+  }
+
+  @media screen and (max-width: 767px) {
+    p.chance {
+      font-size: 20px;
+    }
+    .intro.afterpay-hero {
+      display: block;
+      height: auto;
+      min-height: unset;
+      background-image: none !important;
+    }
+    .intro.afterpay-hero .intro__content {
+      max-width: 100%;
+      padding-bottom: 3rem;
+    }
+  }
+  @media screen and (max-width: 600px) {
+    .offers.signup .signup-form__wrapper {
+      flex-wrap: wrap;
+    }
+    .offers.signup .klaviyo_condensed_styling .klaviyo_field_group, .offers.signup .klaviyo_styling .klaviyo_field_group {
+      margin-right: 0;
+    }
+    .offers.signup .flex-form {
+      width: 100%;
+      padding-bottom: 1rem;
+    }
+    .offers.signup .klaviyo_condensed_styling, .klaviyo_styling {
+      max-width: unset;
+    }
+    .signup .offers__subheader h4 {
+      margin-bottom: 2rem;
+    }
+    .offers.signup .attentive_disclaimer.sms {
+      padding-bottom: 1rem;
+    }
+    .offers.signup .attentive_disclaimer.email {
+      padding-bottom: 0;
+    }
+    .signup .icons--container {
+      padding: 0.5rem 0 2rem;
+    }
+    .signup .icons--container h6.subtitle {
+      font-size: 18px;
+    }
+    .signup .icons--container img.img--icon {
+      width: 120px;
+      height: 70px;
+      object-fit: cover;
+    }
+    .signup .icons--container img.img--icon.truck {
+      width: 170px;
+      height: 70px;
+    }
+    .offers.signup .klaviyo_email, .offers.signup .sms-signup {
+      font-size: 16px;
+    }
+  }
+  @media screen and (max-width: 500px) {
+    .offers.signup .container {
+      padding: 3rem 2rem;
+    }
+    .bestsellers .container, .offers .container {
+      align-items: flex-start;
+      padding: 3rem 2rem 2rem;
+    }
+    .bestsellers .container {
+      padding-top: 2rem;
+    }
+    .signup .icons--container div:first-child {
+      margin-right: 1rem;
+    }
+  }
+
+</style>
+
+{% schema %}
+
+{
+    "name": "Page Content",
+    "settings": [],
+    "blocks": [
+        {
+        "name": "Hero section",
+		"type": "hero",
+        "settings": [
+          {
+            "id": "bgColor",
+            "type": "color",
+            "label": "Background Color"
+          },
+		  {
+            "id": "heading",
+            "type": "text",
+            "label": "Heading"
+          },
+          {
+            "id": "bodyText",
+            "type": "html",
+            "label": "Body Text"
+          },
+          {
+            "id": "bodyImage",
+            "type": "image_picker",
+            "label": "Image"
+          }
+        ]
+      },
+        {
+            "name": "Product carousel",
+            "type": "product_carousel",
+            "settings": [
+                {
+                    "id": "bgColor",
+                    "type": "color",
+                    "label": "Background Color"
+                }, {
+                    "id": "heading",
+                    "type": "text",
+                    "label": "Heading"
+                }, {
+                    "id": "collection",
+                    "type": "collection",
+                    "label": "Collection to display"
+                }
+            ]
+        }, {
+            "name": "Signup section",
+            "type": "signup",
+            "settings": [
+                {
+                    "id": "bgColor",
+                    "type": "color",
+                    "label": "Background Color"
+                }, {
+                    "id": "heading",
+                    "type": "text",
+                    "label": "Heading"
+                }, {
+                    "id": "subheading",
+                    "type": "text",
+                    "label": "Subheading"
+                }, {
+                    "id": "sms_newsletter_disclaimer",
+                    "type": "textarea",
+                    "label": "SMS Newsletter Disclaimer"
+                }, {
+                    "id": "email_newsletter_disclaimer",
+                    "type": "textarea",
+                    "label": "Email Newsletter Disclaimer"
+                }, {
+                    "id": "shipIcon",
+                    "type": "image_picker",
+                    "label": "Shipping Icon"
+                }, {
+                    "id": "shipTitle",
+                    "type": "text",
+                    "label": "Shipping Title"
+                }, {
+                    "id": "sampleIcon",
+                    "type": "image_picker",
+                    "label": "Sample Icon"
+                }, {
+                    "id": "sampleTitle",
+                    "type": "text",
+                    "label": "Sample Title"
+                }
+            ]
+        }, {
+            "name": "Banner Section",
+            "type": "banner",
+            "settings": [
+                {
+                    "id": "image",
+                    "type": "image_picker",
+                    "label": "Image"
+                }, {
+                    "id": "imageMob",
+                    "type": "image_picker",
+                    "label": "Image (Mobile)"
+                }, {
+                    "id": "bgColor",
+                    "type": "color",
+                    "label": "Background Image Color"
+                }, {
+                    "id": "text_color",
+                    "type": "color",
+                    "label": "Text Color",
+                    "default": "#094A6E"
+                }, {
+                    "id": "eyebrow",
+                    "type": "text",
+                    "label": "Eyebrow Text"
+                }, {
+                    "id": "title_bold",
+                    "type": "text",
+                    "label": "Title (Desktop) - Bold"
+                }, {
+                    "id": "title",
+                    "type": "text",
+                    "label": "Title (Desktop)"
+                }, {
+                    "id": "title_mobile_bold",
+                    "type": "text",
+                    "label": "Title (Mobile) - Bold"
+                }, {
+                    "id": "title_mobile",
+                    "type": "text",
+                    "label": "Title (Mobile)"
+                }, {
+                    "type": "text",
+                    "id": "subheader_text",
+                    "label": "Subheader Text"
+                }, {
+                    "id": "promo_above",
+                    "type": "textarea",
+                    "label": "Promo (Desktop Only)"
+                }, {
+                    "id": "promo_above_mobile",
+                    "type": "textarea",
+                    "label": "Promo (Mobile Only)"
+                }, {
+                    "id": "content",
+                    "type": "textarea",
+                    "label": "Content (Desktop)"
+                }, {
+                    "id": "content_mobile",
+                    "type": "textarea",
+                    "label": "Content (Mobile)"
+                }, {
+                    "id": "promo",
+                    "type": "textarea",
+                    "label": "Promo"
+                }, {
+                    "type": "textarea",
+                    "id": "disclaimer_text_2",
+                    "label": "Disclaimer Text"
+                }, {
+                    "type": "url",
+                    "id": "link_url",
+                    "label": "Link URL"
+                }, {
+                    "type": "text",
+                    "id": "link_text",
+                    "label": "Link Text"
+                }, {
+                    "type": "textarea",
+                    "id": "disclaimer_text",
+                    "label": "Disclaimer Text"
+                }, {
+                    "type": "select",
+                    "id": "text_align",
+                    "label": "Text Position",
+                    "options": [
+                        {
+                            "value": "left",
+                            "label": "Left"
+                        }, {
+                            "value": "center",
+                            "label": "Center"
+                        }, {
+                            "value": "right",
+                            "label": "Right"
+                        }
+                    ],
+                    "default": "left"
+                }, {
+                    "type": "checkbox",
+                    "id": "text_align_left",
+                    "label": "Text Align Left?",
+                    "default": true
+                }, {
+                    "type": "checkbox",
+                    "id": "hide_text_desktop",
+                    "label": "Hide Text on Desktop",
+                    "default": false
+                }, {
+                    "type": "range",
+                    "id": "bottom_section_margin_right",
+                    "label": "Bottom Animation Margin Right",
+                    "unit": "%",
+                    "min": 10,
+                    "max": 70,
+                    "step": 1,
+                    "default": 13
+                }
+            ]
+        }, {
+            "name": "Text Image",
+            "type": "text-img",
+            "settings": [
+                {
+                    "type": "radio",
+                    "id": "layout",
+                    "label": "Layout",
+                    "options": [
+                        {
+                            "value": "text-image",
+                            "label": "Text - Image"
+                        }, {
+                            "value": "image-text",
+                            "label": "Image - Text"
+                        }
+                    ],
+                    "default": "text-image"
+                }, {
+                    "type": "color",
+                    "id": "background_color",
+                    "label": "Background Color"
+                }, {
+                    "type": "text",
+                    "id": "top_title",
+                    "label": "Top Title"
+                }, {
+                    "type": "color",
+                    "id": "top_color",
+                    "label": "Top Title Color"
+                }, {
+                    "type": "text",
+                    "id": "title",
+                    "label": "Title"
+                }, {
+                    "type": "color",
+                    "id": "title_color",
+                    "label": "Title Color"
+                }, {
+                    "type": "html",
+                    "id": "content",
+                    "label": "Content (html)"
+                }, {
+                    "type": "text",
+                    "id": "link_text",
+                    "label": "Link Text"
+                }, {
+                    "type": "url",
+                    "id": "link_url",
+                    "label": "Link URL"
+                }, {
+                    "type": "html",
+                    "id": "disclaimer_html",
+                    "label": "Disclaimer HTML Text"
+                }, {
+                    "type": "image_picker",
+                    "id": "image",
+                    "label": "Image"
+                }, {
+                    "type": "image_picker",
+                    "id": "mobile_image",
+                    "label": "Mobile Image"
+                }, {
+                    "type": "text",
+                    "id": "customAnchor",
+                    "label": "Custom Anchor ID"
+                }
+            ]
+        }
+    ]
+}
+
+{% endschema %}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/tiny-slider.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/min/tiny-slider.js"></script>
+<script src="//www.klaviyo.com/media/js/public/klaviyo_subscribe.js" type="text/javascript"></script>
+<script>
+
+$(document).ready(function(){
+
+  const bestSellersSlider = document.querySelector('#bestsellersSlider') && tns({
+    container: '#bestsellersSlider',
+    items: 1,
+    responsive: {
+      500: {
+        items: 2,
+      },
+      1000: {
+        items: 4,
+      }
+    },
+    lazyload: true,
+    controls: true,
+    controlsText: ['<i class="bestseller--arrow left" aria-label="Previous"></i>', '<i class="bestseller--arrow right" aria-label="Next"></i>'],
+    nav: false
+  });
+
+  const productItemsSlider = document.querySelector('#prodItemsSlider') && tns({
+    container: '#prodItemsSlider',
+    items: 1,
+    responsive: {
+      500: {
+        items: 2,
+      },
+      1000: {
+        items: 3,
+      }
+    },
+    lazyload: true,
+    controls: true,
+    controlsText: ['<i class="bestseller--arrow left" aria-label="Previous"></i>', '<i class="bestseller--arrow right" aria-label="Next"></i>'],
+    nav: false
+  });
+
+  KlaviyoSubscribe.attachToForms('#email_signup', {
+    hide_form_on_success: true,
+    custom_success_message: true,
+    extra_properties: {
+      $source: 'OffersLandingPage',
+    },
+    success: function ($form) {
+    // `$form` is a jQuery wrapper around the form that was submitted. This makes it easy to get the email address or form fields.
+      $form.find('.success_message').show();
+      var successMessage = document.getElementsByClassName('success_message')[0];
+      successMessage.style.display = 'block';
+      fbq('track', 'EmailSubscribe');
+    }
+  });
+
+  $('.sms-register').on('submit', function(e) {
+    e.preventDefault();
+
+    let phoneNumber = $('.sms-signup').val();
+    let attentiveID = document.cookie.replace(/(?:(?:^|.*;\s*)__attentive_id\s*=\s*([^;]*).*$)|^.*$/, "$1");
+    let regex = /-/gi;
+    phoneNumber = phoneNumber.replace(regex, '');
+
+    $('.sms-form-wrapper').addClass('loading');
+
+    let formData = {
+    	"phone": phoneNumber,
+      "visitorId": attentiveID
+    }
+
+
+    $.ajax({
+      url: 'https://cors-anywhere.herokuapp.com/https://api.attentivemobile.com/1/add-subscribers',
+      method: 'POST',
+      contentType: 'application/json',
+      dataType: 'json',
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader('Authorization', 'Bearer q-_Tj5jC2r7OmyDUw4Jqj2ZhVV_Rv9PYe9th2fRZ6eU');
+      },
+      data: JSON.stringify(formData),
+      success:function(data,status,xhr) {
+        console.log('status', status)
+        console.log('data', data)
+        $('.sms-form-wrapper').removeClass('loading');
+        $('.successMessage').show();
+        $('.sms-form-wrapper').hide();
+
+      },
+      error: function(err) {
+       console.log('error:', err)
+       $('.sms-form-wrapper').removeClass('loading');
+       $('.errorMessage').show();
+      }
+    })
+  })
+});
+</script>

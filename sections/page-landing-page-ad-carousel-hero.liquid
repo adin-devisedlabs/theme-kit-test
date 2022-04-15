@@ -1,0 +1,208 @@
+{%- assign _section = section.settings -%}
+
+<div class="container--hero paid-search">
+  <div id="ingredientsHeroSlider" class="hero__image-slider">
+    {% for block in section.blocks %}
+      {% assign _block = block.settings %}
+        <img 
+          class="slider-item intro lazyload" 
+          src="{{_block.bgImage | img_url: '1440x'}}" 
+        />
+    {% endfor %}
+  </div>
+  <div class="hero__text">
+    <small>{{ _section.headingSmall }}</small>
+    <h2>{{ _section.headingLarge }}</h2>
+    <div>{{ _section.bodyText }}</div>
+    {%- include 'link' url: _section.link_url, text: _section.link_text, tabindex: true, btn_border: true, border_color: {{_section.text_color}}-%}
+  </div>
+</div>
+
+{% if _section.show_icons_banner == true %}
+  <div 
+    class="icons--container lazyload paid-search animate" 
+    data-bg="url({{_section.iconsBgImage | img_url: '1440x'}})"
+    style="background-repeat: no-repeat; background-size: cover;"
+    >
+    <img class="icons-image hidden-xs" src="{{_section.iconsImageDesk | img_url: '1440x'}}" />
+    <img class="icons-image visible-xs-block" src="{{_section.iconsImageMob | img_url: 'master'}}" />
+  </div>
+{% endif %}
+
+{% schema %}
+  {
+    "name": "Image Carousel Hero",
+    "settings": [
+      {
+        "id": "headingSmall",
+        "type": "text",
+        "label": "Small Heading"
+      },
+      {
+        "id": "headingLarge",
+        "type": "text",
+        "label": "Large Heading"
+      },
+      {
+        "id": "text_color",
+        "type": "color",
+        "label": "Text Color"
+      },
+      {
+        "id": "bodyText",
+        "type": "richtext",
+        "label": "Body Text"
+      },
+      {
+        "type": "url",
+        "id": "link_url",
+        "label": "Link URL"
+      },
+      {
+        "type": "text",
+        "id": "link_text",
+        "label": "Link Text"
+      },
+      {
+        "id": "autoslide_time",
+        "type": "range",
+        "min":       1,
+        "max":       10,
+        "step":      1,
+        "label": "Autoslide Time (seconds)",
+        "default":   3
+      },
+      {
+        "type": "checkbox",
+        "id": "show_icons_banner",
+        "label": "Show Icons Banner",
+        "default": true
+      },
+      {
+        "id": "iconsBgImage",
+        "type": "image_picker",
+        "label": "Icons Background Image"
+      },
+      {
+        "id": "iconsImageDesk",
+        "type": "image_picker",
+        "label": "Icons Image (Desktop)"
+      },
+      {
+        "id": "iconsImageMob",
+        "type": "image_picker",
+        "label": "Icons Image (Mobiile)"
+      }
+    ],
+    "blocks": [
+    {
+      "name": "Carousel image",
+      "type": "carousel",
+      "settings": [
+        {
+          "id": "bgImage",
+          "type": "image_picker",
+          "label": "Image"
+        }
+      ]
+    }
+    ]
+  }
+{% endschema %}
+
+<style>
+  .icons--container.paid-search {
+    padding: 0;
+    display: flex;
+    justify-content: center;
+  }
+  .paid-search .icons-image {
+    width: 100%;
+  }
+  .paid-search .slider-item.intro {
+    padding: 0;
+    margin: 0;
+  }
+  .paid-search .hero__text {
+    position: absolute;
+    width: 600px;
+    right: 2.5%;
+    top: 18vw;
+    z-index: 1;
+    margin: 2rem;
+  }
+  .paid-search .hero__text small {
+    font-size: 1em;
+    font-weight: 900;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .paid-search .hero__text h2 {
+    margin-top: 45px;
+  }
+  @media screen and (max-width: 1350px) {
+    .paid-search .hero__text {
+      width: 500px;
+      top: 16vw;
+    }
+  }
+  @media screen and (max-width: 1200px) {
+    .paid-search .hero__text {
+      width: 400px;
+      top: 14vw;
+    }
+  }
+  @media screen and (max-width: 1000px) {
+    .paid-search .hero__text {
+      position: unset;
+      width: unset;
+      margin: 4rem;
+    }
+    .paid-search #ingredientsHeroSlider {
+      height: 500px;
+    }
+    .paid-search #ingredientsHeroSlider > .tns-item {
+      object-fit: cover;
+      height: 100%;
+      width: 100%;
+      object-position: left center;
+    }
+  }
+  @media screen and (max-width: 767px) {
+    .paid-search .icons-image.visible-xs-block {
+      max-width: 90%;
+    }
+    .paid-search.container--hero .hero__text h2 {
+      margin-top: 28px;
+    }
+  }
+  @media screen and (max-width: 500px) {
+    .paid-search #ingredientsHeroSlider {
+      height: 350px;
+    }
+    .paid-search.container--hero .hero__text{
+      padding: 2.5rem 3rem 3rem;
+    }
+    .paid-search .icons-image.visible-xs-block {
+      max-width: 100%;
+    }
+  }
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/tiny-slider.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/min/tiny-slider.js"></script>
+<script>
+  var ingredientsHeroSlider = tns({
+    container: '#ingredientsHeroSlider',
+    items: 1,
+    mode: 'gallery',
+    autoHeight: true,
+    speed: 1,
+    controls: false,
+    nav: false,
+    autoplay: true,
+    autoplayButtonOutput: false,
+    autoplayTimeout: {{section.settings.autoslide_time | times: 1000}}
+  });
+</script>

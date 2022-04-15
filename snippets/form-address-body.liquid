@@ -1,0 +1,82 @@
+<div class="form__cols field__cols--name">
+	<div class="form__col">
+		<div class="form__row">
+			<div class="form__controls">
+				<input type="text" id="field-first-name-{{ address.id }}" class="field" name="address[first_name]" value="{{ form.first_name }}" autocapitalize="words" placeholder="{{ 'customer.addresses.first_name' | t }}" />
+			</div><!-- /.form__controls -->
+		</div><!-- /.form__row -->
+	</div><!-- /.form__col -->
+
+	<div class="form__col">
+		<div class="form__row">
+			<div class="form__controls">
+				<input type="text" id="field-last-name-{{ address.id }}" class="field" name="address[last_name]" value="{{ form.last_name }}" autocapitalize="words" placeholder="{{ 'customer.addresses.last_name' | t }}" />
+			</div><!-- /.form__controls -->
+		</div><!-- /.form__row -->
+	</div><!-- /.form__col -->
+</div><!-- /.form__cols -->
+
+<div class="form__row field__row--company">
+	<div class="form__controls">
+		<input type="text" id="field-company-{{ address.id }}" class="field" name="address[company]" value="{{ form.company }}" autocapitalize="words" placeholder="{{ 'customer.addresses.company' | t }}" />
+	</div><!-- /.form__controls -->
+</div><!-- /.form__row -->
+
+<div class="form__row field__row--address1">
+	<div class="form__controls">
+		<input type="text" id="field-address-{{ address.id }}" class="field" name="address[address1]" value="{{ form.address1 }}" autocapitalize="words" placeholder="{{ 'customer.addresses.address1' | t }}" />
+	</div><!-- /.form__controls -->
+</div><!-- /.form__row -->
+
+<div class="form__row field__row--address2">
+	<div class="form__controls">
+		<input type="text" id="field-address2-{{ address.id }}" class="field" name="address[address2]" value="{{ form.address2 }}" autocapitalize="words" placeholder="{{ 'customer.addresses.address2' | t }}" />
+	</div><!-- /.form__controls -->
+</div><!-- /.form__row -->
+
+<div class="form__row field__row--city form__row--half">
+	<div class="form__controls">
+		<input type="text" id="field-city-{{ address.id }}" class="field" name="address[city]" value="{{ form.city }}" autocapitalize="words" placeholder="{{ 'customer.addresses.city' | t }}" />
+	</div><!-- /.form__controls -->
+</div><!-- /.form__row -->
+
+<div class="form__row field__row--zip form__row--half">
+	<div class="form__controls">
+		<input type="text" id="field-zip-{{ address.id }}" class="field" name="address[zip]" value="{{ form.zip }}" autocapitalize="characters" placeholder="{{ 'customer.addresses.zip' | t }}" />
+	</div><!-- /.form__controls -->
+</div><!-- /.form__row -->
+
+<div id="form__row-province-{{ address.id }}" id="province-{{address.id}}" class="form__row field__row--province field-select" style="display: none;">
+	<div class="form__controls">
+		<select id="field-province-{{ address.id }}" class="select custom-select" name="address[province]" data-default="{{ form.province }}"></select>
+	</div><!-- /.form__controls -->
+</div><!-- /.form__row -->
+
+<div class="form__row field__row--country field-select">
+	<div class="form__controls">
+		<select id="field-country-{{ address.id }}" class="select custom-select" name="address[country]" data-default="{{ form.country }}">{{ country_option_tags }}</select>
+	</div><!-- /.form__controls -->
+</div><!-- /.form__row -->
+
+<div class="form__row field__row--phone">
+	<div class="form__controls">
+		<input type="tel" id="field-phone-{{ address.id }}" class="field" name="address[phone]" value="{{ form.phone }}" placeholder="{{ 'customer.addresses.phone' | t }}" />
+		<button type="submit" class="customer-btn">
+			<span></span>
+		</button>
+	</div><!-- /.form__controls -->
+</div><!-- /.form__row -->
+
+{%- unless address.id == customer.default_address.id -%}
+	<div class="form__row form__row--default form__row--checkbox">
+		<div class="checkbox">
+			<label>
+				{{- form.set_as_default_checkbox -}}
+				<span></span>
+				{{ 'customer.addresses.set_default' | t }}
+			</label>
+		</div><!-- /.checkbox -->
+	</div><!-- /.form__row -->
+{%- endunless -%}
+
+{%- assign index = '' -%}

@@ -1,0 +1,54 @@
+{%- assign _section = section.settings -%}
+{%- assign section_subtitle = _section.subtitle -%}
+{%- assign section_title = _section.title -%}
+{%- assign section_background_color = _section.background_color -%}
+
+<div class="community animate" {%- include 'inline-style' bgcolor: section_background_color -%}>
+  <div class="community__header left-padding">
+    {%- if section_subtitle != blank -%}
+      <a href="https://www.instagram.com/pipettebaby" target="_blank">
+        <h6>{{section_subtitle}}</h6>
+      </a>
+    {%- endif -%}
+    {%- if section_title != blank -%}
+      <a href="https://www.instagram.com/pipettebaby" target="_blank">
+        <h2>{{section_title | newline_to_br }}</h2>
+      </a>
+    {%- endif -%}
+  </div><!-- /.community__header -->
+  <div class="slider left-padding">
+    <div id="insta-feed"></div>
+    <!-- <div class="next-arrow"></div> -->
+  </div><!-- /.slider -->
+</div><!-- /.community -->
+
+
+{% schema %}
+{
+  "name": "Community",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f2f7fa"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Community",
+      "category": "Dynamic"
+    }
+  ]
+}
+{% endschema %}

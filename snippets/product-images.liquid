@@ -1,0 +1,271 @@
+<div class="image-holder">
+  {% unless product.tags contains 'Gifts' %}
+    <div class="icons">
+      {%- for icon in product.metafields.product.icon -%}
+        {{ icon | img_tag }}
+      {%- endfor -%}
+    </div><!-- /.icons -->
+  {% endunless %}
+  <div id="productImageSlider" class="image-slider">
+  	{% for variant in product.variants %}
+      {% assign variant_image = variant.featured_image %}
+      {%- if variant_image != null -%}
+        <img 
+          id="{{ variant.id}}"
+        	src="{{- variant_image | img_url: '1024x' -}}"
+          data-src="{{- variant_image | img_url: '1024x' -}}"
+        	alt="{{- variant_image.alt -}}"
+          class="tns-lazy-img {% if forloop.length == 1 or product.available == false %} no-carousel{% endif %}" 
+  		  >
+        {% if forloop.last == true %}
+          {% for image in product.images %}
+            {% if image.alt == 'alt image' %}
+              <img
+                src="{{- image | img_url: '1024x' -}}"
+                data-src="{{- image | img_url: '1024x' -}}"
+                alt="{{- image.alt -}}"
+                class="tns-lazy-img"
+              >
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+      {%- else -%}
+        {% for image in product.images %}
+          <img
+            src="{{- image | img_url: '1024x' -}}"
+            data-src="{{- image | img_url: '1024x' -}}"
+            alt="{{- image.alt -}}"
+            class="tns-lazy-img {% if forloop.length == 1 or product.available == false %} no-carousel{% endif %}"
+          >
+        {% endfor %}
+      {%- endif -%}
+  	{% endfor %}
+  </div><!-- /.image-slider -->
+</div><!-- /.image-holder -->
+
+<style>
+  .image-holder [data-controls] {
+    border: 0;
+    margin: 0;
+    padding: 0 3rem;
+    position: absolute;
+    z-index: 1;
+    background: transparent;
+    height: 100%;
+  }
+
+  .image-holder [data-controls="prev"] {
+    left: 0;
+  }
+
+  .image-holder [data-controls="next"] {
+    right: 0;
+  }
+
+  .image-slider > .tns-lazy-img {
+    padding: 0;
+    min-height: 600px;
+    object-fit: cover;
+    object-position: center;
+    opacity: 1;
+    border-left: 2px solid #fffefb;
+    border-right: 2px solid #fffefb;
+  }
+
+  .image-slider > .tns-lazy-img.no-carousel {
+    object-fit: contain;
+    padding: 0;
+    border: none;
+  }
+
+  #productImageSlider-iw.no-carousel {
+      padding: 0;
+    }
+
+  .image-holder .tns-nav {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .image-holder .tns-nav button {
+    border: 0;
+    margin: 5px;
+    width: 18px;
+    height: 18px;
+    background: #cdcdcd;
+    border-radius: 50%;
+  }
+
+  .image-holder .tns-nav button.tns-nav-active {
+    background: #084b6d;
+  }
+
+  @media screen and (max-width: 1400px) {
+    #productImageSlider-iw {
+      margin: 0px 6vw;
+    }
+    .image-holder [data-controls] {
+      padding: 0 2.5rem;
+    }
+    .image-slider > .tns-lazy-img {
+      min-height: unset;
+      height: 550px;
+    }
+    .product__container .image-holder .icons {
+      width: 65px;
+      left: 7vw;
+    }
+  }
+
+  @media screen and (max-width: 1250px) {
+    #productImageSlider-iw {
+      margin: 0px 5vw;
+    }
+    .image-slider > .tns-lazy-img {
+      height: 500px;
+    }
+    .image-holder [data-controls] {
+      padding: 0 1.8rem;
+    }
+    .product__container .image-holder .icons {
+      width: 60px;
+    }
+  }
+
+  @media screen and (max-width: 1050px) {
+    #productImageSlider-iw {
+      margin: 0px 4vw;
+    }
+    .product__container .image-holder .icons {
+      width: 55px;
+    }
+    .image-slider > .tns-lazy-img {
+      height: 450px;
+    }
+    .image-holder [data-controls] {
+      padding: 0 1.4rem;
+    }
+  }
+
+  @media screen and (max-width: 950px) {
+    .image-slider > .tns-lazy-img {
+      height: 400px;
+    }
+    .product__container .image-holder .icons {
+      width: 42px;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+		.image-slider {
+      max-height: 550px;
+    }
+
+    .image-holder .tns-nav {
+      margin-top: 0.5rem;
+    }
+
+    .image-holder .tns-nav button {
+      margin: 0 5px;
+      width: 9px;
+      height: 9px;
+      background: transparent;
+      border: 1px solid #084b6d;
+      border-radius: 50%;
+    }
+    .product__container .image-holder .icons {
+      top: 45%;
+      left: 24%;
+    }
+    .product__container .image-holder .icons img {
+      margin: 6px 0;
+    }
+    #productImageSlider-iw {
+      margin: 0px 18vw;
+    }
+    .image-slider > .tns-lazy-img {
+      height: 450px;
+    }
+    .image-holder [data-controls] {
+      padding: 0 4rem;
+    }
+	}
+
+  @media screen and (max-width: 600px) {
+    .image-slider > .tns-lazy-img {
+      height: 400px;
+    }
+    .image-holder [data-controls] {
+      padding: 0 3rem;
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    #productImageSlider-iw {
+      margin: 0px 120px;
+    }
+    .image-slider > .tns-lazy-img {
+      height: 270px;
+    }
+    .image-holder [data-controls] {
+      padding: 0 11vw;
+    }
+  }
+
+  @media screen and (max-width: 450px) {
+    #productImageSlider-iw {
+      margin: 0px 100px;
+    }
+  }
+
+  @media screen and (max-width: 420px) {
+    #productImageSlider-iw {
+      margin: 0px 90px;
+    }
+    .image-slider > .tns-lazy-img {
+      height: 260px;
+    }
+  }
+
+  @media screen and (max-width: 380px) {
+    #productImageSlider-iw {
+      margin: 0px 70px;
+    }
+    .product__container .image-holder .icons {
+      left: 21%;
+    }
+  }
+
+  @media screen and (max-width: 350px) {
+    #productImageSlider-iw {
+      margin: 0px 60px;
+    }
+  }
+
+</style>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/tiny-slider.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/min/tiny-slider.js"></script>
+<script>
+  var productImageSlider = tns({
+    container: '#productImageSlider',
+    items: 1,
+    controls: true,
+    controlsText: ['<i class="left" aria-label="Previous"></i>', '<i class="right" aria-label="Next"></i>'],
+    lazyload: true,
+    nav: true,
+    navPosition: 'bottom',
+    edgePadding: 100,
+    speed: 400
+  });
+
+  if (productImageSlider) {
+    if($('#productImageSlider-iw #productImageSlider .tns-lazy-img').hasClass('no-carousel')) {
+      $('#productImageSlider-iw').addClass('no-carousel');
+  }
+}
+</script>

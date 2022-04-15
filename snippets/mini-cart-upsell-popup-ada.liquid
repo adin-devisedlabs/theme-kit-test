@@ -1,0 +1,497 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.1/tiny-slider.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.1/min/tiny-slider.js"></script>
+
+{% assign subscriptionInCart = false %}
+{% for item in cart.items %}
+  {% assign itemTitle = item.title | downcase %}
+  {% if itemTitle contains 'auto renew' %}
+    {% assign subscriptionInCart = true %}
+  {% endif %}
+{% endfor %}
+
+<div class="modal upsell-modal dialog" role="dialog" aria-labelledby="dialog-title">
+  <div class="modal-content " >
+    <span class="close close-dialog" aria-label="Close dialog">&times;</span>
+    <h3 class="modal-content-title" id="dialog-title" tabindex="0">You May Also Like:</h3>
+    <div class="modal-upsell-wrapper flex-row hidden-xs">
+      {% for product in collections[settings.upsell_mini_cart_collection].products limit: 3 %}
+        <div class="flex-box">
+          <a href="{{product.url}}" class="product-link">
+            {%- include 'lazyload-image' _image: product.images[0], image_params: '300x', image_tag: product.title -%}
+            <h4>{{product.title}}</h4>
+            <p class="price">{{product.price | money_without_trailing_zeros }}</p>
+          </a>
+          <button class="btn btn--border add-upsell-to-cart cart" data-id="{{product.variants[0].id}}">Add to cart</button>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="checkout-wrapper hidden-xs">
+      
+      <a href="/checkout/" class="btn" aria-label="Checkout button">Proceed to checkout
+      </a>
+    </div>
+
+    <div class="modal-upsell-controls visible-xs-block">
+      <span class="prevButton"></span>
+      <span class="nextButton"></span>
+    </div>
+    <div class="modal-upsell-wrapper-mobile flex-row visible-xs-block">
+      {% for product in collections[settings.upsell_mini_cart_collection].products limit: 3 %}
+        <div class="flex-box">
+          <a href="{{product.url}}" class="product-link">
+            <span class="image lazyload" data-bg="url({{ product.images[0] | img_url: '300x' }})"></span> 
+            <h4>{{product.title}}</h4>
+            <p class="price">{{product.price | money_without_trailing_zeros }}</p>
+          </a>
+          <button class="btn btn--border add-upsell-to-cart cart" data-id="{{product.variants[0].id}}">Add to cart</button>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="checkout-wrapper visible-xs-block">
+    
+    <a href="/checkout/" class="btn" aria-label="Checkout button">Proceed to checkout
+    </a>
+  </div>
+</div>
+
+<div class="dialog-overlay close-dialog" tabindex="-1"></div>
+
+<style>
+  .modal {
+    display: none; 
+    position: fixed;
+    z-index: 9; 
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgb(0,0,0); 
+    background-color: rgba(0,0,0,0.4); 
+  }
+
+  .modal.show {
+    visibility: visible;
+  }
+
+  .modal .btn {
+    visibility: hidden;
+  }
+
+  .modal.show .btn {
+    visibility: visible;
+  }
+
+  .modal-content {
+    background-color: #fefefe;
+    margin: 0 auto;
+    top: 50%;
+    transform: translateY(-50%);
+    position: relative;
+    padding: 20px;
+    padding-bottom: 50px;
+    width: 80%; 
+    max-width: 800px;
+    max-height: 90vh;
+    background: #fafaf2;
+    overflow: scroll;
+  }
+
+  .close {
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .modal .image {
+    position: relative;
+    display: block;
+    height: 336px;
+    background-size: cover;
+    background-position: center center;
+    margin-bottom: 28px;
+  }
+
+  .modal .flex-box {
+    flex-basis: 33.33%;
+    max-width: 33.33%;
+    text-align: center;
+    padding: 0 10px;
+  }
+
+  .modal a {
+    text-decoration: none;
+  }
+
+  .modal .btn--border {
+    min-width: unset;
+    background: none;
+    color: #084b6d !important;
+  }
+
+  .modal .btn--border:hover {
+    background: #084b6d;
+    color: #fffefb !important;
+  }
+
+  .modal-content-title {
+    margin-top: 25px;
+    text-align: center;
+  }
+
+  .modal .modal-upsell-wrapper {
+    padding: 0 20px 40px;
+    align-items: flex-end;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .modal .checkout-wrapper {
+    text-align: center;
+  }
+
+  .modal .checkout-wrapper .btn {
+    border: 2px solid #084b6d;
+    background: #084b6d;
+    color: #fff;
+    min-width: 250px;
+    text-transform: uppercase;
+    font-size: 15px;
+    letter-spacing: 0.125rem;
+  }
+
+  .modal .price {
+    font-weight: 700;
+  }
+
+  .modal .price span {
+    font-weight: 300;
+  }
+
+  @media (max-width: 1023px) {
+    .flex-row {
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+    }
+    
+    .modal-upsell-wrapper-mobile .flex-box {
+      flex-basis: auto;
+    }
+  }
+
+
+  @media (max-width: 767px) {
+    .flex-row .flex-box {
+      -ms-flex-preferred-size: 100%;
+      flex-basis: 100%;
+      max-width: 100%;
+      margin-bottom: 51px;
+    }
+
+    .modal-content {
+      top: 0;
+      transform: translateY(0);
+      height: 100%;
+      width: 100%;
+      overflow: scroll;
+      padding-bottom: 20px;
+      max-height: 100vh;
+    }
+
+    .modal-content-title {
+      margin-top: 25px;
+      font-size: 7vw;
+    }
+
+    .close {
+      position: fixed;
+      right: 30px;
+    }
+
+    .modal-upsell-wrapper-mobile .flex-box {
+      flex-basis: auto;
+    }
+
+    .modal .checkout-wrapper {
+      background: #084b6d;
+      color: #fff;
+      z-index: 99;
+      bottom: 0;
+      position: sticky;
+      /* max-width: 316px; */
+      margin: 0 auto;
+      position: fixed;
+      width: 100%;
+    }
+    
+    .modal .image {
+      /* background-size: contain; */
+      margin: 20px;
+      height: 45vh;
+    }
+  }
+
+  .modal-upsell-controls span {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      width: 28px;
+      height: 11px;
+      z-index: 99;
+      -webkit-transform: translateY(-50%);
+          -ms-transform: translateY(-50%);
+              transform: translateY(-50%); }
+  .modal-upsell-controls .prevButton:after {
+          content: "";
+          position: absolute;
+          left: -5px;
+          top: 50%;
+          width: 18px;
+          height: 18px;
+          border: 1px solid #094a6e;
+          -webkit-transform: rotate(45deg) translateY(-60%);
+              -ms-transform: rotate(45deg) translateY(-60%);
+                  transform: rotate(45deg) translateY(-60%);
+          -webkit-transform-origin: center center;
+              -ms-transform-origin: center center;
+                  transform-origin: center center;
+          border-right: 0;
+          border-top: 0; }
+  .modal-upsell-controls .nextButton:after {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 50%;
+          width: 18px;
+          height: 18px;
+          border: 1px solid #094a6e;
+          -webkit-transform: rotate(45deg) translateY(-60%);
+              -ms-transform: rotate(45deg) translateY(-60%);
+                  transform: rotate(45deg) translateY(-60%);
+          -webkit-transform-origin: center center;
+              -ms-transform-origin: center center;
+                  transform-origin: center center;
+          border-left: 0;
+          border-bottom: 0; }
+  .modal-upsell-controls .nextButton {
+    right: 10px;
+    left: auto;
+  }
+  .modal-upsell-controls .prevButton {
+    left: 10px;
+  }
+
+  /* Mobile View Carousel Nav */
+  .modal .tns-outer {
+    position: relative;
+    display: none;
+  }
+
+  .modal .tns-nav {
+    margin: 10px 0;
+    position: absolute;
+    left: 50%; 
+    bottom: 5px;
+    text-align: center;
+    transform: translateX(-50%);
+    z-index: 1;
+  }
+
+  .modal .tns-nav > [aria-controls] {
+    width: 9px;
+    height: 9px;
+    padding: 0;
+    margin: 0 5px;
+    border-radius: 50%;
+    background: #929292;
+    border: 0;
+  }
+
+  .modal .tns-nav > .tns-nav-active {
+    background: #084b6d;
+  }
+
+  @media screen and (max-width: 767px) {
+    .modal .tns-nav {
+      top: auto;
+    }
+
+    .modal .tns-nav > [aria-controls] {
+      border: 1px solid #084b6d;
+      background: transparent;
+    }
+
+    .modal .tns-nav > .tns-nav-active {
+      border: 1px solid #084b6d;
+      background: #084b6d;
+    }
+
+    .modal .intro__bottom  {
+      display: none;
+    }
+
+    .modal .intro__content {
+      padding-bottom: 50px;
+    }
+
+    .modal .tns-outer {
+      display: block;
+    }
+  }
+
+
+.dialog-overlay {
+	z-index: 2;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,0.7);
+}
+
+.dialog {
+	z-index: 3;
+}
+
+.dialog-overlay[aria-hidden="true"],
+.dialog[aria-hidden="true"] {
+	display: none;
+}
+
+.dialog-overlay:not([aria-hidden="true"]),
+.dialog:not([aria-hidden="true"]) {
+	display: block;
+}
+
+</style>
+
+<script>
+  $('.openModal').on('click', function() {
+    $('.modal').show();
+    $('.modal').addClass('show');
+
+    $(window).width() > 767 ? '' : $('#gorgias-web-messenger-container').hide();
+  })
+
+  $('.modal').click(function() {
+    window.location.href = '/checkout/';
+    // $(this).hide();
+    // $(window).width() > 767 ? '' : $('#gorgias-web-messenger-container').show();
+  })
+
+  $('.modal-content').click(function(e) {
+    e.stopPropagation();
+  })
+
+  $('.checkout-wrapper').click(function(e) {
+    e.stopPropagation();
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      'event': 'upsellGoToCheckout'
+    });
+  })
+
+  $('.close-dialog').click(function() { 
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({
+      'event': 'upsellCloseWidget'
+    });
+
+    window.location.href = '/checkout/';
+    // $(this).closest('.modal').hide();
+    // $(window).width() > 767 ? '' : $('#gorgias-web-messenger-container').show();
+  })
+
+  $('.add-upsell-to-cart').on('click', function() {
+    let $this = $(this);
+    let variantIDToAdd = $this.data('id').toString();
+    let productTitle = $this.prev().find('h4').text();
+
+    if ($this.hasClass('disabled')) {
+      return false;
+    }
+
+    $.ajax({
+      url: '/cart/add.js',
+      method: 'POST',
+      dataType: 'json',
+      data: {
+        quantity: 1,
+        id: variantIDToAdd
+      },
+      success:function() {
+        // window.location.reload();
+
+        $this.text('Added!');
+        $this.css('background-color', '#084b6d').css('color', '#fff');
+        $this.addClass('disabled');
+
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+          'event': 'upsellAddToCart',
+          'variantID': variantIDToAdd,
+          'productTitle': productTitle
+        });
+
+      },
+      error: function(err) {
+        console.log('error:', err)
+      }
+    })
+
+
+  })
+
+  $('.mini-cart .btn--checkout').click(function(e) { 
+    e.preventDefault();
+    // Only show Upsell modal if there's no subscription product in cart
+    {% if subscriptionInCart == false %}
+      $('.mini-cart').removeClass('show');
+      // $('.modal').show();
+      $('.modal').addClass('show');
+      $(window).width() > 767 ? '' : $('#gorgias-web-messenger-container').hide();
+
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        'event': 'upsellDisplay'
+      });
+    {% endif %}
+  })
+
+  // Carousel Mobile
+  $(document).ready(function(){
+    var upsellSlider = tns({
+      container: '.modal-upsell-wrapper-mobile',
+      items: 1,
+      controls: false,
+      autoplay: false,
+      autoplayButtonOutput: false,
+      autoplayTimeout: 5000,
+      autoplayHoverPause: false
+    });
+
+    $('.prevButton').click(function() {
+      upsellSlider.goTo('prev');
+    })
+
+    $('.nextButton').on('click', function() {
+      upsellSlider.goTo('next');
+    })
+
+  }); 
+
+  
+</script>
+
+{{ 'popup_modal.js' | asset_url | script_tag }}
+<script>
+  var navDialogEl = document.querySelector('.dialog');
+  var dialogOverlay = document.querySelector('.dialog-overlay');
+		
+  var myDialog = new Dialog(navDialogEl, dialogOverlay);
+  myDialog.addEventListeners('.mini-cart .btn--checkout', '.close-dialog'); 
+</script>

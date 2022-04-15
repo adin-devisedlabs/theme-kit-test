@@ -1,0 +1,303 @@
+{
+  "general": {
+    "meta": {
+      "tags": "Tagged \"{{ tags }}\"",
+      "page": "Page {{ page }}"
+    },
+    "password_page": {
+      "opening_soon": "Opening Soon",
+      "spread_the_word": "Spread the word:",
+      "login_form_heading": "Enter store using password:",
+      "login_form_password_label": "Password",
+      "login_form_password_placeholder": "Your password",
+      "login_form_submit": "Enter",
+      "signup_form_heading": "Find out when we open:",
+      "signup_form_email_label": "Email",
+      "signup_form_email_placeholder": "Your email",
+      "signup_form_submit": "Submit",
+      "signup_form_success": "We will send you an email right before we open!",
+      "admin_link_html": "Are you the store owner? <a href=\"\/admin\" class=\"text-link\">Log in here<\/a>",
+      "password_link": "Enter using password",
+      "powered_by_shopify_html": "This shop will be powered by {{ shopify }}",
+      "close": "Close (Esc)"
+    },
+    "breadcrumbs": {
+      "home": "Home",
+      "home_link_title": "Back to the frontpage"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "label": "{{ current_page }} of {{ pages }}"
+    },
+    "search": {
+      "no_results_html": "Sorry, we couldn't find any search results for \"{{ terms }}\". Try your search again or shop our bestsellers.",
+      "results_for_html": "Your search for \"{{ terms }}\" revealed the following:",
+      "title": "Search for products on our site",
+      "label": "Search",
+      "placeholder": "Search",
+      "submit": "Search"
+    },
+    "copyright": "Copyright"
+  },
+  "layout": {
+    "cart": {
+      "shipping_price": "You’re {{price}} away from free shipping!",
+      "shipping_free": "You qualify for free shipping!",
+      "gift_text": "Add gift bag (+{{price}})",
+      "other_bought": "Add a gift bag",
+      "add": "Add",
+      "subtotal": "Subtotal",
+      "checkout": "Checkout",
+      "error": "You can't add any more of this product.",
+      "recharge_text": "You will be charged {{price}} every {{days}} days. Skip, modify, or cancel any time.",
+      "continue": "Continue Shopping",
+      "ship_every": "Ships every {{days}} days"
+    },
+    "customer": {
+      "cart": "Cart",
+      "account": "My Account",
+      "log_out": "Log out",
+      "log_in": "Log in",
+      "create_account": "Create account",
+      "sign_in": "Sign In"
+    },
+    "footer": {
+      "email": "Email address"
+    },
+    "socials": {
+      "social_platform": "{{ name }} on {{ platform }}"
+    }
+  },
+  "collections": {
+    "general": {
+      "title": "Collections",
+      "no_matches": "Sorry, there are no products in this collection",
+      "quick_add": "Quick Add"
+    },
+    "filters": {
+      "category": "Category",
+      "all_tags": "Shop All",
+      "filters": "Filters",
+      "apply_filters": "Apply Filters"
+    },
+    "sorting": {
+      "title": "Sort by",
+      "manual": "Featured",
+      "best_selling": "Bestselling",
+      "title_ascending": "Alphabetically, A-Z",
+      "title_descending": "Alphabetically, Z-A",
+      "price_ascending": "Price, low to high",
+      "price_descending": "Price, high to low",
+      "created_descending": "Date, new to old",
+      "created_ascending": "Date, old to new"
+    }
+  },
+  "products": {
+    "product": {
+      "sold_out": "Sold Out",
+      "sale": "Sale",
+      "quantity": "Quantity",
+      "add_to_cart": "Add to Cart",
+      "unavailable": "Unavailable",
+      "shop_now": "Shop Now",
+      "reviews": "Customer Reviews",
+      "read_more": "Read More",
+      "delivery_every": "Delivery every {{days}} days",
+      "one_time": "One-time purchase",
+      "related_title": "",
+      "related_main_title": "You May Also Like"
+    }
+  },
+  "blogs": {
+    "article": {
+      "posted_on_date": "Posted on {{ date }}",
+      "read_more": "Read more"
+    },
+    "comments": {
+      "title": "Comments",
+      "name": "Name",
+      "email": "Email",
+      "message": "Message",
+      "post": "Post comment",
+      "form_title": "Leave a comment",
+      "moderated": "Please note, comments must be approved before they are published",
+      "success_moderated": "Your comment was posted successfully. We will publish it in a little while, as our blog is moderated.",
+      "success": "Your comment was posted successfully! Thank you!"
+    }
+  },
+  "cart": {
+    "general": {
+      "title": "Your Cart",
+      "remove": "Remove",
+      "note": "Special instructions for seller",
+      "subtotal": "Subtotal",
+      "savings_html": "You're saving {{ price }}",
+      "shipping_at_checkout": "Shipping and taxes calculated at checkout",
+      "update": "Update Cart",
+      "checkout": "Checkout",
+      "empty": "Your cart is currently empty.",
+      "continue_browsing_html": "Continue browsing <a href=\"\/collections\/all\">here<\/a>.",
+      "order_summary": "Order Summary"
+    },
+    "label": {
+      "name": "Item",
+      "price": "Price",
+      "quantity": "Quantity",
+      "total": "Total"
+    }
+  },
+  "contact": {
+    "form": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone Number",
+      "message": "Message",
+      "submit": "Send",
+      "post_success": "Thanks for contacting us. We'll get back to you as soon as possible."
+    }
+  },
+  "customer": {
+    "account": {
+      "title": "My Account",
+      "dashboard": "Dashboard",
+      "log_out": "Log out",
+      "view_addresses": "My Addresses",
+      "order_history": "Order History",
+      "refer_friend": "Refer a Friend",
+      "welcome": "Welcome, {{name}}",
+      "personal": "Personal Information",
+      "edit": "Edit",
+      "password": "Password"
+    },
+    "activate_account": {
+      "title": "Activate Account",
+      "subtext": "Create your password to activate your account.",
+      "password": "Password",
+      "password_confirm": "Confirm Password",
+      "submit": "Activate Account",
+      "cancel": "Decline Invitation"
+    },
+    "addresses": {
+      "title": "My Addresses",
+      "default": "Default",
+      "add_new": "Add a New Address",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "company": "Company",
+      "address1": "Address1",
+      "address2": "Address2",
+      "city": "City",
+      "country": "Country",
+      "province": "Province",
+      "zip": "Postal\/Zip Code",
+      "phone": "Phone",
+      "set_default": "Set as default address",
+      "add": "Add Address",
+      "update": "Update Address",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "New to Pipette?",
+      "sign_up": "Sign Up",
+      "email": "Email",
+      "password": "Password",
+      "reset": "Reset it",
+      "forgot_password": "Forgot your password?",
+      "sign_in": "Sign In",
+      "create_account": "Create account",
+      "guest_title": "Continue as a guest",
+      "guest_continue": "Continue"
+    },
+    "orders": {
+      "order_number": "Order",
+      "date": "Date",
+      "payment_status": "Payment Status",
+      "fulfillment_status": "Fulfillment Status",
+      "total": "Total",
+      "none": "You haven't placed any orders yet.",
+      "track_shipment": "Track SHipment"
+    },
+    "order": {
+      "title": "Order {{ name }}",
+      "date": "Placed on {{ date }}",
+      "cancelled": "Order Cancelled on {{ date }}",
+      "cancelled_reason": "Reason: {{ reason }}",
+      "billing_address": "Billing Address",
+      "payment_status": "Payment Status",
+      "shipping_address": "Shipping Address",
+      "fulfillment_status": "Fulfillment Status",
+      "discount": "Discount",
+      "shipping": "Shipping",
+      "tax": "Tax",
+      "product": "Item",
+      "sku": "SKU",
+      "price": "Price",
+      "quantity": "Quantity",
+      "total": "Total",
+      "fulfilled_at": "Fulfilled {{ date }}",
+      "subtotal": "Subtotal"
+    },
+    "recover_password": {
+      "title": "Password Reset",
+      "email": "Email",
+      "submit": "Submit",
+      "subtext": "We will send you an email to reset your password.",
+      "success": "We've sent you an email with a link to update your password."
+    },
+    "reset_password": {
+      "title": "Reset account password",
+      "subtext": "Enter a new password for {{ email }}",
+      "password": "Password",
+      "password_confirm": "Confirm Password",
+      "submit": "Reset Password",
+      "login": "Return to login",
+      "password_contian": "Password must contain:"
+    },
+    "register": {
+      "title": "Sign Up",
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create",
+      "login": "Log in",
+      "already_have_account": "Already have an account?",
+      "newsletter_text": "Send me Pipette news, updates and special offers"
+    }
+  },
+  "gift_cards": {
+    "issued": {
+      "title": "Here's your {{ value }} gift card for {{ shop }}!",
+      "subtext": "Here's your gift card!",
+      "disabled": "Disabled",
+      "expired": "Expired on {{ expiry }}",
+      "active": "Expires on {{ expiry }}",
+      "redeem": "Use this code at checkout to redeem your gift card",
+      "shop_link": "Start shopping",
+      "print": "Print",
+      "add_to_apple_wallet": "Add to Apple Wallet"
+    }
+  },
+  "date_formats": {
+    "short": "%B %d, %Y",
+    "long": "%B %d, %Y %R",
+    "gift_card": "%d\/%m\/%y"
+  },
+  "shopify": {
+    "checkout": {
+      "general": {
+        "all_rights_reserved": "© Pipette. All rights reserved. Privacy Policy Terms of Service"
+      }
+    }
+  },
+  "discount_ninja": {
+    "from": "From",
+    "here": "here",
+    "free": "FREE",
+    "sold_out": "Sold out"
+  }
+}

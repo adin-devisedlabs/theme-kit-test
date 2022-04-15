@@ -1,0 +1,38 @@
+<div class="style-guide-illustrations-container">
+  {%- for block in section.blocks -%}
+    {% if block.settings.illustration %} <img class="illustration" src="{{block.settings.illustration | img_url: 'master' }}" /> {% endif %}
+  {%- endfor -%}
+</div>
+
+{% stylesheet %}
+  .style-guide-illustrations-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-evenly;
+  }
+  .style-guide-illustrations-container .illustration {
+    margin: 5px;
+    padding: 1rem;
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Illustrations",
+  "settings": [],
+  "blocks": [
+    {
+      "name": "Illustration",
+      "type": "illustrations",
+      "settings": [
+      {
+        "id": "illustration",
+        "type": "image_picker",
+        "label": "Illustration"
+      }
+    ]
+    }
+  ]
+}
+{% endschema %}

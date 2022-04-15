@@ -1,0 +1,422 @@
+  <!-- Adrizer START  -->
+  <!-- Taboola Pixel Code -->
+  <script type='text/javascript'>
+    window._tfa = window._tfa || [];
+    window._tfa.push({notify: 'event', name: 'page_view', id: 1317424});
+    !function (t, f, a, x) {
+          if (!document.getElementById(x)) {
+              t.async = 1;t.src = a;t.id=x;f.parentNode.insertBefore(t, f);
+          }
+    }(document.createElement('script'),
+    document.getElementsByTagName('script')[0],
+    '//cdn.taboola.com/libtrc/unip/1317424/tfa.js',
+    'tb_tfa_script');
+  </script>
+  <!-- End of Taboola Pixel Code -->
+
+  <!-- Outbrain Pixel Code -->
+  <script data-obct type="text/javascript">
+    /** DO NOT MODIFY THIS CODE**/
+    !function(_window, _document) {
+      var OB_ADV_ID='0097ee3b5a080421fbddfdff114c7a4167';
+      if (_window.obApi) {var toArray = function(object) {return Object.prototype.toString.call(object) === '[object Array]' ? object : [object];};_window.obApi.marketerId = toArray(_window.obApi.marketerId).concat(toArray(OB_ADV_ID));return;}
+      var api = _window.obApi = function() {api.dispatch ? api.dispatch.apply(api, arguments) : api.queue.push(arguments);};api.version = '1.1';api.loaded = true;api.marketerId = OB_ADV_ID;api.queue = [];var tag = _document.createElement('script');tag.async = true;tag.src = '//amplify.outbrain.com/cp/obtp.js';tag.type = 'text/javascript';var script = _document.getElementsByTagName('script')[0];script.parentNode.insertBefore(tag, script);}(window, document);
+    
+    {% if template contains 'product' %}
+      let productIDstamped = $('.stamped-product-reviews-badge.stamped-main-badge').attr('data-id');
+      obApi('track', 'PAGE_VIEW', { content: { id: productIDstamped }, contentType: 'product' })
+    {% else %}
+      obApi('track', 'PAGE_VIEW');
+    {% endif %}
+  
+  </script>
+  <!-- End of Outbrain Pixel Code -->
+
+  <!-- Yahoo Pixel Code  -->
+  <script type="application/javascript">(function(w,d,t,r,u){w[u]=w[u]||[];w[u].push({'projectId':'10000','properties':{'pixelId':'10115358'}});var s=d.createElement(t);s.src=r;s.async=true;s.onload=s.onreadystatechange=function(){var y,rs=this.readyState,c=w[u];if(rs&&rs!="complete"&&rs!="loaded"){return}try{y=YAHOO.ywa.I13N.fireBeacon;w[u]=[];w[u].push=function(p){y([p])};y(c)}catch(e){}};var scr=d.getElementsByTagName(t)[0],par=scr.parentNode;par.insertBefore(s,scr)})(window,document,"script","https://s.yimg.com/wi/ytc.js","dotq");</script>
+
+  <!-- Zemanta -->
+  <img src="https://p1.zemanta.com/p/7403/7748/" height="1" width="1" border="0" alt="" />
+
+  <!-- Adrizer: Unbounce Pixels -->
+  <script>
+    setTimeout(function() {
+      // Taboola
+      _tfa.push({notify: 'event', name: 'unbounce', id: 1317424});
+
+      // Outbrain
+      obApi('track', 'Unbounce');
+
+      // Yahoo 
+      window.dotq = window.dotq || [];
+      window.dotq.push(
+      {
+        'projectId': '10000',
+        'properties': {
+          'pixelId': '10115358',
+          'qstrings': {
+            'ec': 'unbounce',
+            'ea': 'unbounce'
+          }
+      } } ); 
+
+      // Zemanta 
+      // <img src="https://p1.zemanta.com/p/7403/7749/" height="1" width="1" border="0" alt="" />
+      window.onload = function() {
+        function addTrackingPixel() {
+          var pixel = document.createElement("IMG");
+          pixel.setAttribute("src", "https://p1.zemanta.com/p/7403/7749/");
+          pixel.setAttribute("height", "1");
+          pixel.setAttribute("width", "1");
+          pixel.setAttribute("border", "0");
+          document.body.appendChild(pixel);
+        }
+        addTrackingPixel();
+      };
+
+    }, 30000);
+  </script>
+
+  <!-- Hotjar Tracking Code -->
+  <script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:1484979,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  </script>
+
+  {% if template contains 'product' %}
+    <!-- Taboola Pixel Code -->
+    <script>
+      let productPrice = $('meta[property="og:price:amount"]').attr('content');
+      _tfa.push({notify: 'event', name: 'pdpView', currency: 'USD', revenue: productPrice, id: 1317424});
+    </script>
+    <!-- Outbrain  -->
+    <script>
+      obApi('track', 'PDP View', {orderValue: productPrice, currency:'USD'});
+    </script>
+    <!-- Yahoo  -->
+    <script type="application/javascript">
+      let productCollection = window.location.href.indexOf('/collections/') > -1 ? window.location.href.split('/collections/')[1].split('/')[0] : '';
+      let productID = $('.stamped-product-reviews-badge.stamped-main-badge').attr('data-id');
+      window.dotq = window.dotq || [];
+      window.dotq.push(
+      {
+        'projectId': '10000',
+        'properties': {
+          'pixelId': '10115358',
+          'qstrings': {
+            'et': 'custom',
+            'ec': 'shopping',
+            'ea': 'ViewProduct',
+            'product_id': productID,
+            'el': productCollection,
+            'ev': productCollection,
+            'gv': productPrice
+          }
+      } } ); 
+    </script>
+
+    <!-- Zemanta  --> 
+    <!-- <img src="https://p1.zemanta.com/p/7403/7751/" height="1" width="1" border="0" alt="" /> -->
+    <script>
+      window.onload = function() {
+        function addTrackingPixel() {
+          var pixel = document.createElement("IMG");
+          pixel.setAttribute("src", "https://p1.zemanta.com/p/7403/7751/");
+          pixel.setAttribute("height", "1");
+          pixel.setAttribute("width", "1");
+          pixel.setAttribute("border", "0");
+          document.body.appendChild(pixel);
+        }
+        addTrackingPixel();
+      };
+    </script>
+  {% endif %}
+
+  <script>
+    // Add to cart Pixel
+    $('form[action="/cart/add"]').on('submit', function() {
+      let variantPrice = $('.product__entry .price__amount.current .money').text().replace('$', '');
+      let quantityAdded = $('.product__form .qty input').val();
+      let atcValue = quantityAdded * parseInt(variantPrice);
+      let productCollection = window.location.href.indexOf('/collections/') > -1 ? window.location.href.split('/collections/')[1].split('/')[0] : '';
+      let productID = $('.stamped-product-reviews-badge.stamped-main-badge').attr('data-id');
+      // Taboola
+      _tfa.push({notify: 'event', name: 'addToCart', currency: 'USD', revenue: atcValue, id: 1317424});
+      // Outbrain
+      obApi('track', 'Add to Cart', {orderValue: atcValue, currency:'USD'});
+      // Yahoo 
+      window.dotq = window.dotq || [];
+      window.dotq.push(
+      {
+        'projectId': '10000',
+        'properties': {
+          'pixelId': '10115358',
+          'qstrings': {
+            'et': 'custom',
+            'ec': 'shopping',
+            'ea': 'AddToCart',
+            'product_id': productID,
+            'el': productCollection,
+            'ev': atcValue,
+            'gv': atcValue
+          }
+        } 
+      });
+      // Zemanta  
+      // <img src="https://p1.zemanta.com/p/7403/7752/" height="1" width="1" border="0" alt="" />
+      function addTrackingPixel() {
+        var pixel = document.createElement("IMG");
+        pixel.setAttribute("src", "https://p1.zemanta.com/p/7403/7752/");
+        pixel.setAttribute("height", "1");
+        pixel.setAttribute("width", "1");
+        pixel.setAttribute("border", "0");
+        document.body.appendChild(pixel);
+      }
+      addTrackingPixel();
+    });
+
+    // Search submit Pixel
+    $('form[action="/search"]').on('submit', function() {
+      // Taboola
+      _tfa.push({notify: 'event', name: 'search', id: 1317424});
+      // Outbrain 
+      obApi('track', 'Search');
+      // Yahoo
+      window.dotq = window.dotq || [];
+      window.dotq.push(
+      {
+        'projectId': '10000',
+        'properties': {
+          'pixelId': '10115358',
+          'qstrings': {
+            'ec': 'search',
+            'ea': 'search'
+          }
+      } } );
+
+      // Zemanta
+      // <img src="https://p1.zemanta.com/p/7403/7750/" height="1" width="1" border="0" alt="" />
+      function addTrackingPixel() {
+        var pixel = document.createElement("IMG");
+        pixel.setAttribute("src", "https://p1.zemanta.com/p/7403/7750/");
+        pixel.setAttribute("height", "1");
+        pixel.setAttribute("width", "1");
+        pixel.setAttribute("border", "0");
+        document.body.appendChild(pixel);
+      }
+      addTrackingPixel();
+    });
+  </script>
+  <!-- Adrizer END -->
+
+  <!-- google dynamic remarketing tag for theme.liquid -->
+{% if template contains 'product' %}
+<script type="text/javascript">
+  var json_product = {{ product | json }};
+</script>
+<script>
+  var ecomm_prodid=[];
+  for(var i=0;i<json_product.variants.length;i++)
+    ecomm_prodid.push('shopify_US_{{product.id}}_'+json_product.variants[i].id);
+</script>
+<script type="text/javascript">
+  var google_tag_params = {
+    ecomm_prodid: ecomm_prodid,
+    ecomm_pagetype: 'product',
+    ecomm_totalvalue: parseFloat('{{ product.price | money_without_currency | remove: ","}}')
+  };
+</script>
+{% elsif template contains 'collection' %}
+<script type="text/javascript">
+  var google_tag_params = {
+    ecomm_pagetype: 'category'
+  };
+</script>
+{% elsif template contains 'cart' %}
+<script type="text/javascript">
+  var id = new Array();
+  {% for item in cart.items %}
+  id.push('shopify_US_{{item.product.id}}_{{item.variant.id}}');
+   {% endfor %}
+
+   var google_tag_params = {
+     ecomm_prodid: id,
+     ecomm_pagetype: 'cart',
+     ecomm_totalvalue: parseFloat('{{ cart.total_price | money_without_currency | remove: ","}}')
+   };
+</script>
+{% elsif template contains 'search' %}
+<script type="text/javascript">
+  var google_tag_params = {
+    ecomm_pagetype: 'searchresults'
+  };
+</script>
+{% elsif template contains 'index' %}
+<script type="text/javascript">
+  var google_tag_params = {
+    ecomm_pagetype: 'home'
+  };
+</script>
+{% else %}
+<script type="text/javascript">
+  var google_tag_params = {
+    ecomm_pagetype: 'other'
+  };
+</script>
+{% endif %}
+<script>
+  gtag('event', 'page_view', {'send_to': 'AW-728577457',
+                              'ecomm_prodid':window.google_tag_params.ecomm_prodid,
+                              'ecomm_pagetype': window.google_tag_params.ecomm_pagetype,
+                              'ecomm_totalvalue':window.google_tag_params.ecomm_totalvalue
+                             });
+</script>
+<script>
+  window.addEventListener('load', function(){
+    if(window.location.pathname == "/pages/thank-you"){
+   gtag('event', 'conversion', {'send_to': 'AW-728577457/nFnTCPDUv7MBELHrtNsC'});
+    }
+  });
+</script>
+
+<!-- Attentive -->
+<script src="https://cdn.attn.tv/pipette/dtag.js"></script>
+<script>
+  {% if customer %}
+    {% if customer.accepts_marketing == true %}
+      let findCookie = document.cookie.split('; ').find(function(row) { return row.startsWith('shopify_accepts_marketing') });
+      let customerAcceptsMarketing;
+      if (findCookie) {
+        customerAcceptsMarketing = findCookie.split('=')[1];
+      }
+      if (customerAcceptsMarketing != 'true') {
+        document.cookie = "shopify_accepts_marketing=true";
+      }
+    {% endif %}
+  {% endif %}
+</script>
+
+<!-- Start of pipettebaby Zendesk Widget script -->
+<script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=db18282b-2fab-4e7b-b291-e33054761c30"> </script>
+<!-- End of pipettebaby Zendesk Widget script -->
+
+<!-- Podsites Pixel -->
+<script>
+  (function(w, d){
+   var id='pdst-capture', n = 'script';
+   if (!d.getElementById(id)){
+     w.pdst = w.pdst || function() {(w.pdst.q = w.pdst.q || []).push(arguments);};
+     var e = d.createElement(n); e.id = id; e.async=1;
+     e.src = 'https://cdn.pdst.fm/ping.min.js';
+     var s = d.getElementsByTagName(n)[0];
+     s.parentNode.insertBefore(e, s);
+   }
+   w.pdst('conf', { key: '94f30ca161ba4c599dd14113de8ad0e5' });
+   w.pdst('view');
+  })(window, document);
+</script>
+
+<!-- Bing Tracking -->
+<script>(function(w,d,t,r,u){var f,n,i;w[u]=w[u]||[],f=function(){var o={ti:"56305982"};o.q=w[u],w[u]=new UET(o),w[u].push("pageLoad")},n=d.createElement(t),n.src=r,n.async=1,n.onload=n.onreadystatechange=function(){var s=this.readyState;s&&s!=="loaded"&&s!=="complete"||(f(),n.onload=n.onreadystatechange=null)},i=d.getElementsByTagName(t)[0],i.parentNode.insertBefore(n,i)})(window,document,"script","//bat.bing.com/bat.js","uetq");</script>
+
+<!-- Twitter universal website tag code -->
+<script>
+!function(e,t,n,s,u,a){e.twq||(s=e.twq=function(){s.exe?s.exe.apply(s,arguments):s.queue.push(arguments);
+},s.version='1.1',s.queue=[],u=t.createElement(n),u.async=!0,u.src='//static.ads-twitter.com/uwt.js',
+a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,'script');
+// Insert Twitter Pixel ID and Standard Event data below
+twq('init','o51f9');
+twq('track','PageView');
+</script>
+<!-- End Twitter universal website tag code -->
+
+<script src="https://klaviyo.com/media/js/onsite/onsite.js"></script>
+<script>
+    var klaviyo = klaviyo || [];
+    klaviyo.init({
+      account: "PXQZTm ",
+      platform: "shopify",
+      include_on_tags: 'back-in-stock-alert'
+    });
+    klaviyo.enable("backinstock",{ 
+    trigger: {
+      product_page_text: "Notify Me When Available",
+      product_page_class: "btn btn--border",
+      product_page_text_align: "center",
+      alternate_anchor: "OOS",
+      replace_anchor: false
+    },
+    modal: {
+     headline: "{product_name}",
+     body_content: "Register to receive a notification when this item comes back in stock.",
+     email_field_label: "Email",
+     button_label: "Notify me when available",
+     subscription_success_label: "You're in! We'll let you know when it's back.",
+     footer_content: 'By submitting this form, I accept the <a href="https://pipettebaby.com/pages/privacy-policy" target="_blank">Privacy Policy</a> and <a href="https://pipettebaby.com/pages/terms-of-service" target="_blank">Terms of Service</a>',
+     additional_styles: "@import url('https://fonts.googleapis.com/css?family=Helvetica+Neue');",
+     drop_background_color: "#000",
+     background_color: "#fff",
+     text_color: "#222",
+     button_text_color: "#fff",
+     button_background_color: "#084b6d",
+     close_button_color: "#ccc",
+     error_background_color: "#fcd6d7",
+     error_text_color: "#C72E2F",
+     success_background_color: "#d3efcd",
+     success_text_color: "#1B9500"
+    }
+  });
+</script>
+
+<script>
+  function setCookie(name, value, days) {
+    let expires = '';
+    if (days) {
+        let date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+  }
+
+  function getCookie(name) {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(';');
+    for (let i=0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+  }
+
+  function deleteCookie(name) {
+    document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+  }
+
+  const sample = "{{settings.enable_gwp_auto_add}}";
+  const sampleId = "{{settings.gwp_auto_add_variant_id}}";
+  const gift = "{{settings.enable_gwp_auto_add_threshold}}";
+  const giftId1 = "{{settings.gwp_auto_add_threshold_variant_id_1}}";
+  const giftId2 = "{{settings.gwp_auto_add_threshold_variant_id_2}}";
+  const pickGwp = "{{settings.enable_gwp_pick_threshold}}";
+  const pickGWpId1 = "{{settings.gwp_product_id_1}}";
+  const pickGWpId2 = "{{settings.gwp_product_id_2}}";
+  const pickGWpId3 = "{{settings.gwp_product_id_3}}";
+  const pickGWpId4 = "{{settings.gwp_product_id_4}}";
+
+  const freeGiftIds = getCookie('sag_ids');
+
+  // if free sample / GWP settings change, empty the cart 
+  if (freeGiftIds !== `${sample}${gift}${pickGwp}${sampleId}${giftId1}${giftId2}${pickGWpId1}${pickGWpId2}${pickGWpId3}${pickGWpId4}`) {
+    setCookie('sag_ids', `${sample}${gift}${pickGwp}${sampleId}${giftId1}${giftId2}${pickGWpId1}${pickGWpId2}${pickGWpId3}${pickGWpId4}`, 14);
+    deleteCookie('cart');
+    window.location.reload();
+  }
+</script>

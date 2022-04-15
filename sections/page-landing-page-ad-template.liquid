@@ -1,0 +1,1044 @@
+{% for block in section.blocks %}
+{% assign _block = block.settings %}
+  {% if block.type == 'reviews' %}
+      <div class="paid-search reviews animate"{% if _block.bgColor != empty %} style="background:{{ _block.bgColor }}"{% endif %} id="section{{ block.id }}">
+        <div class="container">
+          <div class="reviews__header">
+            <h2>{{_block.heading}}</h2>
+          </div>
+          <div id="productReviewSlider" class="review-slider">
+            {% for block in section.blocks %}
+              {% if block.type == 'review-item' %}
+                {% assign block_product = all_products[block.settings.product_handle] %}
+                <div class="review__container" style="background: url('https://cdn.shopify.com/s/files/1/0140/8847/0614/files/review_bg.png?v=1619547395');background-repeat: no-repeat;background-size: contain;">
+                  <img class="visible-xs-block" src="https://cdn.shopify.com/s/files/1/0140/8847/0614/files/review_bg_mobile.png?v=1619547412">
+                  <div class="content__wrapper">
+                    <h3>{{block_product.title}}</h3>
+                    <span class="stamped-product-reviews-badge stamped-main-badge" data-id="{{block_product.id}}" style="display: block;"></span>
+                    <p class="review__text">{{block.settings.review_text}}</p>
+                    <p class="reviewer">-&nbsp;&nbsp;{{block.settings.reviewer}}</p>
+                    {%- include 'link' url: block.settings.link_url, text: block.settings.link_text, tabindex: true, btn_border: true, custom_class: 'hidden-xs' -%}
+                  </div>
+                  <div class="image__wrapper">
+                    <img src="{{ block.settings.product_image | img_url: 'master' }}" alt="">
+                    {%- include 'link' url: block.settings.link_url, text: block.settings.link_text, tabindex: true, btn_border: true, custom_class: 'visible-xs-block' -%}
+                  </div>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+    </div>
+  {% endif %}
+  {% if block.type == 'sixty-forty' or block.type == 'sixty-forty-html' %}
+	  <div class="paid-search animate sixty-forty sixty-forty--{{ _block.bodyImageAlign }}"{% if _block.bgColor != empty %} style="background:{{ _block.bgColor }}"{% endif %} id="section{{ block.id }}">
+      {% if _block.bodyImageAlign == 'left' %}
+        <div class="sixty-forty__image" style="background: url('{{ _block.bodyImage | img_url: '2x' }}') {% if _block.bodyImageBgColor != empty %}{{ _block.bodyImageBgColor }}{% endif %};background-size:cover;background-position:30%;">
+          <div>
+            {% if _block.bodyImageMob != blank %}
+              <img src="{{ _block.bodyImageMob | img_url: '2x' }}" alt="" class="img--mob">
+            {% else %}
+              <img src="{{ _block.bodyImage | img_url: '2x' }}" alt="">
+            {% endif %}
+          </div>
+        </div>
+      {% endif %}  
+        <div class="sixty-forty__text"{% if _block.bodyBgColor != empty %} style="background:{{ _block.bodyBgColor }}"{% endif %}>
+          <div class="sixty-forty__text__inner">
+            <small>{{ _block.headingSmall }}</small>
+            <h2>{{ _block.headingLarge }}{%- if _block.headingLargeIcon -%}<img src="{{ _block.headingLargeIcon | img_url: '2x' }}" alt="">{%- endif -%}</h2>
+              {{ _block.bodyText }}
+            	{%- if _block.bodyCTAURL != blank -%}
+                {%- include 'link' url: _block.bodyCTAURL, text: _block.bodyCTAText, tabindex: true, btn_border: true -%}
+              {%- endif -%}
+          </div>
+        </div>
+        {% if _block.bodyImageAlign == 'right' %}
+          <div class="sixty-forty__image" style="background: url('{{ _block.bodyImage | img_url: '2x' }}') {% if _block.bodyImageBgColor != empty %}{{ _block.bodyImageBgColor }}{% endif %};background-size:cover;background-position:center top;">
+            <div class="img--wrapper">
+              {% if _block.bodyImageMob != blank %}
+                <img src="{{ _block.bodyImageMob | img_url: '2x' }}" alt="" class="img--mob">
+              {% else %}
+                <img src="{{ _block.bodyImage | img_url: '2x' }}" alt="">
+              {% endif %}
+            </div>
+          </div>
+      {% endif %}  
+	  </div>
+  {% endif %}
+  {% if block.type == 'press' %}
+    <div class="paid-search press animate"{% if _block.bgColor != empty %} style="background:{{ _block.bgColor }}"{% endif %} id="section{{ block.id }}">
+      <div class="container">
+        <div class="press__header">
+          <h2>{{_block.heading}}</h2>
+        </div>
+        <div id="pressArticleSlider" class="press-slider">
+          {% for block in section.blocks %}
+            {% if block.type == 'press-item' %}
+              <div class="press-image__container">
+                <img src="{{ block.settings.press_image | img_url: 'master' }}" alt="">
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+        {%- include 'link' url: _block.link_url, text: _block.link_text, tabindex: true, btn_border: true -%}
+      </div>
+    </div>
+  {% endif %}
+{% endfor %}
+
+<style>
+  #shopify-section-page-landing-page-ad-template {
+    overflow-x: hidden;
+    overflow-y: hidden;
+  }
+  .paid-search.reviews .tns-outer {
+    max-width: 980px;
+    height: 600px;
+    margin-top: -0.7rem;
+  }
+  .paid-search.reviews .review__container.tns-item {
+    height: 100%;
+    display: inline-flex;
+    justify-content: center;
+  }
+  #productReviewSlider-mw, #productReviewSlider-iw, #productReviewSlider {
+    height: 100%;
+  }
+  .paid-search.reviews .content__wrapper {
+    height: 100%;
+    flex-basis: 47%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 2.5rem;
+  }
+  .paid-search.reviews .image__wrapper {
+    height: 100%;
+    flex-basis: 45%;
+    padding-bottom: 1.5rem;
+  }
+  .paid-search.reviews .image__wrapper img {
+    object-fit: cover;
+    object-position: center;
+    height: 100%;
+  }
+  .paid-search.reviews [data-controls] {
+    border: 0;
+    padding: 0 2rem;
+    position: absolute;
+    height: 100%;
+    margin-top: 0;
+    top: 0;
+    z-index: 1;
+    background: transparent;
+  }
+  .paid-search.reviews [data-controls="prev"] {
+    left: -7rem;
+  }
+  .paid-search.reviews [data-controls="next"] {
+    right: -7rem;
+  }
+  .paid-search.reviews .review--arrow, .paid-search.press .press--arrow {
+    border: solid #004c70;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 10px;
+  }
+  .review--arrow.right, .press--arrow.right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+  }
+  .review--arrow.left, .press--arrow.left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+  }
+  .paid-search.reviews .container {
+    padding: 2.5rem 1rem 3.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .paid-search.press .container {
+    padding: 3.5rem 0 6rem;
+    max-width: unset;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .paid-search.reviews .review__container h3 {
+    font-size: 40px;
+    font-weight: 400;
+    margin-bottom: 0.3rem;
+  }
+  .paid-search.reviews .review__text {
+    padding-top: 2rem;
+  }
+  .paid-search.reviews p.review__text + p {
+    font-size: 26px;
+    line-height: 1.2;
+    margin-bottom: 0;
+  }
+  .paid-search.reviews p.reviewer {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0.5rem 0 1.5rem;
+  }
+  .paid-search.reviews .stamped-badge-text, .paid-search.reviews .stamped-badge-caption, .paid-search.reviews .stamped-product-reviews-badge {
+    font-size: 20px;
+  }
+  .paid-search.reviews .stamped-badge-starrating .stamped-fa {
+    padding-top: 4px;
+  }
+  .paid-search.reviews .stamped-fa-star:before, .testimonials.animate .stamped-fa-star-half-o:before {
+    font-size: 24px;
+  }
+  .paid-search.reviews .stamped-badge {
+    display: flex;
+  }
+  .paid-search.reviews .stamped-badge-caption {
+    padding-left: 0.8rem;
+  }
+  .paid-search .sixty-forty__text__inner {
+    max-width: 600px;
+    padding-right: 2rem;
+  }
+  .paid-search .sixty-forty__text h2 img {
+    width: 150px;
+    right: 1rem;
+    bottom: -1rem;
+    left: unset;
+    top: unset;
+  }
+  .paid-search.sixty-forty--right.sixty-forty .flex-row p {
+    margin-bottom: 1.5rem;
+  }
+  .paid-search .btn--border {
+    background: #084b6d;
+    color: #fffefb !important;
+    font-size: 17px;
+    width: 320px;
+    margin-top: 2rem;
+  }
+  .paid-search.reviews .btn--border {
+    margin-top: 0.5rem;
+  }
+  .paid-search .btn--border:hover {
+    background: none !important;
+    color: #084b6d !important;
+  }
+  .paid-search.sixty-forty--right .btn--border {
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .paid-search.sixty-forty--right .sixty-forty__text__inner h2 {
+    margin-bottom: 1.7rem;
+    margin-top: 1rem;
+  }
+  .paid-search.sixty-forty--right .ingredients-quote {
+    margin-bottom: 1rem;
+    margin-top: 0.5rem;
+  }
+  .paid-search .flex-row.flex-row--mob--col p {
+    margin-right: 2rem;
+  }
+  #pressArticleSlider > .tns-item:not(.active) {
+    transform: scale(0.85);
+    margin-top: 2rem;
+    transition: all 0.2s ease-in-out;
+    margin-bottom: 1.3rem;
+  }
+  #pressArticleSlider > .tns-item.active {
+    transform: scale(1.1);
+    margin-top: 2rem;
+    transition: all 0.2s ease-in-out;
+    margin-bottom: 1.3rem;
+  }
+  #pressArticleSlider-ow.tns-outer {
+    width: 90%;
+  }
+  #pressArticleSlider-iw {
+    margin: 0 27.1vw;
+  }
+  #pressArticleSlider-ow [data-controls] {
+    border: 0;
+    margin: 0;
+    position: absolute;
+    z-index: 1;
+    background: transparent;
+    height: 100%;
+  }
+  #pressArticleSlider-ow [data-controls="prev"] {
+    left: -5rem;
+    padding: 0 27.1vw 0 2rem;
+  }
+  #pressArticleSlider-ow [data-controls="next"] {
+    right: -5rem;
+    padding: 0 2rem 0 27.1vw;
+  }
+  .paid-search .press__header {
+    padding-bottom: 2rem;
+  }
+  .paid-search.press .btn--border {
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+  }
+  .paid-search.sixty-forty .sixty-forty__text__inner span.bold {
+    font-weight: bold;
+  }
+  .paid-search.press .tns-nav {
+    position: absolute;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    bottom: -3.5rem;
+  }
+  .paid-search.press .tns-nav button {
+    border: 0;
+    margin: 5px;
+    width: 18px;
+    height: 18px;
+    background: #cdcdcd;
+    border-radius: 50%;
+  }
+  .paid-search.press .tns-nav button.tns-nav-active {
+    background: #084b6d;
+  }
+  @media screen and (min-width: 768px) {
+    .paid-search.sixty-forty {
+      grid-template-columns: 60% 40%;
+      min-height: 750px;
+    }
+    .paid-search.sixty-forty--left {
+      grid-template-columns: 40% 60%;
+    }
+    .paid-search .sixty-forty__text {
+      padding: 2rem 1.5rem 2rem 5rem;
+    }
+    .paid-search.reviews .review__container img.visible-xs-block {
+      display: none;
+    }
+    .paid-search .img--mob {
+      display: none;
+    }
+  }
+  @media screen and (max-width: 1500px) {
+    #pressArticleSlider-ow [data-controls="prev"] {
+      left: -4.5rem;
+    }
+    #pressArticleSlider-ow [data-controls="next"] {
+      right: -4.5rem;
+    }
+  }
+  @media screen and (max-width: 1250px) {
+    #pressArticleSlider-ow [data-controls="prev"] {
+      left: -4rem;
+    }
+    #pressArticleSlider-ow [data-controls="next"] {
+      right: -4rem;
+    }
+    .paid-search.reviews .tns-outer {
+      max-width: 800px;
+      height: 500px;
+    }
+    .paid-search .sixty-forty__text h2 img {
+      width: 130px;
+    }
+    .paid-search.reviews [data-controls="prev"] {
+      left: -6rem;
+    }
+    .paid-search.reviews [data-controls="next"] {
+      right: -6rem;
+    }
+    .paid-search.reviews .review__text {
+      padding-top: 0.5rem;
+    }
+    .paid-search.reviews .content__wrapper {
+      flex-basis: 55%;
+      padding-left: 0;
+      margin-left: 4rem;
+    }
+    .paid-search.reviews .image__wrapper {
+      flex-basis: 40%;
+    }
+    .paid-search.reviews p.review__text + p {
+      font-size: 24px;
+    }
+    .paid-search.reviews .btn--border {
+      margin-top: 0;
+      width: 300px;
+    }
+    .paid-search.sixty-forty--right {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+    .paid-search.sixty-forty--right .sixty-forty__image {
+      background: none !important;
+    }
+    .paid-search .img--wrapper {
+      height: 100%;
+    }
+    .paid-search.sixty-forty--right .img--mob {
+      display: block;
+      height: 100%;
+      width: 100%;
+      object-fit: cover;
+      max-height: 500px;
+      min-height: 350px;
+    }
+    .paid-search.sixty-forty--right .sixty-forty__text__inner {
+      max-width: unset;
+    }
+    .paid-search .sixty-forty__text__inner {
+      padding-right: 3rem;
+    }
+  }
+  @media screen and (max-width: 1000px) {
+    .paid-search .sixty-forty__text h2 img {
+      width: 120px;
+      top: 0.5rem;
+      right: -1rem;
+    }
+    .paid-search.reviews .image__wrapper {
+      flex-basis: 45%;
+    }
+    .paid-search.reviews [data-controls="prev"] {
+      left: -5rem;
+    }
+    .paid-search.reviews [data-controls="next"] {
+      right: -5rem;
+    }
+  }
+  @media screen and (max-width: 950px) {
+    .paid-search.reviews .tns-outer {
+      max-width: 700px;
+      height: 450px;
+    }
+    .paid-search.reviews .review__container h3 {
+      font-size: 32px;
+    }
+    .paid-search.reviews p.review__text + p {
+      font-size: 22px;
+    }
+    .paid-search.reviews .review__text {
+      padding-top: 0;
+      margin-bottom: 0.5rem;
+    }
+    .paid-search.reviews p.reviewer {
+      margin: 0.4rem 0 0.8rem;
+    }
+    .paid-search.reviews .btn--border {
+      width: 250px;
+    }
+    #pressArticleSlider-iw {
+      margin: 0 25.1vw;
+    }
+    #pressArticleSlider-ow [data-controls="prev"] {
+      padding: 0 25.1vw 0 2rem;
+      left: -3.7rem;
+    }
+    #pressArticleSlider-ow [data-controls="next"] {
+      padding: 0 2rem 0 25.1vw;
+      right: -3.7rem;
+    }
+    .paid-search .sixty-forty__text h2 img {
+      width: 110px;
+      right: -2.5rem;
+      top: 1rem;
+    }
+  }
+  @media screen and (max-width: 850px) {
+    .paid-search.sixty-forty--right.sixty-forty .flex-row p {
+      margin-bottom: 1.5rem;
+    }
+    .paid-search.reviews [data-controls="prev"] {
+      left: -3.5rem;
+    }
+    .paid-search.reviews [data-controls="next"] {
+      right: -3.5rem;
+    }
+    .paid-search .sixty-forty__text h2 img {
+      width: 100px;
+      top: 2.5rem;
+    }
+  }
+  @media screen and (max-width: 767px) {
+    .paid-search .sixty-forty__text__inner {
+      padding-right: 0;
+    }
+    #pressArticleSlider-ow.tns-outer {
+      width: 88%;
+    }
+    #pressArticleSlider-iw {
+      margin: 0 18.5vw;
+    }
+    #pressArticleSlider-ow [data-controls="prev"] {
+      padding: 0 18.5vw 0 2rem;
+    }
+    #pressArticleSlider-ow [data-controls="next"] {
+      padding: 0 2rem 0 18.5vw;
+    }
+    .paid-search.reviews .review__container {
+      background: none !important;
+    }
+    .paid-search.reviews .review__container img.visible-xs-block {
+      display: block;
+    }
+    .paid-search.sixty-forty--left .sixty-forty__image {
+      background: none !important;
+    }
+    .paid-search .img--mob {
+      display: block;
+      width: 100%;
+    }
+    .paid-search.reviews .tns-outer {
+      width: 500px;
+      height: 800px;
+    }
+    .paid-search.reviews .content__wrapper {
+      flex-basis: unset;
+      margin-left: unset;
+      height: unset;
+      max-width: 350px;
+      position: absolute;
+      padding-top: 2.2rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    .paid-search.reviews .image__wrapper {
+      flex-basis: unset;
+      position: absolute;
+      bottom: 5rem;
+      height: 60%;
+    }
+    .paid-search .sixty-forty__text h2 img {
+      width: 120px;
+      top: 0;
+      right: -1rem;
+    }
+    .reviews__header {
+      margin-bottom: 2.3rem;
+    }
+    .paid-search.reviews .review__text {
+      margin-bottom: 1.4rem;
+    }
+    .paid-search.reviews .review__container h3 {
+      font-size: 30px;
+    }
+    .paid-search.reviews .stamped-badge-text, .paid-search.reviews .stamped-badge-caption, .paid-search.reviews .stamped-product-reviews-badge {
+      font-size: 18px;
+    }
+    .paid-search.reviews .stamped-badge-starrating .stamped-fa {
+      padding-top: 2px;
+    }
+    .paid-search.reviews .btn--border {
+      width: 90%;
+      margin: 0 auto;
+      margin-top: -1.5rem;
+      font-size: 16px;
+    }
+    .paid-search.reviews [data-controls="prev"] {
+      left: -2.5rem;
+    }
+    .paid-search.reviews [data-controls="next"] {
+      right: -2.5rem;
+    }
+    .paid-search.press .tns-nav {
+      bottom: -1rem;
+    }
+    .paid-search.press .tns-nav button {
+      border: 0;
+      margin: 0 5px;
+      width: 9px;
+      height: 9px;
+      background: transparent;
+      border: 1px solid #084b6d;
+      border-radius: 50%;
+    }
+    .paid-search.press .tns-nav button.tns-nav-active {
+      border: 1px solid #084b6d;
+      background: #084b6d;
+    }
+    .paid-search.sixty-forty--right .ingredients-quote {
+      margin-bottom: 2rem;
+    }
+  }
+  @media screen and (max-width: 600px) {
+    #pressArticleSlider-ow [data-controls="prev"] {
+      left: -3.4rem;
+    }
+    #pressArticleSlider-ow [data-controls="next"] {
+      right: -3.4rem;
+    }
+    .paid-search.reviews [data-controls="prev"] {
+      left: -1rem;
+    }
+    .paid-search.reviews [data-controls="next"] {
+      right: -1rem;
+    }
+  }
+  @media screen and (max-width: 500px) {
+    #pressArticleSlider-ow.tns-outer {
+      width: 87%;
+    }
+    #pressArticleSlider-iw {
+      margin: 0 16vw;
+    }
+    #pressArticleSlider-ow [data-controls="prev"] {
+      padding: 0 15vw 0 2rem;
+    }
+    #pressArticleSlider-ow [data-controls="next"] {
+      padding: 0 2rem 0 15vw;
+    }
+    .paid-search .press__header {
+      padding-bottom: 1rem;
+    }
+    .paid-search.press .container {
+      padding: 3rem 0 3.5rem;
+    }
+    .paid-search.reviews .container {
+      padding: 2rem 1rem 2.5rem;
+    }
+    .paid-search.reviews .review__text {
+      margin-bottom: 0.5rem;
+    }
+    .paid-search.reviews .image__wrapper {
+      bottom: 4.5rem;
+    }
+    .paid-search.reviews .image__wrapper img {
+      height: 100%;
+      margin-left: 1rem;
+      margin-bottom: 0;
+    }
+    .paid-search.container--hero .hero__text h2 {
+      margin: 26px 0;
+    }
+    .paid-search.sixty-forty h2 {
+      margin-top: 0.5rem;
+    }
+    .paid-search.sixty-forty--right h2 {
+      margin: 0.5rem 0 0;
+    }
+    .paid-search.sixty-forty--right.sixty-forty .flex-row p {
+      margin-bottom: 1rem;
+      margin-right: 0;
+    }
+    .paid-search.sixty-forty--right .sixty-forty__text {
+      padding: 2rem 2rem 2rem 2.5rem;
+    }
+    .sixty-forty__text__inner {
+      padding-bottom: 0;
+    }
+    .paid-search.reviews .tns-outer {
+      width: 100%;
+      height: 650px;
+    }
+    .paid-search.reviews .content__wrapper {
+      padding-top: 1.5rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
+      max-width: 330px;
+    }
+    .paid-search .hero__text {
+      padding: 3rem;
+      margin: 0;
+    }
+    .article__image img, .sixty-forty img {
+      max-width: 100vw;
+    }
+    .paid-search .sixty-forty__text .btn--border, .paid-search .hero__text .btn--border {
+      max-width: 100%;
+      width: unset;
+    }
+    .paid-search.reviews .btn--border {
+      max-width: 275px;
+      margin-top: -0.8rem;
+    }
+    .paid-search.press .btn--border {
+      max-width: 75%;
+    }
+    .sixty-forty__text {
+      padding: 2rem 3rem;
+    }
+    .paid-search.reviews .review__container h3 {
+      font-size: 25px;
+    }
+    .paid-search.reviews .stamped-badge-text, .paid-search.reviews .stamped-badge-caption, .paid-search.reviews .stamped-product-reviews-badge {
+      font-size: 16px;
+    }
+    .paid-search.reviews p.review__text + p, .paid-search.reviews p.reviewer {
+      font-size: 19px;
+      line-height: 1.1;
+    }
+    .paid-search.reviews .stamped-fa-star:before, .testimonials.animate .stamped-fa-star-half-o:before {
+      font-size: 18px;
+    }
+    .paid-search.reviews .stamped-badge-starrating .stamped-fa {
+      padding-top: 1px;
+    }
+    .paid-search.reviews p.reviewer {
+      margin: 0;
+    }
+  }
+  @media screen and (max-width: 450px) {
+    .paid-search.reviews [data-controls="prev"] {
+      left: -1.5rem;
+    }
+    .paid-search.reviews [data-controls="next"] {
+      right: -1.5rem;
+    }
+    .paid-search .sixty-forty__text h2 img {
+      width: 100px;
+      top: 1rem;
+      right: -2.5rem;
+    }
+    #pressArticleSlider-ow.tns-outer {
+      width: 82%;
+    }
+    #pressArticleSlider-iw {
+      margin: 0 14vw;
+    }
+    #pressArticleSlider-ow [data-controls="prev"] {
+      padding: 0 13vw 0 2rem;
+      left: -3.6rem;
+    }
+    #pressArticleSlider-ow [data-controls="next"] {
+      padding: 0 2rem 0 13vw;
+      right: -3.6rem;
+    }
+  }
+  @media screen and (max-width: 400px) {
+    .paid-search.reviews [data-controls="prev"] {
+      left: -2.2rem;
+    }
+    .paid-search.reviews [data-controls="next"] {
+      right: -2.2rem;
+    }
+    #pressArticleSlider-ow [data-controls="prev"] {
+      left: -3.4rem;
+    }
+    #pressArticleSlider-ow [data-controls="next"] {
+      right: -3.4rem;
+    }
+    .paid-search .sixty-forty__text h2 img {
+      width: 90px;
+      top: 1.5rem;
+      right: -3rem;
+    }
+    .paid-search.sixty-forty--right .sixty-forty__text {
+      padding: 2rem 1.5rem 1.3rem 2.5rem;
+    }
+  }
+  @media screen and (max-width: 360px) {
+    .paid-search .sixty-forty__text h2 img {
+      top: 3rem;
+    }
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Page Content",
+    "settings": [],
+    "blocks": [
+      {
+        "name": "Reviews section",
+		    "type": "reviews",
+        "settings": [
+        {
+          "id": "bgColor",
+          "type": "color",
+          "label": "Background Color"
+        },
+          {
+            "id": "heading",
+            "type": "text",
+            "label": "Heading"
+          }
+        ]
+      },
+      {
+        "name": "Review item",
+        "type": "review-item",
+        "settings": [
+          {
+            "id": "product_handle",
+            "type": "product",
+            "label": "Product"
+          },
+          {
+            "id": "product_image",
+            "type": "image_picker",
+            "label": "Product Image"
+          },
+          {
+            "id": "review_text",
+            "type": "richtext",
+            "label": "Review Text"
+          },
+          {
+            "id": "reviewer",
+            "type": "text",
+            "label": "Reviewer's Name"
+          },
+          {
+            "type": "url",
+            "id": "link_url",
+            "label": "Link URL"
+          },
+          {
+            "type": "text",
+            "id": "link_text",
+            "label": "Link Text",
+            "default": "Learn more"
+          }
+        ]
+      },
+      {
+        "name": "Sixty Forty section",
+		    "type": "sixty-forty",
+        "settings": [
+          {
+            "id": "bgColor",
+            "type": "color",
+            "label": "Background Color"
+          },
+          {
+            "id": "headingSmall",
+            "type": "text",
+            "label": "Small Heading"
+          },
+          {
+            "id": "headingLarge",
+            "type": "text",
+            "label": "Large Heading"
+          },
+          {
+            "id": "bodyBgColor",
+            "type": "color",
+            "label": "Sixty Background Color (Optional)"
+          },
+          {
+            "id": "headingLargeIcon",
+            "type": "image_picker",
+            "label": "Large Heading Icon"
+          },
+          {
+            "id": "bodyText",
+            "type": "richtext",
+            "label": "Body Text"
+          },
+          {
+            "id": "bodyCTAURL",
+            "type": "url",
+            "label": "CTA Link"
+          },
+          {
+            "id": "bodyCTAText",
+            "type": "text",
+            "label": "CTA Text",
+			      "default": "Shop all"
+          },
+          {
+            "id": "bodyImage",
+            "type": "image_picker",
+            "label": "Image"
+          },
+          {
+            "id": "bodyImageMob",
+            "type": "image_picker",
+            "label": "Image (mobile)"
+          },
+          {
+            "id": "bodyImageAlign",
+            "type": "select",
+            "label": "Image Alignment",
+            "options": [
+              { "value": "right", "label": "Right"},
+              { "value": "left", "label": "Left"}
+            ],
+			      "default": "right"
+          }
+        ]
+      },
+      {
+        "name": "Sixty Forty HTML section",
+		    "type": "sixty-forty-html",
+        "settings": [
+          {
+            "id": "bgColor",
+            "type": "color",
+            "label": "Background Color (Optional)"
+          },
+          {
+            "id": "headingSmall",
+            "type": "text",
+            "label": "Small Heading"
+          },
+          {
+            "id": "headingLarge",
+            "type": "text",
+            "label": "Large Heading"
+          },
+          {
+            "id": "bodyBgColor",
+            "type": "color",
+            "label": "Sixty Background Color (Optional)"
+          },
+          {
+            "id": "bodyText",
+            "type": "html",
+            "label": "Body Text"
+          },
+          {
+            "id": "bodyCTAURL",
+            "type": "url",
+            "label": "CTA Link"
+          },
+          {
+            "id": "bodyCTAText",
+            "type": "text",
+            "label": "CTA Text",
+			      "default": "Shop all"
+          },
+          {
+            "id": "bodyImage",
+            "type": "image_picker",
+            "label": "Image"
+          },
+          {
+            "id": "bodyImageMob",
+            "type": "image_picker",
+            "label": "Image (mobile)"
+          },
+          {
+            "id": "bodyImageAlign",
+            "type": "select",
+            "label": "Image Alignment",
+            "options": [
+              { "value": "right", "label": "Right"},
+              { "value": "left", "label": "Left"}
+            ],
+			      "default": "right"
+          }
+        ]
+      },
+      {
+        "name": "Press section",
+		    "type": "press",
+        "settings": [
+          {
+            "id": "bgColor",
+            "type": "color",
+            "label": "Background Color"
+          },
+          {
+            "id": "heading",
+            "type": "text",
+            "label": "Heading"
+          },
+          {
+            "type": "url",
+            "id": "link_url",
+            "label": "Link URL"
+          },
+          {
+            "type": "text",
+            "id": "link_text",
+            "label": "Link Text",
+            "default": "Learn more"
+          }
+        ]
+      },
+      {
+        "name": "Press item",
+        "type": "press-item",
+        "settings": [
+          {
+            "id": "press_image",
+            "type": "image_picker",
+            "label": "Press Image"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/tiny-slider.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/min/tiny-slider.js"></script>
+<script>
+$(document).ready(function(){
+  const productReviewSlider = tns({
+    container: '#productReviewSlider',
+    items: 1,
+    controls: true,
+    controlsText: ['<i class="review--arrow left" aria-label="Previous"></i>', '<i class="review--arrow right" aria-label="Next"></i>'],
+    nav: false
+  });
+  const pressArticleSlider = tns({
+    container: '#pressArticleSlider',
+    items: 1,
+    controls: true,
+    controlsText: ['<i class="press--arrow left" aria-label="Previous"></i>', '<i class="press--arrow right" aria-label="Next"></i>'],
+    nav: true,
+    navPosition: 'bottom'
+  });
+
+  const pressSliderInfo = pressArticleSlider.getInfo(),
+    indexCurrent = pressSliderInfo.index;
+  pressSliderInfo.slideItems[indexCurrent].classList.add('active');
+  
+  const buttonNext = $('.paid-search.press .tns-controls [data-controls="next"]');
+  const buttonPrev = $('.paid-search.press .tns-controls [data-controls="prev"]');
+  const buttonNav = $('.paid-search.press .tns-nav button');
+
+  buttonNav.click(function () {
+    const buttonIndex = $(this).attr('data-nav');
+    const pressSliderInfo = pressArticleSlider.getInfo();
+
+    for (let i = 0; i < pressSliderInfo.slideItems.length; i++) {
+      pressSliderInfo.slideItems[i].classList.remove('active');
+    }
+    pressSliderInfo.slideItems[Number(buttonIndex) + 1].classList.add('active');
+  });
+
+  buttonNext.click(function() {
+    const pressSliderInfo = pressArticleSlider.getInfo(),
+      indexCurrent = pressSliderInfo.index;
+
+    for (let i = 0; i < pressSliderInfo.slideItems.length; i++) {
+      pressSliderInfo.slideItems[i].classList.remove('active');
+    }
+    // if last slide reached go to first (+ discount 2 cloned slides at the beginning and end)
+    if ((indexCurrent) == (pressSliderInfo.slideItems.length - 2)) {
+      pressSliderInfo.slideItems[indexCurrent + 1].classList.add('active');
+      pressSliderInfo.slideItems[1].classList.add('active');
+    } else {
+      pressSliderInfo.slideItems[indexCurrent + 1].classList.add('active');
+    }
+  });
+  buttonPrev.click(function() {
+    const pressSliderInfo = pressArticleSlider.getInfo(),
+      indexCurrent = pressSliderInfo.index;
+      
+    for (let i = 0; i < pressSliderInfo.slideItems.length; i++) {
+      pressSliderInfo.slideItems[i].classList.remove('active');
+    }
+    // if first slide reached go to last (+ discount 2 cloned slides)
+    if (indexCurrent == 1) {
+      pressSliderInfo.slideItems[indexCurrent - 1].classList.add('active');
+      pressSliderInfo.slideItems[pressSliderInfo.slideItems.length - 2].classList.add('active');
+    } else {
+      pressSliderInfo.slideItems[indexCurrent - 1].classList.add('active');
+    }
+  });
+}); 
+</script>

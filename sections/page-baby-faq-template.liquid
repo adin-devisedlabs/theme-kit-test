@@ -1,0 +1,146 @@
+{%- assign _section = section.settings -%}
+{%- assign section_title = _section.title -%}
+{%- assign section_background = _section.background -%}
+
+<div class="page-heading page-heading--faq animate" {%- include 'inline-style' bgimage: section_background, wh: '2048x' -%}>
+  <h2>{{ section_title }}</h2>
+  {%- if _section.hero_text != blank -%}
+  	{{ _section.hero_text }}
+  {%- endif -%}
+</div><!-- /.page-heading -->
+
+<div class="container">
+  <div class="flex-row justify">
+    <div class="sidebar">
+      <ul>
+        {%- for block in section.blocks -%}
+          {%- assign _block = block.settings -%}
+          {%- case block.type -%}
+            {%- when 'heading' -%}
+              {%- assign block_title = _block.title -%}
+              <li{% if forloop.first %} class="active"{% endif %}>
+                <a href="#{{block_title | handle }}">{{block_title}}</a>
+              </li>
+          {%- endcase -%}
+        {%- endfor -%}
+      </ul>
+    </div><!-- /.sidebar -->
+    <div class="content">
+      {%- assign class_type = 'odd' -%}
+      {%- for block in section.blocks -%}
+        {%- assign _block = block.settings -%}
+        {%- case block.type -%}
+          {%- when 'heading' -%}
+            {%- assign heading = _block.title -%}
+            {%- assign class_type = 'odd' -%}
+            <h3 id="{{heading | handle }}" class="animate" data-delay="50">{{ heading }}</h3>
+
+          {%- when 'question' -%}
+            {%- assign block_title = _block.title -%}
+            {%- assign block_content = _block.content -%}
+            <div class="qa-row {{class_type}} animate" data-heading="{{heading | handle}}">
+              <div class="question">
+                <h6>{{ block_title }}</h6>
+                <span class="toggle-icon"></span>
+              </div><!-- /.question -->
+              <div class="answer">
+                {{block_content}}
+              </div><!-- /.answer -->
+            </div><!-- /.qa-row -->
+            {%- if class_type == 'odd' -%}
+              {%- assign class_type = 'even' -%}
+            {% else %}
+              {%- assign class_type = 'odd' -%}
+            {%- endif -%}
+        {%- endcase -%}
+      {%- endfor -%}
+    </div><!-- /.content -->
+  </div><!-- /.flex-row -->
+
+  <div class="faq__doc content">
+    <div>
+      <img src="{{ _section.dr_image | img_url: '2x' }}" alt="{{ _section.dr_name }}">
+    </div>
+    <div class="faq__doc__text">
+      <h4>{{ _section.dr_name }}</h4>
+      {{ _section.dr_desc }}
+    </div>
+  </div>
+  
+  <div class="faq__doc faq__doc--disclaimer content">
+    {{ _section.disclaimer }}
+  </div>
+</div><!-- /.container -->
+
+{% schema %}
+{
+  "name": "FAQ",
+  "class": "faq-page template-page--faq",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "image_picker",
+      "id": "background",
+      "label": "Background Image"
+    },
+    {
+      "type": "richtext",
+      "id": "hero_text",
+      "label": "Hero Content"
+    },
+    {
+      "type": "image_picker",
+	  "id": "dr_image",
+      "label": "Doctor Profile Image"
+    },
+    {
+      "type": "text",
+	  "id": "dr_name",
+      "label": "Doctor Profile Name"
+    },
+    {
+      "type": "richtext",
+	  "id": "dr_desc",
+      "label": "Doctor Profile Text"
+    },
+	{
+	  "type": "richtext",
+  	  "id": "disclaimer",
+      "label": "Disclaimer Text"
+	}
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "Heading",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        }
+      ]
+    },
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,204 @@
+{%- assign _section = section.settings -%}
+{%- assign section_subtitle = _section.subtitle -%}
+{%- assign section_title = _section.title -%}
+
+<div class="gifts animate">
+  <div class="container">
+    {%- if section_subtitle != blank -%}
+      <h6>{{section_subtitle}}</h6>
+    {%- endif -%}
+    {%- if section_title != blank -%}
+      <h2>{{section_title}}</h2>
+    {%- endif -%}
+    <div class="flex-row">
+      {%- for block in section.blocks -%}
+        {%- assign _block = block.settings -%}
+          {%- case block.type -%}
+            {%- when 'gift' -%}
+              {%- assign block_image = _block.image -%}
+              {%- assign block_title = _block.title -%}
+              {%- assign block_price = _block.price -%}
+              {%- assign block_link = _block.link -%}
+              {%- assign _product = all_products[_block.product] -%}
+              {% unless _product == empty %}
+                <div class="flex-box">
+                  {%- if block_link != blank -%}
+                    <a href="{{block_link}}" class="product-link">
+                  {%- endif -%}
+                  <span class="image lazyload" data-bg="url({{block_image | img_url: '600x'}})"></span>
+                  {%- if block_title != blank -%}
+                    <h4>{{block_title}}</h4>
+                  {%- endif -%}
+                  <span class="stamped-product-reviews-badge stamped-main-badge" data-id="{{_product.id}}" style="display: block;"></span>
+                  {%- if block_price != blank -%}
+                    <p class="price">{{block_price}}</p><!-- /.price -->
+                  {%- endif -%}
+                  {%- if block_link != blank -%}
+                    </a>
+                  {%- endif -%}
+                  <div class="overlay-product">
+                    {%- form 'product', _product -%}
+                      <div class="qty">
+                        <a href="#!" class="qty-minus qty-edit" aria-label="Decrease quantity">
+                          <span tabindex="0"></span>
+                        </a>
+                        <input type="text" name="quantity" data-mirror="true" value="1" aria-label="quantity value" />
+                        <a href="#!" class="qty-plus qty-edit" aria-label="Increase quantity">
+                          <span tabindex="0"></span>
+                        </a>
+                      </div>
+                      <input type="hidden" name="id" value="{{ _product.first_available_variant.id }}">
+                      <input type="hidden" name="product_name" value="{{ _product.title }}">
+                      <input type="hidden" name="product_sku" value="{{ _product.first_available_variant.sku }}">
+                      <input type="hidden" name="product_price" value="{{ _product.first_available_variant.price }}">
+                      {% if _product.variants.size > 1 %}
+                        <a href="{{_product.url}}" class="btn btn--border cart">
+                            Add to Cart
+                        </a>
+                        <!-- SITE-WIDE PROMO TEXT -->
+                        <!-- <a href="{{_product.url}}" class="btn btn--border cart">
+                          ADD TO CART
+                          <br>
+                          FOR 40% OFF
+                        </a> -->
+                      {% else %}
+                        <button type="submit" class="btn btn--border cart">
+                          Add to Cart
+                        </button>
+                        <!-- <button type="submit" class="btn btn--border cart">
+                          ADD TO CART
+                          <br>
+                          FOR 40% OFF
+                        </button> -->
+                      {% endif %}
+                    {%- endform -%}
+                  </div>
+                </div>
+              {% endunless %}
+            {%- when 'collection' -%}
+              {%- assign block_collection = _block.collection -%}
+              {%- assign block_link_text = _block.link_text -%}
+              <div class="flex-box">
+                <span class="collection-holder">
+                  {%- include 'link' url: collections[block_collection].url, text: block_link_text -%}
+                </span>
+              </div>
+          {%- endcase -%}
+      {%- endfor -%}
+    </div><!-- /.flex-row -->
+  </div><!-- /.container -->
+</div><!-- /.gifts -->
+
+{% stylesheet %}
+.gifts .overlay-product {
+	margin-top: 25px;
+	visibility: hidden;
+	display: flex;
+  justify-content: center;
+}
+
+.gifts .overlay-product form {
+	position: relative;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+}
+
+.gifts .overlay-product .qty input {
+	background: transparent;
+}
+
+.gifts .flex-box:hover .overlay-product {
+	visibility: visible;
+	display: block;
+}
+
+@media (max-width: 767px) {
+	.gifts .overlay-product {
+		visibility: visible;
+		display: block;
+	}
+
+	.gifts .overlay-product .btn {
+		max-width: 250px;
+		flex-basis: 250px;
+	}
+}
+
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gifts",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "gift",
+      "name": "Gift",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        }
+      ]
+    },
+    {
+      "type": "collection",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Collection"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Gift",
+      "category": "Dynamic"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,231 @@
+{% for block in section.blocks %}
+  {%- assign _block = block.settings -%}
+  {%- assign body_image = _block.bodyImage -%}
+  {%- assign body_image_mob = _block.bodyImageMob | default: body_image_mob -%}
+
+  {% if block.type == 'hero' %}
+	<div class="mchero">
+      <div class="mchero__content"{% if _block.bodyBgColor != empty %} style="background:{{ block.settings.bodyBgColor }}"{% endif %}>
+        <div class="mchero__content__text">
+          {%- if _block.headingSmall != blank -%}
+            <small>{{ _block.headingSmall }}</small>
+          {%- endif -%}
+          <h2 class="title--large">{{ _block.heading }}</h2>
+          {%- if _block.bodyText != blank -%}
+            {{ _block.bodyText }}
+          {%- endif -%}
+        </div>
+        {% if _block.bodyImage %}
+          {%- include 'lazyload-image' _image: body_image, image_params: '2x' -%}
+        {% endif %}
+      </div>
+	</div>
+  {% endif %}
+  {% if block.type == 'sixty-forty' or block.type == 'sixty-forty-html' %}
+	<div class="sixty-forty sixty-forty--{{ _block.bodyImageAlign }} {{ block.type }}"{% if _block.bgColor != empty %} style="background:{{ block.settings.bgColor }}"{% endif %} id="section{{ block.id }}">
+      {% if _block.bodyText == 'contact-form' %}
+        {%- include 'lazyload-image' asset_image: true, _image: 'baby.jpg', image_tag: 'baby', additional_classes: 'img--mob' -%}
+        {%- include 'lazyload-image' file_image: true, _image: 'croc.png', image_tag: 'croc', additional_classes: 'croc' -%}
+      {% endif %}
+      <div class="sixty-forty__text"{% if _block.bodyBgColor != empty %} style="background:{{ block.settings.bodyBgColor }}"{% endif %}>
+        <div class="sixty-forty__text__inner">
+          <small>{{ _block.headingSmall }}</small>
+          <h2>{{ _block.headingLarge }}</h2>
+          {% if _block.bodyText == 'contact-form' %}
+          	{% include 'contact-form' %}
+          {% else %}
+            {{ _block.bodyText }}
+          {% endif %}
+        </div>
+      </div>
+      <div class="{% if _block.bodyImageHeading %}sixty-forty__text{% else %}sixty-forty__image{% endif %}"{% if _block.bodyImageBgColor != empty %} style="background:{{ block.settings.bodyImageBgColor }} url('{{ block.settings.bodyImage | img_url: '2x' }}');background-size:cover;"{% endif %}>
+        <div>
+          {% if _block.bodyImageHeading %}
+            <h3>{{ _block.bodyImageHeading }}</h3>
+          {% endif %}
+          {% if _block.bodyImageContent %}
+            {{ _block.bodyImageContent }}
+          {% endif %}
+          {% if _block.bodyImage %}
+            {%- include 'lazyload-image' _image: body_image, image_params: '2x', additional_classes: 'img--desk' -%}
+            {%- include 'lazyload-image' _image: body_image_mob, image_params: '2x', additional_classes: 'img--mob' -%}
+          {% endif %}
+        </div>
+      </div>
+	</div>
+  {% endif %}
+{% endfor %}
+
+{% schema %}
+  {
+    "name": "Page Content",
+    "settings": [],
+	"blocks": [
+      {
+        "name": "Hero section",
+		"type": "hero",
+        "settings": [
+          {
+            "id": "bgColor",
+            "type": "color",
+            "label": "Background Color"
+          },
+		  {
+            "id": "heading",
+            "type": "text",
+            "label": "Heading"
+          },
+          {
+            "id": "bodyText",
+            "type": "html",
+            "label": "Body Text"
+          },
+          {
+            "id": "bodyImage",
+            "type": "image_picker",
+            "label": "Image"
+          }
+        ]
+      },
+      {
+        "name": "Sixty Forty section",
+		"type": "sixty-forty",
+        "settings": [
+          {
+            "id": "bgColor",
+            "type": "color",
+            "label": "Background Color"
+          },
+          {
+            "id": "headingSmall",
+            "type": "text",
+            "label": "Small Heading"
+          },
+          {
+            "id": "headingLarge",
+            "type": "text",
+            "label": "Large Heading"
+          },
+          {
+            "id": "bodyText",
+            "type": "html",
+            "label": "Body Text"
+          },
+          {
+            "id": "bodyImage",
+            "type": "image_picker",
+            "label": "Image"
+          },
+          {
+            "id": "bodyImageMob",
+            "type": "image_picker",
+            "label": "Image (mobile)"
+          },
+          {
+            "id": "bodyImageAlign",
+            "type": "select",
+            "label": "Image Alignment",
+            "options": [
+              { "value": "right", "label": "Right"},
+              { "value": "left", "label": "Left"}
+            ],
+			"default": "right"
+          }
+        ]
+      },
+      {
+        "name": "Sixty Forty HTML section",
+		"type": "sixty-forty-html",
+        "settings": [
+          {
+            "id": "bgColor",
+            "type": "color",
+            "label": "Background Color (Optional)"
+          },
+          {
+            "id": "headingSmall",
+            "type": "text",
+            "label": "Small Heading"
+          },
+          {
+            "id": "headingLarge",
+            "type": "text",
+            "label": "Large Heading"
+          },
+          {
+            "id": "bodyBgColor",
+            "type": "color",
+            "label": "Sixty Background Color (Optional)"
+          },
+          {
+            "id": "bodyText",
+            "type": "html",
+            "label": "Body Text"
+          },
+          {
+            "id": "bodyImageBgColor",
+            "type": "color",
+            "label": "Forty Background Color (Optional)"
+		  },
+          {
+            "id": "bodyImageHeading",
+            "type": "text",
+            "label": "Image Heading"
+          },
+		  {
+			"id": "bodyImageContent",
+			"type": "html",
+			"label": "Text content"
+		  },
+          {
+            "id": "bodyImage",
+            "type": "image_picker",
+            "label": "Image"
+          },
+          {
+            "id": "bodyImageMob",
+            "type": "image_picker",
+            "label": "Image (mobile)"
+          },
+          {
+            "id": "bodyImageAlign",
+            "type": "select",
+            "label": "Image Alignment",
+            "options": [
+              { "value": "right", "label": "Right"},
+              { "value": "left", "label": "Left"}
+            ],
+			"default": "right"
+          }
+        ]
+      }
+	]
+  }
+{% endschema %}
+
+{% stylesheet %}
+  #section1566506249642 h2 ~ h2 {
+  	margin-top: 1em;
+	margin-bottom: .75em;
+  }
+
+  @media all and (max-width: 599px) {
+	.template-page--affiliates .sixty-forty__text,
+	.template-page--careers .sixty-forty:not(.sixty-forty-html) .sixty-forty__text {
+	  grid-row: 2;
+	}
+  }
+
+  @media all and (min-width: 800px) {
+	#section1566506249642 {
+	  grid-template-columns: 56% 44%;
+	}
+
+	#section1566506249642 img {
+	  width: 100%;
+	}
+  }
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

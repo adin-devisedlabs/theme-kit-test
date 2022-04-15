@@ -1,0 +1,181 @@
+<section class="section-account">
+	<div class="section__inner">
+		{%- include 'account', fragment: 'sidebar' -%}
+
+		<div class="section__content">
+			<h4>{{ 'customer.account.order_history' | t }}</h4>
+			<div class="order-head">
+				<div class="order-row">
+					<div class="order-item">
+						<h6>Order Number</h6>
+						<p>{{ order.id }}</p>
+					</div><!-- /.order-item -->
+					<div class="order-item">
+						<h6>{{ 'customer.orders.date' | t }}</h6>
+						<p>{{- order.created_at | date: '%B %d, %Y' -}}</p>
+					</div><!-- /.order-item -->
+					<div class="order-item">
+					<h6>{{- 'customer.orders.track_shipment' | t -}}</h6>
+						{%- assign fullfilment_link = '' -%}
+						{%- for line_item in order.line_items -%}
+							{%- if line_item.fulfillment.tracking_number -%}
+								{%- capture fullfilment_link -%}{{fullfilment_link}}{{ line_item.fulfillment.tracking_number | link_to: line_item.fulfillment.tracking_url }},{%- endcapture -%}
+							{%- endif -%}
+						{%- endfor -%}
+						{%- assign fullfilment_link = fullfilment_link | split: ',' | join: ',' -%}
+					</div><!-- /.order-item -->
+				</div><!-- /.order-row -->
+			</div><!-- /.order-head -->
+
+			<div class="order-info">
+				<div class="cols">
+					<div class="col">
+						<h6>
+							{{- 'customer.order.shipping_address' | t -}}
+						</h6>
+
+						{{- order.shipping_address | format_address -}}
+					</div><!-- /.col -->
+					<div class="col">
+						<h6>
+							{{- 'customer.order.billing_address' | t -}}
+						</h6>
+						{{- order.billing_address | format_address -}}
+					</div><!-- /.col -->
+
+				</div><!-- /.cols -->
+			</div><!-- /.order-info -->
+
+			<div class="table-order table-order--products">
+				<table>
+					<thead>
+						<tr class="order">
+							<th class="order__product" colspan="2">
+								{{- 'customer.order.product' | t -}}
+							</th>
+
+							<th class="order__price">
+								{{- 'customer.order.price' | t -}}
+							</th>
+
+							<th class="order__quantity">
+								{{- 'customer.order.quantity' | t -}}
+							</th>
+
+							<th class="order__total">
+								{{- 'customer.order.total' | t -}}
+							</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						{% for line_item in order.line_items %}
+							<tr class="order" id="{{- line_item.id -}}">
+								<td>
+									<a href="{{ line_item.url }}" class="image-link">
+										{{ line_item.image | img_url: '100x' | img_tag: line_item.image.alt }}
+									</a>
+								</td>
+								<td
+									class="order__product"
+									data-heading="{{- 'customer.order.product' | t -}}"
+								>
+
+									{{- line_item.title | link_to: line_item.product.url -}}
+
+									{% if line_item.properties.subscription_id != blank %}
+										<p>{{line_item.properties.shipping_interval_frequency}} Day Auto Replenish Subscription</p>
+									{% endif %}
+								</td>
+
+								<td
+									class="order__price"
+									data-heading="{{- 'customer.order.price' | t -}}"
+								>
+									{{- line_item.price | money -}}{% if line_item.properties.subscription_id != blank %}/mo{% endif %}
+								</td>
+
+								<td
+									class="order__quantity"
+									data-heading="{{- 'customer.order.quantity' | t -}}"
+								>
+									{{- line_item.quantity -}}
+								</td>
+
+								<td
+									class="order__total"
+									data-heading="{{- 'customer.order.total' | t -}}"
+								>
+									{{- line_item.quantity | times: line_item.price | money -}}
+								</td>
+							</tr>
+						{% endfor %}
+					</tbody>
+				</table>
+			</div><!-- /.table -->
+			<div class="total-table">
+				<table>
+					<tbody>
+						<tr class="order-details__subtotal">
+							<td class="order-details__title" colspan="4">
+								{{- 'customer.order.subtotal' | t -}}
+							</td>
+
+							<td class="order-details__value">
+								{{- order.subtotal_price | money -}}
+							</td>
+						</tr>
+
+						{% for discount in order.discounts %}
+							<tr class="order-details__discount">
+								<td class="order-details__title" colspan="4">
+									{{- discount.code -}} {{- 'customer.order.discount' | t -}}
+								</td>
+
+								<td class="order-details__value">
+									{{- discount.savings | money -}}
+								</td>
+							</tr>
+						{% endfor %}
+
+						{% for shipping_method in order.shipping_methods %}
+							<tr class="order-details__shipping">
+								<td class="order-details__title" colspan="4">
+									{{- 'customer.order.shipping' | t -}} ({{- shipping_method.title -}})
+								</td>
+
+								<td class="order-details__value">
+									{{- shipping_method.price | money -}}
+								</td>
+							</tr>
+						{% endfor %}
+
+						{% for tax_line in order.tax_lines %}
+							<tr class="order-details__tax">
+								<td class="order-details__title" colspan="4">
+									{{- 'customer.order.tax' | t -}} ({{- tax_line.title -}} {{- tax_line.rate | times: 100 -}}%)
+								</td>
+
+								<td class="order-details__value">
+									{{- tax_line.price | money -}}
+								</td>
+							</tr>
+						{% endfor %}
+
+						<tr class="order-details__total">
+							<td class="order-details__title" colspan="4">
+								{{- 'customer.order.total' | t -}}
+							</td>
+
+							<td class="order-details__value order-total">
+								{{- order.total_price | money -}}
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div><!-- /.total-table -->
+		</div><!-- /.section__content -->
+	</div><!-- /.section__inner -->
+</section><!-- /.section-account -->
+
+

@@ -1,0 +1,142 @@
+{%- if heading -%}
+  {%- if products.product.related_title.size > 1 -%}
+    <h6>{{ 'products.product.related_title' | t }}</h6>
+  {%- endif -%}
+  <h2>{{ 'products.product.related_main_title' | t }}</h2>
+{%- endif -%}
+
+{%- if body -%}
+  {%- unless _product.id == product.id -%}
+    {%- if related_counter <= 4 -%}
+      {%- assign related_counter = related_counter | plus: 1 -%}
+      <div class="flex-box">
+        <a href="{{_product.url}}" class="product-link">
+          {% if template contains 'product' %}
+            <div class="icons-wrapper">
+              <div class="icons">
+                {%- for icon in _product.metafields.product.icon limit: 1 -%}
+                  {{ icon | img_tag }}
+                {%- endfor -%}
+              </div><!-- /.icons -->
+            </div>
+          {% endif %}
+          <span class="image lazyload" data-bg="url({{ _product.images[0] | img_url: '600x' }})" style="background-color: #f6f8f0;background-size: contain;background-repeat: no-repeat;"></span>
+          <h4>{{_product.title}}</h4>
+          <span class="stamped-product-reviews-badge stamped-main-badge" data-id="{{_product.id}}" style="display: block;"></span>
+          <p class="price">{{_product.price | money}}</p><!-- /.price -->
+        </a>
+        <div class="overlay-product">
+          {%- if _product.available -%}
+            {%- form 'product', _product -%}
+              <div class="qty">
+                <a href="#!" class="qty-minus qty-edit" aria-label="Decrease quantity"> \
+                  <span tabindex="0"></span>
+                </a>
+                <input type="text" name="quantity" data-mirror="true" value="1" aria-label="quantity value" />
+                <a href="#!" class="qty-plus qty-edit" aria-label="Increase quantity">
+                  <span tabindex="0"></span>
+                </a>
+              </div><!-- /.qty -->
+              <input type="hidden" name="id" value="{{ _product.first_available_variant.id }}">
+              <input type="hidden" name="product_name" value="{{ _product.title }}">
+              <input type="hidden" name="product_sku" value="{{ _product.first_available_variant.sku }}">
+              <input type="hidden" name="product_price" value="{{ _product.first_available_variant.price }}">
+
+              {% assign _tags = product.tags %}
+
+              {% if _product.variants.size > 1 %}
+                <a aria-label="Add {{ _product.title }} to cart" href="{{_product.url}}" class="btn btn--border cart">
+                  {% if settings.enable_custom_cta %}
+                  <!-- CTA global tag exclusion -->
+													{% if _tags contains "cta-exclude" %}
+                            {{- 'products.product.add_to_cart' | t -}}
+                          {% else %}
+                          <!-- SITE-WIDE PROMO TEXT -->
+                            {{settings.cta_text}}
+                        {% endif %}
+                  {% else %}
+                    Add to Cart
+                  {% endif %}
+                </a>
+              {% else %}
+                <button type="submit" class="btn btn--border cart">
+                  {% if settings.enable_custom_cta %}
+                 <!-- CTA global tag exclusion -->
+													{% if _tags contains "cta-exclude" %}
+                          {{- 'products.product.add_to_cart' | t -}}
+                        {% else %}
+                        <!-- SITE-WIDE PROMO TEXT -->
+                          {{settings.cta_text}}
+                      {% endif %}
+                  {% else %}
+                    Add to Cart
+                  {% endif %}
+                </button>
+              {% endif %}
+
+            {%- endform -%}
+          {%- else -%}
+            <p>
+              <!-- {% if product.id == 4993532493910 or product.id == 4993532461142 %}
+                Coming Soon
+              {% else %} -->
+                {{ 'products.product.sold_out' | t }}
+              <!-- {% endif %} -->
+            </p>
+          {%- endif -%}
+        </div><!-- /.overlay -->
+      </div>
+    {%- endif -%}
+  {%- endunless -%}
+{%- endif -%}
+
+{%- if link -%}
+  <div class="flex-box">
+    <span class="collection-holder">
+      {%- include 'link' url: collections[link].url, text: 'Show all' -%}
+    </span>
+  </div><!-- /.flex-box -->
+{%- endif -%}
+
+<style>
+  .related-products .overlay-product {
+    margin-top: 25px;
+    visibility: hidden;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .related-products .flex-box:hover .overlay-product {
+    visibility: visible;
+    display: flex;
+  }
+
+  .related-products .overlay-product form {
+    position: relative;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .related-products .overlay-product .qty input {
+    background: transparent;
+    height: 100%;
+  }
+
+  @media (max-width: 767px) {
+    .related-products .overlay-product {
+      visibility: visible;
+      display: block;
+    }
+
+    .related-products .overlay-product .btn {
+        max-width: 250px;
+        flex-basis: 250px;
+      }
+  }
+</style>

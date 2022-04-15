@@ -1,0 +1,97 @@
+{%- assign _section = section.settings -%}
+{%- assign section_subtitle = _section.subtitle -%}
+{%- assign section_title = _section.title -%}
+{%- assign section_content = _section.content -%}
+{%- assign section_image1 = _section.image1 | img_url: '1024x' -%}
+{%- assign section_mobile_image1 = _section.mobile_image1 | default: section_image1 | img_url: '800x' -%}
+{%- assign section_image2 = _section.image2 | img_url: '1024x' -%}
+{%- assign section_mobile_image2 = _section.mobile_image2 | default: section_image2 | img_url: '800x' -%}
+
+<div class="commitment animate">
+  <div class="flex-row justify">
+    <div class="images">
+      <img src="{{ section_image1 }}" data-img-desktop="{{ section_image1 }}" data-img-mobile="{{ section_mobile_image1 }}" alt="" />
+      <img src="{{ section_image2 }}" data-img-desktop="{{ section_image2 }}" data-img-mobile="{{ section_mobile_image2 }}" alt="" />
+    </div><!-- /.images -->
+    <div class="content">
+      {%- if section_subtitle != blank -%}
+        <h6>{{section_subtitle}}</h6>  
+      {%- endif -%}
+      {%- if section_title != blank -%}
+        <h2>{{section_title}}</h2>
+      {%- endif -%}
+      {{ section_content }}
+      {%- for block in section.blocks -%}
+        {%- assign _block = block.settings -%}
+        {%- assign block_title = _block.title -%}
+        {%- assign block_content = _block.content -%}
+        {%- if block_title != blank -%}
+          <h3>{{block_title}}</h3>
+          {{block_content}}
+        {%- endif -%}
+      {%- endfor -%}
+    </div><!-- /.content -->
+  </div><!-- /.flex-row -->
+</div><!-- /.commitment -->
+
+
+{% schema %}
+{
+  "name": "Commitment",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content"
+    },
+    {
+      "type": "image_picker",
+      "id": "image1",
+      "label": "Image1"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image1",
+      "label": "Mobile Image 1"
+    },
+    {
+      "type": "image_picker",
+      "id": "image2",
+      "label": "Image2"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image2",
+      "label": "Mobile Image 2"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "text_block",
+      "name": "Text Block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "richtext",
+          "id": "content",
+          "label": "Content"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

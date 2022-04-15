@@ -1,0 +1,300 @@
+    {% if settings.enable_gwp_pick_threshold == true %}
+      {% if miniCart == true %}
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/micromodal/dist/micromodal.min.js"></script>
+          <script>
+            $(document).ready(function(){
+              $("#pick-gwp-btn").attr("tabindex", "-1");
+              $("#modal_cls_btn").attr("tabindex", "-1");
+              const overPickGWPThreshold = "{{checkout_subtotal_over_pick_gwp_threshold}}";
+              let product1 = {};
+              let product2 = {};
+              let product3 = {};
+              let product4 = {};
+              const product1Id = "{{settings.gwp_product_id_1}}";
+              const product1Handle = "{{settings.gwp_product_1}}";
+              const product2Id = "{{settings.gwp_product_id_2}}";
+              const product2Handle = "{{settings.gwp_product_2}}";
+              const product3Id = "{{settings.gwp_product_id_3}}";
+              const product3Handle = "{{settings.gwp_product_3}}";
+              const product4Id = "{{settings.gwp_product_id_4}}";
+              const product4Handle = "{{settings.gwp_product_4}}";
+              const pickGWPMinicartText = "{{settings.gwp_pick_minicart_text}}";
+              const pickGWPMinicartBtnText = "{{settings.gwp_pick_minicart_btn}}";
+
+              if (overPickGWPThreshold == "true") {
+                $('.mini-cart .shipping-text').append(
+                  '<div class="gwp">' +
+                  pickGWPMinicartText +
+                  '<button type="button" class="btn btn--border" data-micromodal-trigger="modal-gwp">' +
+                  pickGWPMinicartBtnText +
+                  '</button>' +
+                  '</div>'
+                );
+                MicroModal.init({
+                  onShow: function (modal) {
+                    if (modal.id == 'modal-gwp') {
+                      $("#pick-gwp-btn").removeAttr("tabindex");
+                      $("#modal_cls_btn").removeAttr("tabindex");
+                      $('#modal-gwp').css('opacity', 0);
+                      setTimeout(function() {
+                        product1Handle && jQuery.getJSON(`/products/${product1Handle}.js`, function(product) {
+                          product1 = { ...product1, title: product.title, img: product.featured_image, available: product.available};
+                          if (product1.available) {
+                            let image1Path = product1.img;
+                            if (image1Path.includes('.jpg')) {
+                              image1Path = product1.img.split(".jpg").join("_300x.jpg");
+                            } else if (image1Path.includes('.png')) {
+                              image1Path = product1.img.split(".png").join("_300x.png");
+                            }
+                            $('.modal-gwp.is-open#modal-gwp .gwp-list').append(`<li><div><img class='gwp-img' src='${image1Path}'/><h4>${product1.title}</h4></div><div><input type="checkbox" class="input-checkbox" id="${product1Id}"></div></li>`);
+                          }
+                          product2Handle && jQuery.getJSON(`/products/${product2Handle}.js`, function(product) {
+                            product2 = { ...product2, title: product.title, img: product.featured_image, available: product.available};
+                            if (product2.available) {
+                              let image2Path = product2.img;
+                              if (image2Path.includes('.jpg')) {
+                                image2Path = product2.img.split(".jpg").join("_300x.jpg");
+                              } else if (image2Path.includes('.png')) {
+                                image2Path = product2.img.split(".png").join("_300x.png");
+                              }
+                              $('.modal-gwp.is-open#modal-gwp .gwp-list').append(`<li><div><img class='gwp-img' src='${image2Path}'/><h4>${product2.title}</h4></div><div><input type="checkbox" class="input-checkbox" id="${product2Id}"></div></li>`);
+                            }
+                            product3Handle && jQuery.getJSON(`/products/${product3Handle}.js`, function(product) {
+                              product3 = { ...product3, title: product.title, img: product.featured_image, available: product.available};
+                              if (product3.available) {
+                                let image3Path = product3.img;
+                                if (image3Path.includes('.jpg')) {
+                                  image3Path = product3.img.split(".jpg").join("_300x.jpg");
+                                } else if (image3Path.includes('.png')) {
+                                  image3Path = product3.img.split(".png").join("_300x.png");
+                                }
+                                $('.modal-gwp.is-open#modal-gwp .gwp-list').append(`<li><div><img class='gwp-img' src='${image3Path}'/><h4>${product3.title}</h4></div><div><input type="checkbox" class="input-checkbox" id="${product3Id}"></div></li>`);
+                              }
+                              if (!product4Handle) {
+                                const gwpLimit = "{{ settings.gwp_pick_number_amount | plus: 1 }}";
+
+                                $('.mini-cart .mini-cart__items tr td:first-child a').each(function() {
+                                  const cartItemVariantId = $(this).attr('href').split('variant=')[1];
+                                  $('.modal-gwp.is-open#modal-gwp ul.gwp-list li input.input-checkbox').each(function() {
+                                    if ($(this).attr('id') == cartItemVariantId) {
+                                      $(this).prop('checked', true);
+                                    }
+                                  });
+                                });
+                                $('#modal-gwp').css('opacity', 1);
+                                $('.modal-gwp.is-open#modal-gwp ul.gwp-list li input.input-checkbox').on('change', function(e) {
+                                  if($('.modal-gwp.is-open#modal-gwp ul.gwp-list input[type=checkbox]:checked').length >= gwpLimit) {
+                                   $(this).prop('checked', false);
+                                   console.log("allowed only 2");
+                                   console.log("{{ settings.gwp_pick_number_amount | plus: 1 }}");
+                                  }
+                                });
+                              } else {
+                              jQuery.getJSON(`/products/${product4Handle}.js`, function(product) {
+                                product4 = { ...product4, title: product.title, img: product.featured_image, available: product.available};
+                                if (product4.available) {
+                                  let image4Path = product4.img;
+                                  if (image4Path.includes('.jpg')) {
+                                    image4Path = product4.img.split(".jpg").join("_300x.jpg");
+                                  } else if (image4Path.includes('.png')) {
+                                    image4Path = product4.img.split(".png").join("_300x.png");
+                                  }
+                                  $('.modal-gwp.is-open#modal-gwp .gwp-list').append(`<li><div><img class='gwp-img' src='${image4Path}'/><h4>${product4.title}</h4></div><div><input type="checkbox" class="input-checkbox" id="${product4Id}"></div></li>`);
+                                }
+                                const gwpLimit = "{{ settings.gwp_pick_number_amount | plus: 1 }}";
+
+                                $('.mini-cart .mini-cart__items tr td:first-child a').each(function() {
+                                  const cartItemVariantId = $(this).attr('href').split('variant=')[1];
+                                  $('.modal-gwp.is-open#modal-gwp ul.gwp-list li input.input-checkbox').each(function() {
+                                    if ($(this).attr('id') == cartItemVariantId) {
+                                      $(this).prop('checked', true);
+                                    }
+                                  });
+                                });
+                                $('#modal-gwp').css('opacity', 1);
+                                $('.modal-gwp.is-open#modal-gwp ul.gwp-list li input.input-checkbox').on('change', function(e) {
+                                  if($('.modal-gwp.is-open#modal-gwp ul.gwp-list input[type=checkbox]:checked').length >= gwpLimit) {
+                                   $(this).prop('checked', false);
+                                   console.log("allowed only 2");
+                                   console.log("{{ settings.gwp_pick_number_amount | plus: 1 }}");
+                                  }
+                                });
+                              });
+                              }
+                            });
+                          });
+                        });
+                      }, 1);
+                    }
+                  },
+                  onClose: function () {
+                    $("#pick-gwp-btn").attr("tabindex", "-1");
+                    $("#modal_cls_btn").attr("tabindex", "-1");
+                    $('.modal-gwp#modal-gwp ul.gwp-list').empty();
+                  }
+                });
+              }
+            });
+        </script>
+      {% else %}
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/micromodal/dist/micromodal.min.js"></script>
+        <script>
+          $(document).ready(function(){
+            const overPickGWPThreshold = "{{checkout_subtotal_over_pick_gwp_threshold}}";
+            let product1 = {};
+            let product2 = {};
+            let product3 = {};
+            let product4 = {};
+            const product1Id = "{{settings.gwp_product_id_1}}";
+            const product1Handle = "{{settings.gwp_product_1}}";
+            const product2Id = "{{settings.gwp_product_id_2}}";
+            const product2Handle = "{{settings.gwp_product_2}}";
+            const product3Id = "{{settings.gwp_product_id_3}}";
+            const product3Handle = "{{settings.gwp_product_3}}";
+            const product4Id = "{{settings.gwp_product_id_4}}";
+            const product4Handle = "{{settings.gwp_product_4}}";
+            const pickGWPMinicartText = "{{settings.gwp_pick_minicart_text}}";
+            const pickGWPMinicartBtnText = "{{settings.gwp_pick_minicart_btn}}";
+
+            if (overPickGWPThreshold == "true") {
+              $('.form--cart .shipping-text').append(
+                  '<div class="gwp">' +
+                  pickGWPMinicartText +
+                  '<button type="button" class="btn btn--border" data-micromodal-trigger="modal-gwp">' +
+                  pickGWPMinicartBtnText +
+                  '</button>' +
+                  '</div>'
+                );
+            MicroModal.init({
+              onShow: function (modal) {
+                if (modal.id == 'modal-gwp-cart') {
+                  $('.modal-gwp.is-open#modal-gwp-cart .gwp-list').empty();
+                  product1Handle && jQuery.getJSON(`/products/${product1Handle}.js`, function(product) {
+                    product1 = { ...product1, title: product.title, img: product.featured_image, available: product.available};
+                    if (product1.available) {
+                      let image1Path = product1.img;
+                      if (image1Path.includes('.jpg')) {
+                        image1Path = product1.img.split(".jpg").join("_300x.jpg");
+                      } else if (image1Path.includes('.png')) {
+                        image1Path = product1.img.split(".png").join("_300x.png");
+                      }
+                      $('.modal-gwp.is-open#modal-gwp-cart .gwp-list').append(`<li><div><img class='gwp-img' src='${image1Path}'/><h4>${product1.title}</h4></div><div><input type="checkbox" class="input-checkbox" id="${product1Id}"></div></li>`);
+                    }
+                    product2Handle && jQuery.getJSON(`/products/${product2Handle}.js`, function(product) {
+                      product2 = { ...product2, title: product.title, img: product.featured_image, available: product.available};
+                      if (product2.available) {
+                        let image2Path = product2.img;
+                        if (image2Path.includes('.jpg')) {
+                          image2Path = product2.img.split(".jpg").join("_300x.jpg");
+                        } else if (image2Path.includes('.png')) {
+                          image2Path = product2.img.split(".png").join("_300x.png");
+                        }
+                        $('.modal-gwp.is-open#modal-gwp-cart .gwp-list').append(`<li><div><img class='gwp-img' src='${image2Path}'/><h4>${product2.title}</h4></div><div><input type="checkbox" class="input-checkbox" id="${product2Id}"></div></li>`);
+                      }
+                      product3Handle && jQuery.getJSON(`/products/${product3Handle}.js`, function(product) {
+                        product3 = { ...product3, title: product.title, img: product.featured_image, available: product.available};
+                        if (product3.available) {
+                          let image3Path = product3.img;
+                          if (image3Path.includes('.jpg')) {
+                            image3Path = product3.img.split(".jpg").join("_300x.jpg");
+                          } else if (image3Path.includes('.png')) {
+                            image3Path = product3.img.split(".png").join("_300x.png");
+                          }
+                          $('.modal-gwp.is-open#modal-gwp-cart .gwp-list').append(`<li><div><img class='gwp-img' src='${image3Path}'/><h4>${product3.title}</h4></div><div><input type="checkbox" class="input-checkbox" id="${product3Id}"></div></li>`);
+                        }
+
+                        if (!product4Handle) {
+                          const gwpLimit = "{{ settings.gwp_pick_number_amount | plus: 1 }}";
+
+                          $('.form--cart .table--cart tr td:first-child a').each(function() {
+                            const cartItemVariantId = $(this).attr('href').split('variant=')[1];
+                            $('.modal-gwp.is-open#modal-gwp-cart ul.gwp-list li input.input-checkbox').each(function() {
+                              if ($(this).attr('id') == cartItemVariantId) {
+                                $(this).prop('checked', true);
+                              }
+                            });
+                          });
+                          $('.modal-gwp.is-open#modal-gwp-cart ul.gwp-list li input.input-checkbox').on('change', function(e) {
+                            if($('.modal-gwp.is-open#modal-gwp-cart ul.gwp-list input[type=checkbox]:checked').length >= gwpLimit) {
+                             $(this).prop('checked', false);
+                             console.log("allowed only 2, cart");
+                            }
+                          });
+                        } else {
+                        jQuery.getJSON(`/products/${product4Handle}.js`, function(product) {
+                          product4 = { ...product4, title: product.title, img: product.featured_image, available: product.available};
+                          if (product4.available) {
+                            let image4Path = product4.img;
+                            if (image4Path.includes('.jpg')) {
+                              image4Path = product4.img.split(".jpg").join("_300x.jpg");
+                            } else if (image4Path.includes('.png')) {
+                              image4Path = product4.img.split(".png").join("_300x.png");
+                            }
+                            $('.modal-gwp.is-open#modal-gwp-cart .gwp-list').append(`<li><div><img class='gwp-img' src='${image4Path}'/><h4>${product4.title}</h4></div><div><input type="checkbox" class="input-checkbox" id="${product4Id}"></div></li>`);
+                          }
+                          const gwpLimit = "{{ settings.gwp_pick_number_amount | plus: 1 }}";
+
+                          $('.form--cart .table--cart tr td:first-child a').each(function() {
+                            const cartItemVariantId = $(this).attr('href').split('variant=')[1];
+                            $('.modal-gwp.is-open#modal-gwp-cart ul.gwp-list li input.input-checkbox').each(function() {
+                              if ($(this).attr('id') == cartItemVariantId) {
+                                $(this).prop('checked', true);
+                              }
+                            });
+                          });
+                          $('.modal-gwp.is-open#modal-gwp-cart ul.gwp-list li input.input-checkbox').on('change', function(e) {
+                            if($('.modal-gwp.is-open#modal-gwp-cart ul.gwp-list input[type=checkbox]:checked').length >= gwpLimit) {
+                             $(this).prop('checked', false);
+                             console.log("allowed only 2, cart");
+                            }
+                          });
+                        });
+                      }
+                      });
+                    });
+                  });
+                }
+              }
+            });
+            }
+          });
+      </script>
+      {% endif %}
+  {% endif %}
+
+{% if settings.enable_gwp_promocode %}
+  {% assign gwp_promo_code_1 = settings.gwp_discount_code_1 %}
+  {% assign gwp_threshold_1 = settings.gwp_discount_gift_threshold_1 | plus: 0 %}
+  {% assign gwp_product_1 = all_products[settings.gwp_discount_product_1] %}
+
+  {% assign cart_subtotal = cart.total_price | divided_by: 100 %}
+
+  {% if cart_subtotal > gwp_threshold_1 and settings.hide_discount == false %}
+
+    <div class="cart-gwp-container">
+      <div class="cart-gwp">
+        <div class="cart-gwp__message">
+          {{gwp_product_1.title}} on orders ${{gwp_threshold_1}}+
+        </div>
+        <div class="cart-gwp__details-wrapper">
+          <img src="{{gwp_product_1.featured_image | img_url: '150x'}}" alt="{{gwp_product_1.title}}">
+          <div class="cart-gwp__details">
+            <p>You've qualified for this gift!</p>
+            <span>Code: {{gwp_promo_code_1}}</span>
+            <p class="italicized">Add code at checkout</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endif %}
+
+{{ 'style--gwp-promocode.scss.css' | asset_url | stylesheet_tag }}
+
+<style>
+  .input-checkbox:after {
+      background-image: url("{{ 'checkbox-tick.svg' | asset_url }}"),none;
+  }
+</style>

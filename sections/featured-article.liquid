@@ -1,0 +1,105 @@
+{% assign featuredArticle = articles[section.settings.blogarticle] %}
+{% if section.settings.bloghero %}
+  {% assign heroImg = section.settings.bloghero | img_url: 'master' %}
+{% else %}
+  {% assign heroImg = featuredArticle | img_url: 'master' %}
+{% endif %}
+<div class="blog__article--featured" style="background:url('{{ heroImg }}') right center no-repeat;background-size: cover;">
+  <div class="blog__article--featured__content">
+    <small>{{ featuredArticle.tags.last | upcase }}</small>
+
+    <h2 class="article__title">
+      {{- featuredArticle.title -}}
+    </h2>
+    
+    {%- assign date_format = 'date_formats.short' | t -%}
+    {%- assign published_at = featuredArticle.published_at | date: date_format -%}
+    {% assign featured_article_author = featuredArticle.metafields.accentuate.author_name %}
+
+    by {% if featured_article_author != blank %}{{ featured_article_author }}{% else %}{{ featuredArticle.author }}{% endif %} – {{ published_at }}
+
+    <div class="container--btn">
+	  <a href="{{ featuredArticle.url }}" class="btn btn--block btn--border">Read now</a>
+    </div>
+  </div>
+  {%- if heroImg -%}
+    <div class="article__image">
+      {% if section.settings.bloghero %}
+        {{ section.settings.bloghero | img_url: '500x' | img_tag: section.settings.bloghero.alt }}
+      {% endif %}
+    </div><!-- /.article__image -->
+  {%- endif -%}
+</div>
+
+{% schema %}
+  {
+    "name": "Featured Blog Article",
+    "settings": [
+	  {
+        "type": "article",
+        "id": "blogarticle",
+        "label": "Blog Article"
+      },
+	  {
+        "type": "image_picker",
+        "id": "bloghero",
+        "label": "Custom Hero Image"
+      }
+	]
+  }
+{% endschema %}
+
+{% stylesheet %}
+.blog__article--featured {
+  height: 70vh;
+  position: relative;
+}
+
+.blog__article--featured h2 {
+  font-size: 2.75em;
+  margin-bottom: .5em;
+  margin-top: .5em;
+}
+
+.blog__article--featured small {
+  font-size: .8em;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.blog__article--featured__content {
+  background-color: #fafaf2;
+  padding: 3em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.container--btn {
+  margin-top: 1em;
+  width: 100%;
+}
+
+@media all and (max-width: 599px) {
+  .blog__article--featured small {
+    padding-top: 1em;
+    padding-bottom: 2em;
+    display: block;
+  }
+}
+
+@media all and (min-width: 601px) {
+  .blog__article--featured__content {
+    background: none;
+	  padding: 0;
+    position: absolute;
+    top: 50%; right: 5vw;
+    transform: translateY(-50%);
+    width: 33vw;
+    font-size: 18px; 
+  }
+}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

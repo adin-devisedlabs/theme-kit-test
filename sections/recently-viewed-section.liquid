@@ -1,0 +1,43 @@
+{% if template contains 'product' %}
+    {% assign productTemplate = true %}
+{% else %}
+    {% assign productTemplate = false %}
+{% endif %}
+
+{% assign hideOnPDP = section.settings.hide_on_pdp %}
+
+{% include 'product-recently-viewed', productTemplate: productTemplate, hideOnPDP: hideOnPDP %}
+
+<style>
+  {% if productTemplate == false %}
+    .recently-viewed-section {
+      background-color: {{section.settings.background_color}}
+    }
+  {% endif %}
+</style>
+  
+
+{% schema %}
+{
+  "name": "Recently Viewed",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "hide_on_pdp",
+      "label": "Hide section on PDP"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color (HP Only)",
+      "default": "#F6F7EC"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Recently Viewed",
+      "category": "Dynamic"
+    }
+  ]
+}
+{% endschema %}

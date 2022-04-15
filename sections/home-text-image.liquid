@@ -1,0 +1,159 @@
+{%- assign _section = section.settings -%}
+{%- assign section_layout = _section.layout -%}
+{%- assign section_background_color = _section.background_color -%}
+{%- assign section_top_title = _section.top_title -%}
+{%- assign section_title = _section.title -%}
+{%- assign section_title_icon = _section.title_icon -%}
+{%- assign section_content = _section.content -%}
+{%- assign section_link_text = _section.link_text -%}
+{%- assign section_link_url = _section.link_url -%}
+{%- assign section_image = _section.image | default: section_mobile_image -%}
+{%- assign section_move_image = _section.move_image -%}
+{%- assign section_mobile_image = _section.mobile_image -%}
+{%- assign section_mobile_center_mobile = _section.center_mobile -%}
+
+<div class="text-image animate" {%- include "inline-style" bgcolor: section_background_color -%}>
+  <div class="flex-row justify align--{{section_layout}}">
+    <div class="text-image__image{% if section_move_image %} move-image{% endif %} lazyload" data-bg="url({{section_image | img_url: '1024x'}})">
+      {%- if section_mobile_image -%}
+        <span class="mobile-image visible-xs-block">
+          {%- include 'lazyload-image' _image: section_mobile_image, original_width: '600' -%}
+        </span>
+      {%- endif -%}
+    </div><!-- /.text-image__image -->
+    <div class="text-image__content left-padding{% if section_mobile_center_mobile %} align-center{% endif %}">
+      {%- if section_top_title != blank -%}
+        <h6>{{section_top_title}}</h6>
+      {%- endif -%}
+      {%- if section_title != blank -%}
+        <h2{% if section_title_icon %} class="has-image"{% endif %}>
+          {{ section_title }}
+          {%- if section_title_icon -%}
+            <span class="icon" {%- include "inline-style" bgimage: section_title_icon, wh: "120x" -%}></span>
+          {%- endif -%}
+        </h2>
+      {%- endif -%}
+      
+      {{ section_content }}
+
+      {%- if section.blocks.size > 0 -%}
+        <ul class="icons">
+          {%- for block in section.blocks -%}
+            {%- assign _block = block.settings -%}
+            {%- assign block_title = _block.title -%}
+            {%- assign block_icon = _block.icon -%}
+            <li{% if block_title != blank %} class="large"{% endif %}>
+              {%- include 'lazyload-image' _image: block_icon, image_params: '120x' -%}
+              {%- if block_title != blank -%}
+                <span>{{block_title}}</span>
+              {%- endif -%}
+            </li>
+          {%- endfor -%}
+        </ul>
+      {%- endif -%}
+
+      {%- include 'link' url: section_link_url, text: section_link_text, btn_border: true -%}
+    </div><!-- /.text-image__content -->
+  </div><!-- /.flex-row -->
+</div><!-- /.text-image -->
+
+
+
+{% schema %}
+{
+  "name": "Text Image",
+  "settings": [
+    {
+      "type": "radio",
+      "id": "layout",
+      "label": "Layout",
+      "options": [
+        { "value": "text-image", "label": "Text - Image" },
+        { "value": "image-text", "label": "Image - Text" }
+      ],
+      "default":   "text-image"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color"
+    },
+    {
+      "type": "text",
+      "id": "top_title",
+      "label": "Top Title"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "image_picker",
+      "id": "title_icon",
+      "label": "Title Icon"
+    },
+    {
+      "type": "html",
+      "id": "content",
+      "label": "Content (html)"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link Text"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Image"
+    },
+    {
+      "type": "image_picker",
+      "id": "mobile_image",
+      "label": "Mobile Image"
+    },
+    {
+      "type": "checkbox",
+      "id": "move_image",
+      "label": "Move mobile image to bottom",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "center_mobile",
+      "label": "Center Mobile",
+      "default": false
+    }
+  ],
+  "blocks": [
+    {
+      "type": "icon",
+      "name": "Icon",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Text Image",
+      "category": "Dynamic"
+    }
+  ]
+}
+{% endschema %}

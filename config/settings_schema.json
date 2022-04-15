@@ -1,0 +1,606 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Exo",
+    "theme_author": "N\/A",
+    "theme_version": "1.0.0",
+    "theme_documentation_url": "https:\/\/help.shopify.com\/manual\/using-themes",
+    "theme_support_email": "theme-support@shopify.com"
+  },
+  {
+    "name": "Cart",
+    "settings": [
+      {
+        "type": "text",
+        "id": "price_free_shipping",
+        "label": "Free Shipping Price Min",
+        "info": "Don't include $ symbol (ex: 34.99)"
+      },
+      {
+        "type": "url",
+        "id": "shopping_url",
+        "label": "Continue Shopping Link"
+      },
+      {
+        "type": "textarea",
+        "id": "gwp_cart_message",
+        "label": "GWP Cart Message"
+      },
+      {
+        "type": "header",
+        "content": "Products Upsell"
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_upsell",
+        "label": "Enable upsell at minicart",
+        "default": true
+      },
+      {
+        "type": "text",
+        "id": "upsell_title",
+        "label": "Upsell title",
+        "default": "You may also like"
+      },
+      {
+        "type": "product",
+        "id": "upsell_product_1",
+        "label": "Upsell Product (1)"
+      },
+      {
+        "type": "text",
+        "id": "upsell_product_id_1",
+        "label": "Upsell Variant ID (1)"
+      },
+      {
+        "type": "product",
+        "id": "upsell_product_2",
+        "label": "Upsell Product (2)"
+      },
+      {
+        "type": "text",
+        "id": "upsell_product_id_2",
+        "label": "Upsell Variant ID (2)"
+      },
+      {
+        "type": "product",
+        "id": "upsell_product_3",
+        "label": "Upsell Product (3)"
+      },
+      {
+        "type": "text",
+        "id": "upsell_product_id_3",
+        "label": "Upsell Variant ID (3)"
+      },
+      {
+        "type": "product",
+        "id": "upsell_product_4",
+        "label": "Upsell Product (4)"
+      },
+      {
+        "type": "text",
+        "id": "upsell_product_id_4",
+        "label": "Upsell Variant ID (4)"
+      },
+      {
+        "type": "product",
+        "id": "upsell_product_5",
+        "label": "Upsell Product (5)"
+      },
+      {
+        "type": "text",
+        "id": "upsell_product_id_5",
+        "label": "Upsell Variant ID (5)"
+      },
+      {
+        "type": "product",
+        "id": "upsell_product_6",
+        "label": "Upsell Product (6)"
+      },
+      {
+        "type": "text",
+        "id": "upsell_product_id_6",
+        "label": "Upsell Variant ID (6)"
+      },
+      {
+        "type": "product",
+        "id": "gift_product",
+        "label": "Gift Product"
+      }
+    ]
+  },
+  {
+    "name": "ADD TO CART CTAs",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_custom_cta",
+        "label": "Enable custom Add to Cart CTAs",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "cta_text",
+        "label": "Custom CTA text",
+        "default": "ADD TO CART<br>FOR 35% OFF"
+      }
+    ]
+  },
+  {
+    "name": "Checkout Message",
+    "settings": [
+      {
+        "type": "textarea",
+        "id": "checkout_message",
+        "label": "Checkout Message",
+        "default": "Due to COVID-19 restrictions, shipping may be slightly delayed."
+      }
+    ]
+  },
+  {
+    "name": "Free Sample Auto-Add",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_gwp_auto_add",
+        "label": "Enable Sample auto-add at checkout"
+      },
+      {
+        "type": "text",
+        "id": "gwp_auto_add_variant_id",
+        "label": "Sample Auto-Add Variant ID"
+      },
+      {
+        "type": "product",
+        "id": "gwp_auto_add_product",
+        "label": "Sample Auto-Add Product"
+      },
+      {
+        "type": "text",
+        "id": "sample_set_variant_id",
+        "label": "Exclusion Variant ID",
+        "info": "Don't add Sample if this Product Variant is the only item in cart"
+      }
+    ]
+  },
+  {
+    "name": "GWP Auto-Add (Threshold)",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_gwp_auto_add_threshold",
+        "label": "Enable GWP auto-add at checkout"
+      },
+      {
+        "type": "text",
+        "id": "gwp_auto_add_threshold_variant_id_1",
+        "label": "GWP Variant ID 1"
+      },
+      {
+        "type": "text",
+        "id": "gwp_auto_add_threshold_variant_id_2",
+        "label": "GWP Variant ID 2 (optional)"
+      },
+      {
+        "type": "text",
+        "id": "gwp_auto_add_threshold_amount",
+        "label": "GWP Auto-Add Threshold Amount ($)"
+      }
+    ]
+  },
+  {
+    "name": "GWP Pick X with Threshold",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_gwp_pick_threshold",
+        "label": "Enable GWP Pick Items with Threshold",
+        "default": false
+      },
+      {
+        "type": "html",
+        "id": "gwp_pick_minicart_text",
+        "label": "Pick GWP Text at minicart",
+        "default": "<p>Hooray! You qualify for <span class='bold'>TWO FREE Full-Size<\/span> Products<\/p>"
+      },
+      {
+        "type": "html",
+        "id": "gwp_pick_minicart_btn",
+        "label": "Pick GWP Button Text at minicart",
+        "default": "Pick 2 FREE <br>FULL-SIZE Products"
+      },
+      {
+        "type": "text",
+        "id": "gwp_pick_threshold_amount",
+        "label": "Pick GWP Threshold Amount ($)",
+        "default": "39.99"
+      },
+      {
+        "type": "select",
+        "id": "gwp_pick_number_amount",
+        "label": "GWP Number of items to pick",
+        "options": [
+          {
+            "value": "1",
+            "label": "One"
+          },
+          {
+            "value": "2",
+            "label": "Two"
+          }
+        ],
+        "default": "2"
+      },
+      {
+        "type": "product",
+        "id": "gwp_product_1",
+        "label": "GWP Product (1)"
+      },
+      {
+        "type": "text",
+        "id": "gwp_product_id_1",
+        "label": "GWP Variant ID (1)"
+      },
+      {
+        "type": "product",
+        "id": "gwp_product_2",
+        "label": "GWP Product (2)"
+      },
+      {
+        "type": "text",
+        "id": "gwp_product_id_2",
+        "label": "GWP Variant ID (2)"
+      },
+      {
+        "type": "product",
+        "id": "gwp_product_3",
+        "label": "GWP Product (3)"
+      },
+      {
+        "type": "text",
+        "id": "gwp_product_id_3",
+        "label": "GWP Variant ID (3)"
+      },
+      {
+        "type": "product",
+        "id": "gwp_product_4",
+        "label": "GWP Product (4) - Optional"
+      },
+      {
+        "type": "text",
+        "id": "gwp_product_id_4",
+        "label": "GWP Variant ID (4) - Optional"
+      }
+    ]
+  },
+  {
+    "name": "GWP with Promo Code",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "enable_gwp_promocode",
+        "label": "Enable GWP at checkout with promo code"
+      },
+      {
+        "type": "checkbox",
+        "id": "hide_discount",
+        "label": "Hide Discount 1 in Mini-Cart & Cart Page",
+        "default": false
+      },
+      {
+        "type": "header",
+        "content": "Discount Code 1 (Displays in Mini Cart)"
+      },
+      {
+        "type": "text",
+        "id": "gwp_discount_code_1",
+        "label": "Discount Code"
+      },
+      {
+        "type": "text",
+        "id": "gwp_discount_gift_threshold_1",
+        "label": "Gift Threshold ($)",
+        "default": "50"
+      },
+      {
+        "type": "text",
+        "id": "gwp_discount_gift_product_1",
+        "label": "Gift Item Variant ID"
+      },
+      {
+        "type": "product",
+        "id": "gwp_discount_product_1",
+        "label": "GWP Product"
+      },
+      {
+        "type": "header",
+        "content": "Discount Code 2"
+      },
+      {
+        "type": "text",
+        "id": "gwp_discount_code_2",
+        "label": "Discount Code"
+      },
+      {
+        "type": "text",
+        "id": "gwp_discount_gift_threshold_2",
+        "label": "Gift Threshold ($)",
+        "default": "50"
+      },
+      {
+        "type": "text",
+        "id": "gwp_discount_gift_product_2",
+        "label": "Gift Item Variant ID"
+      },
+      {
+        "type": "product",
+        "id": "gwp_discount_product_2",
+        "label": "GWP Product"
+      },
+      {
+        "type": "header",
+        "content": "Discount Code 3"
+      },
+      {
+        "type": "text",
+        "id": "gwp_discount_code_3",
+        "label": "Discount Code"
+      },
+      {
+        "type": "text",
+        "id": "gwp_discount_gift_threshold_3",
+        "label": "Gift Threshold ($)",
+        "default": "50"
+      },
+      {
+        "type": "text",
+        "id": "gwp_discount_gift_product_3",
+        "label": "Gift Item Variant ID"
+      },
+      {
+        "type": "product",
+        "id": "gwp_discount_product_3",
+        "label": "GWP Product"
+      },
+      {
+        "type": "header",
+        "content": "Discount Code 4 (Qualifying Collection)"
+      },
+      {
+        "type": "text",
+        "id": "gwp_discount_code_4",
+        "label": "Discount Code"
+      },
+      {
+        "type": "text",
+        "id": "gwp_discount_gift_threshold_4",
+        "label": "Gift Threshold ($)",
+        "default": "50"
+      },
+      {
+        "type": "text",
+        "id": "gwp_discount_gift_product_4",
+        "label": "Gift Item Variant ID"
+      },
+      {
+        "type": "product",
+        "id": "gwp_discount_product_4",
+        "label": "GWP Product"
+      }
+    ]
+  },
+  {
+    "name": "Nav Offers Sub-Menu",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Nav Item 1"
+      },
+      {
+        "type": "image_picker",
+        "id": "offers_nav_item_1_image",
+        "label": "Nav Item 1 - Image"
+      },
+      {
+        "type": "text",
+        "id": "offers_nav_item_1_text",
+        "label": "Nav Item 1 - Text"
+      },
+      {
+        "type": "url",
+        "id": "offers_nav_item_1_url",
+        "label": "Nav Item 1 - URL"
+      },
+      {
+        "type": "header",
+        "content": "Nav Item 2"
+      },
+      {
+        "type": "image_picker",
+        "id": "offers_nav_item_2_image",
+        "label": "Nav Item 2 - Image"
+      },
+      {
+        "type": "text",
+        "id": "offers_nav_item_2_text",
+        "label": "Nav Item 2 - Text"
+      },
+      {
+        "type": "url",
+        "id": "offers_nav_item_2_url",
+        "label": "Nav Item 2 - URL"
+      },
+      {
+        "type": "header",
+        "content": "Nav Item 3"
+      },
+      {
+        "type": "image_picker",
+        "id": "offers_nav_item_3_image",
+        "label": "Nav Item 3 - Image"
+      },
+      {
+        "type": "text",
+        "id": "offers_nav_item_3_text",
+        "label": "Nav Item 3 - Text"
+      },
+      {
+        "type": "url",
+        "id": "offers_nav_item_3_url",
+        "label": "Nav Item 3 - URL"
+      }
+    ]
+  },
+  {
+    "name": "Nav Learn Sub-Menu",
+    "settings": [
+      {
+        "type": "header",
+        "content": "Nav Item 1"
+      },
+      {
+        "type": "image_picker",
+        "id": "nav_item_1_image",
+        "label": "Nav Item 1 - Image"
+      },
+      {
+        "type": "text",
+        "id": "nav_item_1_text",
+        "label": "Nav Item 1 - Text"
+      },
+      {
+        "type": "url",
+        "id": "nav_item_1_url",
+        "label": "Nav Item 1 - URL"
+      },
+      {
+        "type": "header",
+        "content": "Nav Item 2"
+      },
+      {
+        "type": "image_picker",
+        "id": "nav_item_2_image",
+        "label": "Nav Item 2 - Image"
+      },
+      {
+        "type": "text",
+        "id": "nav_item_2_text",
+        "label": "Nav Item 2 - Text"
+      },
+      {
+        "type": "url",
+        "id": "nav_item_2_url",
+        "label": "Nav Item 2 - URL"
+      },
+      {
+        "type": "header",
+        "content": "Nav Item 3"
+      },
+      {
+        "type": "image_picker",
+        "id": "nav_item_3_image",
+        "label": "Nav Item 3 - Image"
+      },
+      {
+        "type": "text",
+        "id": "nav_item_3_text",
+        "label": "Nav Item 3 - Text"
+      },
+      {
+        "type": "url",
+        "id": "nav_item_3_url",
+        "label": "Nav Item 3 - URL"
+      }
+    ]
+  },
+  {
+    "name": "Footer",
+    "settings": [
+      {
+        "type": "richtext",
+        "id": "copyright",
+        "label": "Copyright",
+        "info": "Use [year] to set the current year."
+      }
+    ]
+  },
+  {
+    "name": "Account Page",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "account_image",
+        "label": "Account Image"
+      },
+      {
+        "type": "richtext",
+        "id": "contact_text",
+        "label": "Contact Text"
+      }
+    ]
+  },
+  {
+    "name": "404",
+    "settings": [
+      {
+        "type": "text",
+        "id": "404_title",
+        "label": "Title"
+      },
+      {
+        "type": "richtext",
+        "id": "404_content",
+        "label": "Content"
+      }
+    ]
+  },
+  {
+    "name": "Pop-Up Flyout Banner",
+    "settings": [
+      {
+        "type": "checkbox",
+        "id": "flyout_active",
+        "label": "Turn Flyout Banner On",
+        "default": false
+      },
+      {
+        "type": "text",
+        "id": "flyout_text",
+        "label": "Banner Header Text",
+        "default": "Join the family! Save 15% on your first purchase."
+      },
+      {
+        "type": "text",
+        "id": "flyout_confirmation",
+        "label": "Confirmation Text",
+        "default": "Please check your inbox for your 10% promo code on your first order."
+      },
+      {
+        "type": "range",
+        "id": "flyout_delay",
+        "min": 1,
+        "max": 10,
+        "step": 1,
+        "unit": "sec",
+        "label": "Pop-Up Delay (seconds)",
+        "default": 1
+      },
+      {
+        "type": "text",
+        "id": "flyout_cookie_expiration",
+        "label": "Cookie Expiration (Days)",
+        "default": "90"
+      }
+    ]
+  },
+  {
+    "name": "Favicon",
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "favicon",
+        "label": "Favicon"
+      }
+    ]
+  }
+]

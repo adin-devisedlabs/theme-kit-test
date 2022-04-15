@@ -1,0 +1,169 @@
+
+{%- assign _section = section.settings -%}
+
+{%- for block in section.blocks -%}
+  {%- if block.type == 'carousel' -%}
+    {%- assign carouselCount = carouselCount | plus: 1 -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- for block in section.blocks -%}
+  {%- assign _block = block.settings -%}
+  {%- if carouselCount > 0 and forloop.index == 1 -%}
+    <div class="carousel carousel--hero" id="hpHeroCarousel">
+  {%- endif -%}
+
+  <div class="carousel__img" onClick="linkHeroBanner('{{_block.link_url}}')" onkeyup="linkHeroBanner('{{_block.link_url}}')">
+    <div class="intro animate animated lazyload" data-bg="url({{_block.image | img_url: '2048x'}})">
+        {%- if _block.imageMob -%}
+          <div class="mobile-image visible-xs-block">
+            {%- include 'lazyload-image' _image: _block.imageMob, original_width: '600' -%}
+          </div><!-- /.mobile-image -->
+        {%- endif -%}
+        <div class="intro__content left-padding {% if _block.align_right %}right-padding right-text-align{% endif %}">
+          {%- if _block.title != blank -%}
+            <h2>{{_block.title}}</h2>
+          {%- endif -%}
+          <p {% if _block.align_right %}class="right-float"{% endif %}>{{ _block.content }}</p>
+          <div class="clear-both"></div>
+          {%- include 'link' url: _block.link_url, text: _block.link_text, tabindex: true, btn_border: true -%}
+        </div><!-- /.intro__content -->
+        {%- if _block.bottom_text != blank -%}
+          <div class="intro__bottom {% if _block.align_right %}right-float{% endif %}" {% if _block.align_right %}style="margin-right: {{_block.bottom_section_margin_right}}% !important;"{% endif %}>
+            <span class="cloud">
+              {%- include 'svg-icons' with 'cloud' -%}
+            </span>
+            <div class="intro__text">
+              {{ _block.bottom_text }}
+            </div>
+            <div class="frog">
+              <span class="eye eye--left">
+                <i></i>
+              </span>
+              <span class="eye eye--right">
+                <i></i>
+              </span>
+            </div><!-- /.frog -->
+          </div><!-- /.intro__bottom -->
+        {%- endif -%}
+      </div><!-- /.intro -->
+  </div>
+
+  {%- if carouselCount > 0 and forloop.index == carouselCount -%}
+    </div>
+  {%- endif -%}
+{%- endfor -%}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.1/tiny-slider.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.1/min/tiny-slider.js"></script>
+<script>
+  $(document).ready(function(){
+    var heroSlider = tns({
+      container: '.carousel--hero',
+      items: 1,
+      controls: false,
+      autoplay: {{section.settings.enable_autoslide}},
+      autoplayButtonOutput: false,
+      autoplayTimeout: {{section.settings.autoslide_time | times: 1000}},
+      autoplayHoverPause: {{section.settings.autoplayHoverPause}},
+      autoHeight: true
+    });
+  });
+
+  function linkHeroBanner(link) {
+    window.location.href = link;
+  }
+</script>
+
+{% schema %}
+{
+  "name": "HP Carousel",
+  "settings": [
+    {
+      "id": "enable_autoslide",
+      "type": "checkbox",
+      "label": "Enable Autoslide"
+    },
+    {
+      "id": "autoslide_time",
+      "type": "range",
+      "min":       2,
+      "max":       12,
+      "step":      1,
+      "label": "Autoslide Time (Seconds)",
+      "default":   5
+    },
+    {
+      "id": "autoplayHoverPause",
+      "type": "checkbox",
+      "label": "Pause Autoslide on hover"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Carousel image",
+      "type": "carousel",
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Image"
+        },
+        {
+          "id": "imageMob",
+          "type": "image_picker",
+          "label": "Image (Mobile)"
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Title"
+        },
+        {
+          "id": "content",
+          "type": "textarea",
+          "label": "Content"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Link URL"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link Text"
+        },
+        {
+          "type": "textarea",
+          "id": "bottom_text",
+          "label": "Bottom Text"
+        },
+        {
+          "type": "checkbox",
+          "id": "align_right",
+          "label": "Text Align Right",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "bottom_section_margin_right",
+          "label": "Bottom Animation Margin Right",
+          "unit": "%",
+          "min": 10,
+          "max": 70,
+          "step": 1,
+          "default": 13
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "HP Carousel",
+      "category": "Dynamic"
+    }
+  ]
+}
+{% endschema %}

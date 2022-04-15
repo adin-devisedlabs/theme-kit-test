@@ -1,0 +1,255 @@
+/* Home Page -------------- */
+
+@media screen and (max-width: 767px) {
+  h2 {
+    font-size: 32px;
+  }
+}
+
+// Carousel Hero Section
+#hpHeroCarousel-ow {
+  .carousel__img {
+    cursor: pointer;
+  }
+}
+
+.tns-outer {
+  position: relative;
+}
+
+.tns-nav {
+  margin: 10px 0 !important;
+  position: absolute !important;
+  left: 50%;
+  bottom: 1em !important;
+  text-align: center !important;
+  transform: translateX(-50%) !important;
+  z-index: 1 !important;
+}
+
+.tns-nav > [aria-controls] {
+  width: 9px !important;
+  height: 9px !important;
+  padding: 0 !important;
+  margin: 0 5px !important;
+  border-radius: 50% !important;
+  background: #929292 !important;
+  border: 0 !important;
+}
+
+.tns-nav > .tns-nav-active {
+  background: #084b6d !important;
+}
+
+#hpHeroCarousel-item2 .intro {
+  background-position: center;
+}
+
+.intro__bottom {
+  visibility: hidden;
+}
+
+@media screen and (max-width: 767px) {
+  .tns-outer#hpHeroCarouselAlt-ow {
+    padding-bottom: 30px !important;
+  }
+
+  #shopify-section-1577397589651 .tns-nav {
+    top: 63vw !important;
+    bottom: unset !important;
+  }
+
+  .tns-nav > [aria-controls] {
+    border: 1px solid #084b6d !important;
+    background: transparent !important;
+  }
+
+  .tns-nav > .tns-nav-active {
+    border: 1px solid #084b6d !important;
+    background: #084b6d !important;
+  }
+
+  .carousel__img .intro__bottom {
+    display: none;
+  }
+
+  // .carousel__img .intro__content {
+  //   padding-bottom: 50px;
+  //   display: none;
+  // }
+}
+
+@media screen and (min-width: 768px) {
+  #shopify-section-1577397589651 .tns-nav {
+    bottom: unset !important;
+    left: unset !important;
+    right: 1% !important;
+    display: grid !important;
+    top: 42% !important;
+  }
+
+  .tns-nav > [aria-controls] {
+    margin: 5px !important;
+    width: 18px !important;
+    height: 18px !important;
+    background: #cdcdcd !important;
+  }
+
+  .tns-nav > .tns-nav-active {
+    background: #084b6d !important;
+  }
+
+  .right-text-align {
+    text-align: right;
+  }
+  .left-text-align {
+    text-align: left;
+  }
+
+  .right-float {
+    float: right;
+  }
+
+  .center-text-align {
+    text-align: center;
+    margin: 0 auto 40px;
+  }
+
+  .carousel__img .intro {
+    // height: calc(100vh - 128px);
+    // height: 100vh;
+    background-position: center;
+  }
+
+  .intro p {
+    max-width: 440px;
+  }
+}
+
+// Accordian Section
+.accordion-section {
+  .arrow:before {
+    height: 0;
+  }
+  .arrow:after {
+    width: 18px;
+    height: 18px;
+  }
+  .arrow--prev {
+    top: 305px;
+  }
+  .stamped-main-badge,
+  .stamped-badge {
+    cursor: default;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .accordion-section {
+    .accordion-item__content .mobile-image span.arrow-prev {
+      left: -190px;
+    }
+    .accordion-item__content .mobile-image span.arrow-next {
+      right: -190px;
+    }
+  }
+}
+
+// Our Ingredients Section
+#shopify-section-1561450603467 {
+  .icons {
+    flex-wrap: wrap;
+    -ms-flex-wrap: wrap;
+
+    .large {
+      flex-basis: 31%;
+      -ms-flex-preferred-size: 31%;
+      max-width: 31%;
+      margin-right: 2%;
+    }
+
+    .large:nth-child(5) img {
+      padding-top: 7px;
+      padding-bottom: 7px;
+    }
+
+    .large:nth-child(6) span {
+      color: #569954;
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  #shopify-section-1561450603467 {
+    .icons {
+      width: 50%;
+      min-width: 324px;
+      margin-left: -1.5vw;
+    }
+  }
+}
+
+// Squalane Section
+.text-image {
+  h2.has-image {
+    max-width: 450px;
+
+    span {
+      right: 0;
+    }
+  }
+}
+
+// Gifts section
+.gifts {
+  background: #f6f7ec;
+
+  .product-link {
+    text-align: center;
+  }
+}
+
+// Testimonials section
+.carousel--testimonials {
+  display: flex !important;
+
+  .carousel__img {
+    height: auto !important;
+
+    .carousel__text {
+      height: 100%;
+    }
+  }
+}
+
+// Our Story Section
+#shopify-section-1561470340634 {
+  .icons {
+    .large:nth-child(3) {
+      span {
+        color: #569954;
+      }
+    }
+  }
+}
+
+// Body copy
+@media screen and (min-width: 768px) {
+  body {
+    font-size: 20px;
+  }
+
+  .fixed-form,
+  .footer,
+  .title {
+    font-size: 16px;
+  }
+}
+
+.community {
+  .community__header {
+    a {
+      text-decoration: none;
+    }
+  }
+}

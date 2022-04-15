@@ -1,0 +1,35 @@
+
+
+<div class="horizontal-box-content">
+  {%- for block in section.blocks -%}
+    {% if block.settings.pattern %} <img class="style-guide-pattern" src="{{block.settings.pattern | img_url: 'master' }}" /> {% endif %}
+  {%- endfor -%}
+</div>
+
+{% stylesheet %}
+  .style-guide-pattern {
+    margin: 5px;
+    border-radius: 50px;
+    width: 100px;
+  }
+{% endstylesheet %}
+
+{% schema %}
+  {
+    "name": "Prints & Patterns",
+    "settings": [],
+    "blocks": [
+      {
+        "name": "Pattern",
+        "type": "patterns",
+        "settings": [
+          {
+            "id": "pattern",
+            "type": "image_picker",
+            "label": "Prints/Pattern"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

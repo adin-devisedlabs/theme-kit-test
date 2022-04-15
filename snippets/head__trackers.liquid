@@ -1,0 +1,88 @@
+  <!-- OneTrust Cookies Consent Notice start -->
+  <script src="https://cdn.cookielaw.org/scripttemplates/otSDKStub.js"  type="text/javascript" charset="UTF-8" data-domain-script="e636fcd1-ce42-4b36-b060-5b6896145879"></script>
+  <script type="text/javascript">
+  function OptanonWrapper() { }
+  </script>
+  <!-- OneTrust Cookies Consent Notice end -->
+
+  <!-- Anti-flicker snippet (recommended) Google Optimize -->
+  <style>.async-hide { opacity: 0 !important} </style>
+  <script>(function(a,s,y,n,c,h,i,d,e){s.className+=' '+y;h.start=1*new Date;
+  h.end=i=function(){s.className=s.className.replace(RegExp(' ?'+y),'')};
+  (a[n]=a[n]||[]).hide=h;setTimeout(function(){i();h.end=null},c);h.timeout=c;
+  })(window,document.documentElement,'async-hide','dataLayer',5000,
+  {'GTM-NRPTV3L':true});</script>
+  
+  <!-- Google Tag Manager -->
+  
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  
+  })(window,document,'script','dataLayer','GTM-NRPTV3L');ga('require','GTM-NFT2QSF');ga('create', 'UA-145103213-1', 'auto', {allowLinker: true});</script>
+  
+  <!-- End Google Tag Manager -->  
+
+  <!-- Global site tag (gtag.js) - Google Ads: 728577457 --> 
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-728577457"></script> 
+  <script> 
+    window.dataLayer = window.dataLayer || []; 
+    function gtag(){dataLayer.push(arguments);} 
+    gtag('js', new Date()); 
+    gtag('config', 'AW-728577457'); 
+  </script>
+
+  <!-- Adrizer -->
+  <script src="//run.crtx.info/track.min.js" id="ADRIZER_JS" data-domain="pipettebaby.com"></script>
+
+  <!-- Facebook Pixel Code -->
+  <script>
+    let customerOptedOut = false;
+    let ccpaCookie = getCookie('OptanonConsent');
+    if (ccpaCookie) {
+      let ccpaResponses = ccpaCookie.split('C0004%')[1];
+      let targetingCookieResponse = ccpaResponses.split('%')[0];
+      if (targetingCookieResponse == '3A0') {
+        customerOptedOut = true;
+      }
+    }
+
+    function getCookie(cname) {
+      var name = cname + "=";
+      var ca = document.cookie.split(';');
+      for(var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+          c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+          return c.substring(name.length, c.length);
+        }
+      }
+      return "";
+    }
+
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    if (customerOptedOut) {
+      fbq('dataProcessingOptions', ['LDU'], 0, 0);
+    }
+    fbq('init', '1034760580052338');
+    fbq('track', 'PageView');
+
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none" alt=""
+        src="https://www.facebook.com/tr?id=1034760580052338&ev=PageView&noscript=1"/>
+  </noscript>
+  <!-- End Facebook Pixel Code -->

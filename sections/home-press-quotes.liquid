@@ -1,0 +1,98 @@
+{% for block in section.blocks %}
+  {% assign _block = block.settings %}
+  {% if block.type == 'press' %}
+  <div class="well-wed animate press__container">
+    <h6>{{ _block.headingSmall }}</h6>
+    <div class="flex-row flex-row--press">
+      {% for block in section.blocks %}
+        {% if block.type == 'press-review' %}
+          <div class="img-container">
+            <img src="{{ block.settings.logo_desktop | img_url: 'master' }}" alt="" class="img--press hidden-xs {{block.settings.press_title}}">
+            <img src="{{ block.settings.logo_mobile | img_url: 'master' }}" alt="" class="img--press visible-xs-block {{block.settings.press_title}}">
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+    <div class="press__content">
+      <h2 class="press__text"></h2>
+    </div>
+  </div>
+  {% endif %}
+{% endfor %}
+
+
+{% schema %}
+  {
+  "name": "Press Quotes",
+  "blocks": [
+    {
+      "name": "Press section",
+      "type": "press",
+      "settings": [
+      {
+        "id": "headingSmall",
+        "type": "text",
+        "label": "Small Heading"
+      }
+      ]
+    },
+    {
+      "name": "Press Review",
+      "type": "press-review",
+      "settings": [
+        {
+          "id": "press_title",
+          "type": "text",
+          "label": "Press title"
+        },
+        {
+          "id": "logo_desktop",
+          "type": "image_picker",
+          "label": "Logo (desktop)"
+        },
+        {
+          "id": "logo_mobile",
+          "type": "image_picker",
+          "label": "Logo (mobile)"
+        },
+        {
+          "id": "press_text",
+          "type": "textarea",
+          "label": "Press text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Press Quotes",
+      "category": "Dynamic"
+    }
+  ]
+  }
+{% endschema %}
+
+<script>
+  $(document).ready(function() { 
+    $('.well-wed .flex-row--press .img-container:first-child').addClass('active').siblings().removeClass('active');
+    
+    {% for block in section.blocks %}
+      {% if block.type == 'press-review' %}
+        $('.press__content .press__text').text("{{block.settings.press_text}}");
+        {% break %}
+      {% endif %}
+    {% endfor %}
+    
+    $('.well-wed .flex-row--press .img-container').mouseover(function() {
+      $(this).addClass('active').siblings().removeClass('active');
+      {% for block in section.blocks %}
+        {% if block.type == 'press-review' %}
+          if ($(this).find('img').hasClass("{{block.settings.press_title}}")) {
+            $('.press__content .press__text').text("{{block.settings.press_text}}");
+            return;
+          }
+        {% endif %}
+      {% endfor %}
+    });
+  });
+</script>

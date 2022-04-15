@@ -1,0 +1,692 @@
+{% for block in section.blocks %}
+  {% assign _block = block.settings %}
+  {% if block.type == 'container' %}
+    <div 
+    class="well-wed intro animate lazyload {% if forloop.first%} animated{% endif %}{% if _block.container_bg_as_image == false %} no-bg-mob{% endif %}" 
+    data-bg="url({{_block.image | img_url: '2048x'}})"
+    {% if _block.text_align == 'right' %}
+      style="justify-content: flex-end;background-position:right;{% if _block.bgColor != empty %}background-color:{{ _block.bgColor }};{% endif %}"
+    {% elsif _block.text_align == 'center' %} 
+      style="justify-content: center;background-position:right;{% if _block.bgColor != empty %}background-color:{{ _block.bgColor }};{% endif %}"
+    {% else %}
+      style="{% if _block.bgColor != empty %}background-color:{{ _block.bgColor }};{% endif %}background-position:right;"  
+    {% endif %}
+    >
+      {%- if _block.imageMob -%}
+        <div class="mobile-image visible-xs-block">
+          {%- include 'lazyload-image' _image: _block.imageMob, original_width: '600' -%}
+        </div><!-- /.mobile-image -->
+      {%- endif -%}
+      <div 
+        class="intro__content 
+        {% if _block.text_align == 'left' %} 
+          left-padding 
+        {% elsif _block.text_align == 'right' %} 
+          right-padding 
+          {% if _block.text_align_left == false%}right-text-align{% endif %}
+        {% elsif _block.text_align == 'center' %} 
+            center-text-align 
+        {% endif %} 
+        {% if _block.text_align_left %}
+          left-text-align
+        {% endif %}
+        {% if _block.hide_text_desktop %} 
+          visible-xs-block 
+        {% endif %}"
+        style="color: {{block.settings.text_color}};"
+      >
+        {%- if _block.eyebrow != blank -%}
+          <h6>{{_block.eyebrow}}</h6>
+        {%- endif -%}
+        {%- if _block.title != blank -%}
+          {% if forloop.first %}
+            <h2 class="title--large">{{_block.title}}</h2>
+          {% else %}
+            <h2>{{_block.title}}</h2>
+          {% endif %}
+        {%- endif -%}
+        {%- if _block.content != blank -%}
+          <p class="content {% if _block.align_right != blank %} right-float{% endif %}{% if forloop.first %} hero{% endif %}">{{ _block.content }}</p>
+        {%- endif -%} 
+        {%- if _block.promo != blank -%}
+          <p class="intro__promo">{{ _block.promo }}</p> 
+        {%- endif -%}  
+        <div class="clear-both"></div>
+        {%- include 'link' url: _block.link_url, text: _block.link_text, tabindex: true, btn_border: true, border_color: {{_block.text_color}} -%}
+        {% if _block.disclaimer_text != blank %}
+          <p class="intro__disclaimer">{{_block.disclaimer_text}}</p>
+        {% endif %}
+      </div><!-- /.intro__content -->
+    </div><!-- /.intro -->
+  {% endif %}
+  {% if block.type == 'press' %}
+    <div class="well-wed animate press__container">
+      <h6>{{ _block.headingSmall }}</h6>
+      <div class="flex-row flex-row--press">
+        {% for block in section.blocks %}
+          {% if block.type == 'press-review' %}
+            <div class="img-container">
+              <img src="{{ block.settings.logo_desktop | img_url: 'master' }}" alt="" class="img--press hidden-xs {{block.settings.press_title}}">
+              <img src="{{ block.settings.logo_mobile | img_url: 'master' }}" alt="" class="img--press visible-xs-block {{block.settings.press_title}}">
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="press__content">
+        <h2 class="press__text"></h2>
+      </div>
+    </div>
+  {% endif %}
+  {% if block.type == 'sixty-forty' %}
+    <div class="well-wed animate sixty-forty sixty-forty--{{ _block.bodyImageAlign }}"{% if _block.bgColor != empty %} style="background:{{ _block.bgColor }}"{% endif %} id="section{{ block.id }}">
+      <div class="sixty-forty__image" style="background: url('{{ _block.bodyImage | img_url: '2x' }}') {% if _block.imgBgColor != empty %}{{ _block.imgBgColor }}{% endif %};background-size:contain;background-repeat: no-repeat;background-position: center top;">
+        <div>
+          {% if _block.bodyImage %}
+            {% if _block.bodyImageMob != blank %}
+              <img src="{{ _block.bodyImageMob | img_url: '2x' }}" alt="" class="img--mob">
+            {% else %}
+              <img src="{{ _block.bodyImage | img_url: '2x' }}" alt="">
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+      <div class="sixty-forty__text"{% if _block.bodyBgColor != empty %} style="background:{{ _block.bodyBgColor }}"{% endif %}>
+        <div class="sixty-forty__text__inner">
+          <h6>{{ _block.headingSmall }}</h6>
+          <h2>{{ _block.headingLarge }}</h2>
+            {{ _block.bodyText }}
+              <div class="flex-row flex-row--features">
+                {% for block in section.blocks %}
+                  {% if block.type == 'feature' %}
+                    <div>
+                      <img src="{{ block.settings.icon | img_url: 'master' }}" alt="" class="img--perk">
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            {%- if _block.bodyCTAURL != blank -%}
+            <a href="{{ _block.bodyCTAURL }}" class="btn">{{ _block.bodyCTAText }}</a>
+            {%- endif -%}
+            {% if _block.disclaimer_text != blank %}
+              <p class="intro__disclaimer">{{_block.disclaimer_text}}</p>
+            {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if block.type == 'article' %}
+    {%- assign article_img = _block.article_image -%}
+    {%- assign article_img_mob = _block.article_left_mobile | default: article_img -%}
+    {%- assign article_thumb = _block.article_thumb -%}
+    {%- assign right_img_mobile = _block.mobile_right_image | default: article_thumb -%}
+    <div class="well-wed product-article animate" {% if _block.bgColor != empty %}style="background-color:{{ _block.bgColor }};"{% endif %}>
+      <div class="container">
+        <div class="flex-row justify">
+          <div class="side-image">
+            {%- include 'lazyload-image' _image: article_img, image_params: '700x', additional_classes: 'hidden-xs' -%} 
+            {%- include 'lazyload-image' _image: article_img_mob, image_params: '400x', additional_classes: 'visible-xs-block' -%} 
+          </div><!-- /.side-image -->
+          <div class="side-content">
+            {%- if _block.article_title != blank -%}
+              <h2>{{ _block.article_title }}</h2>
+            {%- endif -%}
+            <p>{{ _block.article_content }}</p>
+            <a href="{{_block.article_url}}" class="btn btn--border">
+              {{ 'products.product.read_more' | t }}
+            </a>
+            <div class="bottom-image">
+              {%- if _block.article_thumb or product.metafields.product.mobile_right_image -%}
+                {%- include 'lazyload-image' _image: article_thumb, image_params: '600x', additional_classes: 'hidden-xs' -%} 
+                {%- include 'lazyload-image' _image: right_img_mobile, image_params: '400x', additional_classes: 'visible-xs-block' -%} 
+              {%- endif -%}
+            </div><!-- /.bottom-image -->
+          </div><!-- /.side-content -->
+        </div><!-- /.flex-row -->
+      </div><!-- /.container -->
+    </div><!-- /.product-article -->
+  {% endif %}
+{% endfor %}
+
+<style>
+  .well-wed.intro {
+    display: flex;
+    padding: 0;
+    height: 900px;
+    min-height: 100vh;
+  }
+  
+  .well-wed.intro .intro__content {
+    align-self: center;
+    max-width: 55%;
+  }
+
+  .well-wed.intro p.content {
+    max-width: 410px;
+    line-height: 1.6;
+  }
+
+  .well-wed.intro p.content.hero {
+    max-width: 480px;
+  }
+
+  .well-wed .left-padding {
+    padding-left: 150px;
+  }
+
+  .well-wed.product-article .container {
+    max-width: 1200px;
+  }
+
+  .well-wed.product-article .side-content {
+    flex-basis: 44%;
+    max-width: 44%;
+    padding: 1rem;
+  }
+
+  .well-wed.intro h2.title--large {
+    margin-bottom: 25px;
+  }
+  
+  .intro__content h3 {
+    font-family: "Basis Grotesque Pro", Arial, Helvetica, sans-serif;
+  }
+  
+  .well-wed .intro__disclaimer {
+    font-size: .75em;
+    margin-top: 40px;
+  }
+
+  .well-wed .sixty-forty__text .intro__disclaimer {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+  
+  .intro .intro__disclaimer.no-top-margin {
+    margin-top: -10px;
+  }
+
+  .intro__content.left-padding {
+    text-align: left;
+  }
+  
+  .well-wed .intro__content h6, .well-wed .sixty-forty__text__inner h6 {
+    margin-bottom: 45px;
+    font-size: 24px;
+    margin-top: 2rem;
+  }
+
+  .well-wed .btn--border {
+    color: #fff !important;
+    background: #084b6d !important;
+  }
+
+  .well-wed .btn--border:hover {
+    color: #084b6d !important;
+    background: transparent !important;
+  }
+
+  .well-wed .sixty-forty__text__inner {
+    max-width: 485px;
+  }
+
+  .well-wed .sixty-forty__text {
+    padding: 2rem 0 3rem 0;
+  }
+
+  .well-wed .flex-row--features {
+    flex-wrap: nowrap;
+    max-width: unset;
+    justify-content: center;
+  }
+
+  .well-wed .flex-row--features > div {
+    margin: 0 1rem;
+  }
+
+  .well-wed .product-article .container {
+    max-width: 1200px;
+  }
+
+  @media screen and (min-width: 1610px) {
+    .well-wed.intro {
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+  }
+  
+  @media screen and (min-width: 768px) and (max-width: 1300) {
+    .well-wed.intro .intro__content {
+      align-self: flex-end;
+    }
+  }
+
+  @media screen and (max-width: 1200px) {
+    .well-wed.intro .intro__content {
+      max-width: 65%;
+    }
+  }
+  
+  @media screen and (max-width: 1000px) {
+    .well-wed.intro .intro__content {
+      max-width: 500px;
+    }
+  }
+  
+  @media screen and (min-width: 768px) and (max-width: 850px) {
+    .intro h2.title--large {
+      font-size: 70px;
+    }
+  }
+  
+  @media screen and (max-width: 767px) {
+    .intro__content h3 {
+      font-size: 22px;
+    }
+  
+    .well-wed.intro {
+      display: block;
+      height: auto;
+      background-image: none !important;
+    }
+
+    .well-wed .left-padding {
+      padding-left: 32px;
+    }
+
+    .well-wed.intro.no-bg-mob {
+      background: none !important;
+    }
+  
+    .well-wed.intro .intro__content {
+      max-width: 100%;
+      text-align: left;
+      color: #084b6d !important;
+      padding-bottom: 1rem;
+    }
+  
+    .intro__content {
+      padding-top: 21px;
+    }
+    .well-wed.intro .intro__content.center-text-align {
+      text-align: center;
+    }
+    .well-wed.intro .intro__content.right-text-align {
+      text-align: center;
+    }
+    .well-wed.intro .intro__content.left-text-align {
+      text-align: left;
+    }
+    .intro__content {
+      color: #084b6d !important;
+    }
+
+    .well-wed.intro p.content, .well-wed.intro p.content.hero {
+      max-width: unset;
+    }
+
+    .well-wed .intro__content h6, .well-wed .sixty-forty__text__inner h6 {
+      font-size: 18px;
+      margin-bottom: 1rem;
+      margin-top: 0;
+    }
+    .well-wed .sixty-forty__text__inner {
+      text-align: center;
+    }
+    .well-wed .intro__content h2.title--large {
+      font-size: 44px;
+      line-height: 1.4;
+      margin-bottom: 1rem;
+    }
+    .well-wed h2 {
+      font-size: 38px;
+      margin-top: 1rem;
+    }
+    .well-wed .intro__content h3 {
+      font-size: 20px;
+      font-family: "Basis Grotesque Pro", Arial, Helvetica, sans-serif;
+    }
+    .well-wed.intro .mobile-image {
+      margin-bottom: 0;
+    }
+    .well-wed p {
+      margin-bottom: 1.5rem;
+    }
+    .well-wed .intro__disclaimer {
+      font-size: 11px;
+      line-height: 1.6;
+      margin: 2rem 0;
+    }
+    .well-wed .sixty-forty__text__inner {
+      padding: 0 2rem;
+    }
+    .well-wed .flex-row--features {
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: flex-start;
+      max-width: 80%;
+      margin: 0 auto;
+      padding-top: 1rem;
+    }
+    .well-wed .flex-row--features > div {
+      flex-shrink: unset;
+      flex-basis: 40%;
+      margin: 0.9rem 0;
+    }
+    .flex-row--features img {
+      max-width: 90px;
+      margin: 0 auto;
+    }
+    .flex-row--features div:first-child img {
+      max-width: 85px;
+    }
+    .flex-row--features div:nth-child(2) img {
+      max-width: 110px;
+    }
+    .well-wed.product-article .side-content {
+      flex-basis: unset;
+      max-width: unset;
+      padding: 0;
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    .well-wed.intro p.content.hero {
+      max-width: 80vw;
+    }
+    .well-wed .sixty-forty__text__inner h6 {
+      padding: 1rem 2rem;
+    }
+    .well-wed.product-article .side-image {
+      margin-bottom: 3rem;
+    }
+    .well-wed .side-content h2 {
+      font-size: 34px;
+    }
+  }
+  
+  </style>
+
+{% schema %}
+{
+  "name": "Page Content",
+  "settings": [],
+  "blocks": [
+    {
+      "name": " Bg Image Container",
+	    "type": "container",
+      "settings": [
+      {
+        "id": "image",
+        "type": "image_picker",
+        "label": "Image"
+      },
+      {
+        "id": "imageMob",
+        "type": "image_picker",
+        "label": "Image (Mobile)"
+      },
+      {
+        "id": "bgColor",
+        "type": "color",
+        "label": "Background Image Color"
+      },
+      {
+        "type": "checkbox",
+        "id": "container_bg_as_image",
+        "label": "Container Bg same as image?",
+        "default": false
+      },
+      {
+        "id": "text_color",
+        "type": "color",
+        "label": "Text Color",
+        "default": "#ffffff" 
+      },
+      {
+        "id": "eyebrow",
+        "type": "text",
+        "label": "Eyebrow Text"
+      },
+      {
+        "id": "title",
+        "type": "text",
+        "label": "Title"
+      },
+      {
+        "id": "content",
+        "type": "textarea",
+        "label": "Content"
+      },
+      {
+        "id": "promo",
+        "type": "text",
+        "label": "Promo"
+      },
+      {
+        "type": "url",
+        "id": "link_url",
+        "label": "Link URL"
+      },
+      {
+        "type": "text",
+        "id": "link_text",
+        "label": "Link Text"
+      },
+      {
+        "type": "textarea",
+        "id": "disclaimer_text",
+        "label": "Disclaimer Text"
+      },
+      {
+        "type":      "select",
+        "id":        "text_align",
+        "label":     "Text Position",
+        "options": [
+          { "value": "left", "label": "Left"},
+          { "value": "center", "label": "Center"},
+          { "value": "right", "label": "Right"}
+        ],
+        "default":   "left"
+      },
+      {
+        "type": "checkbox",
+        "id": "text_align_left",
+        "label": "Text Align Left?",
+        "default": true
+      }
+      ]
+    },
+    {
+      "name": "Press section",
+      "type": "press",
+      "settings": [
+      {
+        "id": "headingSmall",
+        "type": "text",
+        "label": "Small Heading"
+      }
+      ]
+    },
+    {
+      "name": "Press Review",
+      "type": "press-review",
+      "settings": [
+        {
+          "id": "press_title",
+          "type": "text",
+          "label": "Press title"
+        },
+        {
+          "id": "logo_desktop",
+          "type": "image_picker",
+          "label": "Logo (desktop)"
+        },
+        {
+          "id": "logo_mobile",
+          "type": "image_picker",
+          "label": "Logo (mobile)"
+        },
+        {
+          "id": "press_text",
+          "type": "textarea",
+          "label": "Press text"
+        }
+      ]
+    },
+    {
+      "name": "Sixty Forty section",
+      "type": "sixty-forty",
+      "settings": [
+        {
+          "id": "bgColor",
+          "type": "color",
+          "label": "Background Color"
+        },
+        {
+          "id": "headingSmall",
+          "type": "text",
+          "label": "Small Heading"
+        },
+        {
+          "id": "headingLarge",
+          "type": "text",
+          "label": "Large Heading"
+        },
+        {
+          "id": "bodyText",
+          "type": "richtext",
+          "label": "Body Text"
+        },
+        {
+          "id": "bodyCTAURL",
+          "type": "url",
+          "label": "CTA Link"
+        },
+        {
+          "id": "bodyCTAText",
+          "type": "text",
+          "label": "CTA Text",
+          "default": "Shop all"
+        },
+        {
+          "type": "textarea",
+          "id": "disclaimer_text",
+          "label": "Disclaimer Text"
+        },
+        {
+          "id": "imgBgColor",
+          "type": "color",
+          "label": "Image Background Color"
+        },
+        {
+          "id": "bodyImage",
+          "type": "image_picker",
+          "label": "Image"
+        },
+        {
+          "id": "bodyImageMob",
+          "type": "image_picker",
+          "label": "Image (mobile)"
+        },
+        {
+          "id": "bodyImageAlign",
+          "type": "select",
+          "label": "Image Alignment",
+          "options": [
+            { "value": "right", "label": "Right"},
+            { "value": "left", "label": "Left"}
+          ],
+          "default": "right"
+        }
+      ]
+    },
+    {
+      "name": "Feature",
+      "type": "feature",
+      "settings": [
+        {
+          "id": "icon",
+          "type": "image_picker",
+          "label": "Icon"
+        }
+      ]
+    },
+    {
+      "name": "Article",
+      "type": "article",
+      "settings": [
+        {
+          "id": "article_image",
+          "type": "image_picker",
+          "label": "Image"
+        },
+        {
+          "id": "article_left_mobile",
+          "type": "image_picker",
+          "label": "Image (Mobile)"
+        },
+        {
+          "id": "bgColor",
+          "type": "color",
+          "label": "Background Color"
+        },
+        {
+          "id": "article_title",
+          "type": "text",
+          "label": "Article Title"
+        },
+        {
+          "id": "article_content",
+          "type": "textarea",
+          "label": "Article Content"
+        },
+        {
+          "id": "article_url",
+          "type": "url",
+          "label": "Article URL"
+        },
+        {
+          "id": "article_thumb",
+          "type": "image_picker",
+          "label": "Article Thumbnail Image"
+        },
+        {
+          "id": "mobile_right_image",
+          "type": "image_picker",
+          "label": "Article Mobile Right Image"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
+
+<script>
+$(document).ready(function() {
+  if ($(window).width() > 1600) {
+    $('.sixty-forty__image').css('background-size', 'cover');
+  }
+
+  $('.well-wed .flex-row--press .img-container:first-child').addClass('active').siblings().removeClass('active');
+  
+  {% for block in section.blocks %}
+    {% if block.type == 'press-review' %}
+      $('.press__content .press__text').text("{{block.settings.press_text}}");
+      {% break %}
+    {% endif %}
+  {% endfor %}
+  
+  $('.well-wed .flex-row--press .img-container').mouseover(function() {
+    $(this).addClass('active').siblings().removeClass('active');
+    {% for block in section.blocks %}
+      {% if block.type == 'press-review' %}
+        if ($(this).find('img').hasClass("{{block.settings.press_title}}")) {
+          $('.press__content .press__text').text("{{block.settings.press_text}}");
+          return;
+        }
+      {% endif %}
+    {% endfor %}
+  });
+});
+
+</script>

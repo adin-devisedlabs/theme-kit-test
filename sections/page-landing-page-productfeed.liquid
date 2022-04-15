@@ -1,0 +1,34 @@
+<div class="collection__items">
+
+  {%- for _product in collections[section.settings.collection].products -%}
+    {%- assign main_index = forloop.index -%}
+
+    {% unless _product.type == 'hidden' or _product.type == 'hidden-displayATC' %}
+      {%- include 'product-item' with _product -%}
+    {% endunless %}
+
+  {%- endfor -%}
+</div><!-- /.collection__items -->
+
+{% stylesheet %}
+#shopify-section-page-landing-page-productfeed .overlay_image .product__item-image {
+	margin-top: 60px;
+}
+
+#shopify-section-page-landing-page-productfeed .overlay-product {
+	bottom: 200px;
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Egghunt Collection",
+  "settings": [
+    {
+      "id": "collection",
+      "type": "collection",
+      "label": "Select Collection"
+    }
+  ]
+}
+{% endschema %}

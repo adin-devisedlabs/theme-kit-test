@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="{{ shop.locale }}">
+<head>
+
+	{%- include 'settings' -%}
+
+	{%- include 'head' -%}
+
+	{{ content_for_header }}
+
+  {% include 'bmdi-dl' %}
+
+  {% include 'head__trackers' %}
+
+  <!-- Zendesk Default Widget Configuration -->
+  <script type="text/javascript">
+    window.zESettings = {
+      webWidget: {
+        launcher: {
+          chatLabel: {
+            '*': 'Chat'
+          },
+          label: {
+            '*': 'Help'
+          }
+        },
+        helpCenter: {
+          title: {
+            '*': 'Message Us'
+          }
+        },
+        contactForm: {
+          title: {
+            '*': 'Message Us'
+          }
+        },
+        chat: {
+          offlineForm: {
+            greeting: {
+               '*': "Sorry, we aren't online at the moment. Leave a message and we'll get back to you as soon as possible!"
+            }
+          },
+          title: {
+            '*': 'Message Us'
+          },
+          departments: {
+           enabled: ['Pipette Baby'],
+           select: 'Pipette Baby'
+          }
+        },
+        talk: {
+          title: {
+            '*': 'Message Us'
+          }
+        },
+        answerBot: {
+          title: {
+            '*': 'Message Us'
+          }
+        }
+      }
+    };
+  </script>
+
+
+{% render 'limoniapps-discountninja-header' %}{%- if product -%}{%- assign discountninjaproduct = product -%}{%- endif -%}{%- if collection -%}{%- assign discountninjacollection = collection -%}{%- endif -%}
+</head>
+
+<body class="{{ template_class }} page--{{ page.handle }}{% if page.handle contains 'shipping' or page.handle contains 'faq' %} template-page--faq{% endif %}" {% if settings.enable_gwp_auto_add %} data-sample-product="{{ settings.gwp_auto_add_variant_id }}"{% endif %}{% if settings.enable_gwp_auto_add_threshold %} data-code-thresh="{{ settings.gwp_auto_add_threshold_amount | times: 100 }}" data-code-product-1="{{ settings.gwp_auto_add_threshold_variant_id_1}}" data-code-product-2="{{ settings.gwp_auto_add_threshold_variant_id_2}}"{% endif %} data-price-free-ship="{{ settings.price_free_shipping | times: 100 }}" {% if settings.enable_gwp_pick_threshold %} data-price-pick-threshold="{{ settings.gwp_pick_threshold_amount | times: 100 }}" data-gwp-pick-text="{{settings.gwp_pick_minicart_text}}" data-gwp-pick-btn-text="{{settings.gwp_pick_minicart_btn}}" data-pick-limit="{{ settings.gwp_pick_number_amount | plus: 1 }}" data-pick-varid-1="{{ settings.gwp_product_id_1}}" data-pick-varid-2="{{ settings.gwp_product_id_2}}" data-pick-varid-3="{{ settings.gwp_product_id_3}}" data-pick-varid-4="{{ settings.gwp_product_id_4}}" data-pick-prod-1="{{ settings.gwp_product_1}}" data-pick-prod-2="{{ settings.gwp_product_2}}" data-pick-prod-3="{{ settings.gwp_product_3}}" data-pick-prod-4="{{ settings.gwp_product_4}}"{% endif %}>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRPTV3L"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <div class="wrapper">
+    {%- include 'header-screen-reader-links' %}
+    {%- section 'header' -%}
+
+    <div class="main" id="main" role="main">
+      {{ content_for_layout }}
+    </div><!-- /.main container clear -->
+
+    {%- section "footer" -%}
+  </div><!-- /.wrapper -->
+  <div class="overlay" data-overlay="" aria-hidden="true" tabindex="-1"></div>
+
+  {%- include 'ie-modal' -%}
+  {{ theme_scripts }}
+  <!-- Begin ReCharge code -->
+  {% include 'subscription-theme-footer' %}
+  <!-- End ReCharge code -->
+  {% include 'swymSnippet' %}
+  {{ 'theme.scss.css' | asset_url | stylesheet_tag }}
+  {% include 'popup-welcome-flyout' %}
+  {% include 'body__trackers' %}
+
+  <!----- YOU MUST INCLUDE THIS STATEMENT OR CRITEO TAGS WILL BREAK ---------->
+
+{% include 'criteo-tracking' %}
+
+<!----- YOU MUST INCLUDE THIS STATEMENT OR CRITEO TAGS WILL BREAK ---------->
+
+
+{% include 'limoniapps-discountninja-body' %}
+</body>
+</html>

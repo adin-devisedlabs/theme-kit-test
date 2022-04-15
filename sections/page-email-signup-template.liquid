@@ -1,0 +1,553 @@
+<div class="lp-email-signup-section-wrapper">
+  <!-- Hero Section  -->
+  {% if section.settings.hero_display %}
+    <div class="intro animate lazyload" data-bg="url({{section.settings.hero_image | img_url: '2048x'}})">
+      {%- if section.settings.hero_image_mobile -%}
+        <div class="mobile-image visible-xs-block">
+          {%- include 'lazyload-image' _image: section.settings.hero_image_mobile, original_width: '600' -%}
+        </div><!-- /.mobile-image -->
+      {%- endif -%}
+      <div class="intro__content left-padding">
+        {%- if section.settings.hero_logo -%}
+          <h6>Meet Pipette</h6>
+        {%- endif -%}
+        {% if section.settings.hero_subheader %}
+          <h2>{{section.settings.hero_subheader}}</h2>
+        {% endif %}
+        {% if section.settings.hero_blurb %}
+          <p>{{section.settings.hero_blurb}}</p>
+        {% endif %}
+      </div><!-- /.intro__content -->
+
+      <div class="intro__bottom">
+        <div class="">
+          <!-- <img src="{{section.settings.hero_image_overlay | img_url: 'master'}}"> -->
+        </div>
+      </div>
+
+    </div><!-- /.intro -->
+  {% endif %}
+  <!-- END Hero Section  -->
+
+  <!-- Newsletter Section  -->
+  <div class="page-intro">
+    <h6>Exclusive Offer</h6>
+    {%- if section.settings.newsletter_header != blank -%}
+      <h2>{{section.settings.newsletter_header}}</h2>
+    {%- endif -%}
+    <h4>{{section.settings.newsletter_subheader}}</h4>
+    <p>{{section.settings.newsletter_details}}</p>
+
+    <div class="lp-newsletter-section footer">
+      <div class="newsletter-form">
+        <form id="email_signup" class="klaviyo_styling klaviyo_gdpr_embed_KhCGpp" action="//manage.kmail-lists.com/subscriptions/subscribe" data-ajax-submit="//manage.kmail-lists.com/ajax/subscriptions/subscribe" method="GET" target="_blank" novalidate="novalidate" style="max-width: 100%;">
+          <input type="hidden" name="g" value="KhCGpp">
+          <input type="hidden" name="$fields" value="$consent">
+          <input type="hidden" name="$list_fields" value="$consent">
+          <input type="checkbox" name="$consent" id="consent-email" value="email" checked style="display: none;">
+          <div class="klaviyo_field_group">
+            <input class="" type="text" value="" name="email" id="k_id_email" placeholder="Email address" />
+            <div class="klaviyo_form_actions">
+              <button type="submit" class="form-btn klaviyo_submit_button" aria-label="Newsletter Submit Button">
+                <span></span>
+              </button>
+            </div>
+          </div>
+          <div class="klaviyo_messages">
+            <div class="success_message" style="display:none;">
+              <p style="font-weight:700;">Please check your inbox for your 30% promo code on your first order.</p>
+            </div>
+            <div class="error_message" style="display:none;"></div>
+          </div>
+        </form>
+        <script type="text/javascript" src="//www.klaviyo.com/media/js/public/klaviyo_subscribe.js"></script>
+        <script type="text/javascript">
+          KlaviyoSubscribe.attachToForms('#email_signup', {
+            hide_form_on_success: true,
+            custom_success_message: true,
+            extra_properties: {
+              $source: 'LandingPage',
+            },
+            success: function ($form) {
+            // `$form` is a jQuery wrapper around the form that was submitted. This makes it easy to get the email address or form fields.
+              $form.find('.success_message').show();
+              var successMessage = document.getElementsByClassName('success_message')[0];
+              successMessage.style.display = 'block';
+              fbq('track', 'EmailSubscribe');
+            }
+          });
+        </script>
+        <div class="sms-disclaimer" style="margin-top: 65px;">
+          <h2>Get another 30% off</h2>
+          <h4>when you sign up for texts</h4>
+        </div>
+        <div class="sms-form-wrapper klaviyo_styling">
+          <form class="sms-register">
+            <input type="tel" name="phone" class="sms-signup" pattern="[0-9]{3}[0-9]{3}[0-9]{4}" placeholder="Phone" required/>
+            <p class="errorMessage" style="display: none;color:red;">Something went wrong. Please make sure to enter a phone number in this format: xxx-xxx-xxxx</p>
+            <div class="klaviyo_form_actions">
+              <button type="submit" class="form-btn submitSMS" aria-label="Newsletter Submit Button">
+                <span></span>
+              </button>
+            </div>
+          </form>
+          <p class="attentive_disclaimer">By signing up via text, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from Pipette at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg & data rates may apply. View <span><a href="http://attn.tv/pipette/terms.html">Terms</a></span> & <span><a href="https://attnl.tv/legal/p/zsZ">Privacy.</a></span></p>
+        </div>
+        <p class="successMessage" style="display: none">Check your texts. Reply "Y" to confirm your subscription.</p>
+      </div><!-- /.newsletter-form -->
+    </div>
+  </div><!-- /.page-intro -->
+  <!-- END Newsletter Section   -->
+
+  <!-- Bestsellers Section -->
+  <div class="lp-bestsellers-section">
+    <h2>{{section.settings.bestsellers_header}}</h2>
+    <p>{{section.settings.bestsellers_subheader}}</p>
+    <div class="collection__items grid-uniform">
+      {% for product in collections[section.settings.bestsellers_collection].products limit: 4 %}
+        <!-- <div class="flex-box"> -->
+          {% include 'product-item' with product %}
+        <!-- </div> -->
+      {% endfor %}
+    </div>
+    <div class="lp-button-wrapper">
+      <a href="{{section.settings.bestsellers_button_link}}">
+        <button class="lp-button">{{section.settings.bestsellers_button_text}}</button>
+      </a>
+    </div>
+  </div>
+  <!-- END Bestsellers Section -->
+
+  <!-- Press Section -->
+  <div class="lp-press-section">
+    <h2>{{section.settings.press_header}}</h2>
+    <div class="press-review-wrapper">
+      <img src="{{section.settings.press_logo_1 | img_url: 'master'}}">
+      <p>{{section.settings.press_text_1}}</p>
+    </div>
+    <hr>
+    <div class="press-review-wrapper">
+      <img src="{{section.settings.press_logo_2 | img_url: 'master'}}">
+      <p>{{section.settings.press_text_2}}</p>
+    </div>
+    <div class="lp-button-wrapper">
+      <a href="{{section.settings.press_button_link}}">
+        <button class="lp-button">{{section.settings.press_button_text}}</button>
+      </a>
+    </div>
+    <div class="logos-wrapper flex-row">
+      {% for block in section.blocks %}
+        <div class="flex-box">
+          <img src="{{block.settings.icon_image | img_url: '600x'}}">
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <!-- END Press Section -->
+</div>
+
+<script>
+$(document).ready(function(){
+  $('.sms-register').on('submit', function(e) {
+    e.preventDefault();
+    
+    let phoneNumber = $('.sms-signup').val();
+    let attentiveID = document.cookie.replace(/(?:(?:^|.*;\s*)__attentive_id\s*=\s*([^;]*).*$)|^.*$/, "$1");
+    let regex = /-/gi;
+    phoneNumber = phoneNumber.replace(regex, '');
+
+    $('.sms-form-wrapper').addClass('loading');
+    
+    let formData = {
+    	"phone": phoneNumber,
+      "visitorId": attentiveID
+    }
+    
+    
+    $.ajax({
+      url: 'https://cors-anywhere.herokuapp.com/https://api.attentivemobile.com/1/add-subscribers',
+      method: 'POST',
+      contentType: 'application/json',
+      dataType: 'json',
+      beforeSend: function (xhr) {
+        xhr.setRequestHeader('Authorization', 'Bearer q-_Tj5jC2r7OmyDUw4Jqj2ZhVV_Rv9PYe9th2fRZ6eU');
+      },
+      data: JSON.stringify(formData),
+      success:function(data,status,xhr) {
+        console.log('status', status)
+        console.log('data', data)
+        $('.sms-form-wrapper').removeClass('loading');
+        $('.successMessage').show();
+        $('.sms-form-wrapper').hide();
+        
+      },
+      error: function(err) {
+       console.log('error:', err)
+       $('.sms-form-wrapper').removeClass('loading');
+       $('.errorMessage').show();
+      }
+    })
+  })
+});
+</script>
+  
+{% stylesheet %}
+.lp-email-signup-section-wrapper .intro {
+	background-position: center;
+}
+
+.lp-email-signup-section-wrapper .intro__content {
+	width: calc(50% - 192px);
+	min-width: 450px;
+	text-align: center;
+}
+
+@media screen and (max-width: 767px) {
+	.lp-email-signup-section-wrapper .intro__content {
+		width: 100%;
+		min-width: 0;
+	}
+}
+
+.lp-email-signup-section-wrapper .intro__content img {
+	margin-top: 10px;
+	margin-bottom: 40px;
+}
+
+.lp-email-signup-section-wrapper .intro__content h2 {
+	margin-top: 20px;
+}
+
+.lp-email-signup-section-wrapper .intro__content p {
+	margin: 0 auto;
+}
+
+@media screen and (max-width: 767px) {
+	.lp-email-signup-section-wrapper .intro__bottom {
+		height: 20px;
+	}
+}
+
+.page-intro h2 {
+	margin-bottom: 10px;
+}
+
+.page-intro h4 {
+	margin-bottom: 30px;
+}
+
+.page-intro p {
+	font-size: 16px;
+}
+
+.wrapper .lp-newsletter-section {
+	padding: 40px 0;
+}
+
+.lp-newsletter-section .newsletter-form {
+	max-width: 500px;
+	margin: 0 auto;
+}
+
+.lp-bestsellers-section {
+	background-color: #fffefb;
+	text-align: center;
+	padding: 100px 0;
+}
+
+.lp-bestsellers-section .collection__items {
+	background: transparent;
+}
+
+.lp-bestsellers-section .collection__items .product__item-link {
+	padding: 28px 0 48px;
+}
+
+.lp-bestsellers-section .collection__items .overlay_image, .lp-bestsellers-section .collection__items .overlay-product {
+	display: none !important;
+}
+
+.sample-set-image-wrapper {
+	max-width: 50vw;
+	position: absolute;
+	top: -16vw;
+	left: 25vw;
+}
+
+@media screen and (min-width: 1600px) {
+	.sample-set-image-wrapper {
+		max-width: 40vw;
+		top: -12vw;
+		left: 30vw;
+	}
+}
+
+.lp-button-wrapper {
+	margin-top: 40px;
+}
+
+.lp-button {
+	font-size: 14px;
+	line-height: 1.14;
+	font-weight: 700;
+	padding: 19px 40px;
+	border: 2px solid #084b6d;
+	background: transparent;
+}
+
+.lp-press-section {
+	position: relative;
+	padding: 100px 50px;
+	background-color: #f2f6f8;
+	text-align: center;
+}
+
+.lp-press-section .press-review-wrapper {
+	padding: 50px;
+}
+
+.lp-press-section .press-review-wrapper p {
+	max-width: 600px;
+	margin: 0 auto;
+	margin-top: 30px;
+}
+
+.lp-press-section hr {
+	width: 100px;
+	height: 4px;
+	margin: 0 auto;
+	background: #084b6d;
+	border: none;
+}
+
+.lp-press-section .logos-wrapper {
+	align-items: center;
+	justify-content: center;
+	margin-top: 80px;
+}
+
+.lp-press-section .logos-wrapper .flex-box {
+	padding: 3vw;
+}
+
+#k_id_email, .sms-signup {
+	height: 64px;
+	padding: 0 60px 0 24px;
+	border: solid 2px #094a6e;
+	background: none;
+}
+
+.sms-signup {
+	width: 100%;
+}
+
+.sms-form-wrapper {
+	position: relative;
+	max-width: none !important;
+}
+
+.sms-disclaimer {
+	margin-top: 65px;
+}
+
+.sms-disclaimer h4 {
+	font-weight: 300;
+}
+
+.attentive_disclaimer {
+	font-size: 14px;
+	padding-top: 15px;
+}
+
+.klaviyo_field_group {
+	position: relative;
+}
+
+.klaviyo_condensed_styling .klaviyo_submit_button, .klaviyo_styling .klaviyo_submit_button {
+	background-color: transparent !important;
+	height: 70px !important;
+	position: absolute !important;
+  border: none;
+}
+
+.sms-form-wrapper.loading:before {
+	content: "";
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	width: 50px;
+	height: 50px;
+	border-radius: 100%;
+	border: 2px solid #084b6d;
+	border-top: 2px solid #fffefb;
+	border-bottom: 2px solid #fffefb;
+	-webkit-animation: spinner 0.6s linear infinite;
+	animation: spinner 0.6s linear infinite;
+	z-index: 2;
+}
+
+.sms-form-wrapper.loading:after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #fffefb;
+	opacity: 0.5;
+}
+
+{% endstylesheet %}
+  
+  {% schema %}
+    {
+      "name": "Email SignUp LandingPage",
+      "settings": [
+        {
+          "type": "header",
+          "content": "Hero"
+        },
+        {
+          "type": "checkbox",
+          "id": "hero_display", 
+          "label": "Display Hero Section",
+          "default": false
+        },
+        {
+          "type": "text",
+          "id": "hero_subheader", 
+          "label": "Sub Header"
+        },
+        {
+          "type": "textarea",
+          "id": "hero_blurb", 
+          "label": "Hero Blurb"
+        },
+        {
+          "type": "image_picker",
+          "id": "hero_image", 
+          "label": "Hero Image (Desktop)"
+        },
+        {
+          "type": "image_picker",
+          "id": "hero_image_mobile", 
+          "label": "Hero Image (Mobile)"
+        },
+        {
+          "type": "image_picker",
+          "id": "hero_logo", 
+          "label": "Hero Logo"
+        },
+        {
+          "type": "image_picker",
+          "id": "hero_image_overlay", 
+          "label": "Overlay Image"
+        },
+        {
+          "type": "header",
+          "content": "Newsletter Section"
+        },
+        {
+          "type": "text",
+          "id": "newsletter_header", 
+          "label": "Newsletter Header"
+        },
+        {
+          "type": "text",
+          "id": "newsletter_subheader", 
+          "label": "Newsletter Sub Header"
+        },
+        {
+          "type": "textarea",
+          "id": "newsletter_details", 
+          "label": "Newsletter Details"
+        },
+        {
+          "type": "header",
+          "content": "Bestsellers Section"
+        },
+        {
+          "type": "text",
+          "id": "bestsellers_header", 
+          "label": "Bestsellers Header"
+        },
+        {
+          "type": "text",
+          "id": "bestsellers_subheader", 
+          "label": "Bestsellers Sub Header"
+        },
+        {
+          "type": "collection",
+          "id": "bestsellers_collection", 
+          "label": "Bestsellers Collection"
+        },
+        {
+          "type": "text",
+          "id": "bestsellers_button_text", 
+          "label": "Bestsellers Button Text"
+        },
+        {
+          "type": "url",
+          "id": "bestsellers_button_link", 
+          "label": "Bestsellers Button Link URL"
+        },
+        {
+          "type": "header",
+          "content": "Press Section"
+        },
+        {
+          "type": "text",
+          "id": "press_header", 
+          "label": "Press Header"
+        },
+        {
+          "type": "image_picker",
+          "id": "press_logo_1", 
+          "label": "Press Logo 1"
+        },
+        {
+          "type": "textarea",
+          "id": "press_text_1", 
+          "label": "Press Text 1"
+        },
+        {
+          "type": "image_picker",
+          "id": "press_logo_2", 
+          "label": "Press Logo 2"
+        },
+        {
+          "type": "textarea",
+          "id": "press_text_2", 
+          "label": "Press Text 2"
+        },
+        {
+          "type": "text",
+          "id": "press_button_text", 
+          "label": "Press Button Text"
+        },
+        {
+          "type": "url",
+          "id": "press_button_link", 
+          "label": "Press Button Link URL"
+        }
+      ],
+      "blocks": [
+        {
+          "name": "Logos section",
+          "type": "content",
+          "settings": [
+            {
+              "id": "icon_image",
+              "type": "image_picker",
+              "label": "Image (Icon)"
+            }, 
+            {
+              "id": "icon_link",
+              "type": "text",
+              "label": "Image Link URL"
+            }
+          ]
+        }
+      ]
+    }
+  {% endschema %}

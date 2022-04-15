@@ -1,0 +1,13 @@
+{%- if product.metafields.product.res_subtitle != blank or product.metafields.product.res_title != blank or product.metafields.product.res_content != blank -%}
+  <div class="product-results animate">
+    <div class="container">
+      {%- if product.metafields.product.res_subtitle != blank -%}
+        <h6>{{product.metafields.product.res_subtitle}}</h6>
+      {%- endif -%}
+      {%- if product.metafields.product.res_title != blank -%}
+        <h3>{{product.metafields.product.res_title}}</h3>
+      {%- endif -%}
+      {{product.metafields.product.res_content}}
+    </div><!-- /.container -->
+  </div><!-- /.product-results -->
+{%- endif -%}

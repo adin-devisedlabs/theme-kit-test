@@ -1,0 +1,66 @@
+<div class="container">
+  <div class="versus__header">
+    <h2>{{ section.settings.heading }}</h2>
+    {%- if section.settings.bodyText != '' -%}
+      {{ section.settings.bodyText }}
+    {%- endif -%}
+  </div>
+  <div class="flex-row">
+    {%- for block in section.blocks -%}
+      <div>
+        <img src="{{ block.settings.icon | img_url: '2x' }}" alt="">
+        <h3>{{ block.settings.heading }}</h3>
+        {{ block.settings.content }}
+      </div>
+    {%- endfor -%}
+  </div>
+</div>
+
+
+{% schema %}
+  {
+    "name": "Icon with text columns",
+	"class": "icon-with-text",
+    "settings": [
+      {
+		"id": "heading",
+		"type": "text",
+		"label": "Heading"
+      },
+      {
+		"id": "bodyText",
+		"type": "richtext",
+		"label": "Body Text"
+      }
+	],
+    "blocks": [
+      {
+        "type": "column",
+        "name": "Column",
+        "settings": [
+          {
+            "id": "icon",
+            "type": "image_picker",
+            "label": "Column Image/Icon"
+          },
+          {
+            "id": "heading",
+            "type": "text",
+            "label": "Column Heading"
+          },
+          {
+            "id": "content",
+            "type": "richtext",
+            "label": "Column Content"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

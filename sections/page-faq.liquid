@@ -1,0 +1,336 @@
+{%- assign _section = section.settings -%}
+{%- assign section_title = _section.title -%}
+
+{{ 'zendesk-faq.scss.css' | asset_url | stylesheet_tag }}
+
+<div id="zendesk-faq">
+  <div class="page-heading animate lazyload">
+    <div class="flex-row">
+      <div class="flex-item">
+        <h2>{{section_title}}</h2>
+
+        <div class="zd-search-box">
+          <input
+            class="zd-search-input"
+            type="text"
+            v-model="search"
+            placeholder="Search"
+            @input="searchArticles"
+          >
+
+          <button v-show="search.length > 1" class="zd-search-clear" @click="clearSearch">x</button>
+        </div>
+      </div>
+      <div class="flex-item"></div>
+    </div>
+  </div><!-- /.page-heading -->
+
+  <div class="container">
+    <div class="flex-row justify">
+      <div class="zd-container">
+        <div class="zd-search-results" v-show="showResults && isViewSearch">
+          <a href="#" @click="selectView('categories')">Back to categories</a>
+          <p>Found a total of <strong>[[ searchResults.count ]] results</strong> for your query</p>
+
+          <ul>
+            <li
+              v-for="article in searchResults.results"
+              @click="displayToggle(article.id, true)"
+              :class="{'zd-article-open': article.display}"
+            >
+              <span :class="{'text-bold': article.display}">[[ article.name ]]</span>
+              <div v-show="article.display" v-html="article.body"></div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="zd-categories" v-show="isViewCategories">
+          <ul>
+            <li
+              v-for="category in categories"
+              @click="loadCategory(category)"
+            >
+              <img :src="categoriesImgs[category.id]" alt="" style="width: 180px;">
+              <div>
+                <big>[[ category.name ]]</big>
+                <small>[[ category.description ]]</small>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="zd-articles" v-show="isViewArticles">
+          <a href="#" @click="selectView('categories')">Back to categories</a>
+
+          <div v-for="section in sections">
+            <h3 v-bind:id="section.name">[[ section.name ]]</h3>
+
+            <ul>
+              <li
+                v-for="article in filterArticlesBySection(section.id)"
+                @click="displayToggle(article.id)"
+                :class="{'zd-article-open': article.display}"
+              >
+                <span :class="{'text-bold': article.display}">[[ article.name ]]</span>
+                <div v-show="article.display" v-html="article.body"></div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div><!-- /.flex-row -->
+  </div><!-- /.container -->
+</div>
+
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+<script>
+	const ZENDESK_PROJECT = 'pipettebaby'
+	const ZENDESK_CATEGORY_IMGS = {
+		1500001378781: 'https://theme.zdassets.com/theme_assets/2465732/718b002ffbe90e758b1768f15db3932b46151dbf.png',
+		1500001403061: 'https://theme.zdassets.com/theme_assets/2465732/3a1abac1ff6dfc7320177d6cdcc483fd463ab1c5.png',
+		1500001391402: 'https://theme.zdassets.com/theme_assets/2465732/0a2dcc57e0e847dbb3156de6ccdcf5d3336f00a2.png',
+		1500001567942: 'https://theme.zdassets.com/theme_assets/2465732/95253831bebade328f995b200c2d62d0eceda8f4.png',
+		1500001403321: 'https://theme.zdassets.com/theme_assets/2465732/c278cf47eb6b4fb60a020f62431e197edc39fb27.png',
+		1500001429241: 'https://theme.zdassets.com/theme_assets/2465732/1eda5c2fdca03428fb5d73e612e5854cff0fc0b1.png'
+	}
+
+	const ZENDESK_API = `https://${ZENDESK_PROJECT}.zendesk.com/api/v2/help_center`
+
+	let app = new Vue({
+		el: '#zendesk-faq',
+
+		delimiters: ["[[", "]]"],
+
+		data: {
+			article: {},
+			articles: [],
+			category: {},
+			categories: [],
+			categoriesImgs: ZENDESK_CATEGORY_IMGS,
+			search: '',
+			searchResults: {},
+			sections: [],
+			view: ''
+		},
+
+		computed: {
+			isViewCategories() {
+				return this.view === 'categories'
+			},
+
+			isViewArticles() {
+				return this.view === 'articles'
+			},
+
+      isViewSearch() {
+				return this.view === 'search'
+			},
+
+			isViewArticle() {
+				return this.view === 'article'
+			},
+
+			pageTitle() {
+				if (this.article && this.article.id) {
+					return this.article.title
+				} else if (this.category && this.category.id) {
+					return this.category.name
+				} else {
+					return 'Categories'
+				}
+			},
+
+			showResults() {
+				return (this.searchResults && this.searchResults.results && this.searchResults.results.length)
+			}
+		},
+
+		methods: {
+			clearSearch: function () {
+				this.search = ''
+				this.searchResults = []
+			},
+
+			displayToggle: function (articleId, searchResult) {
+				if (searchResult) {
+					this.searchResults.results.forEach((article, index) => {
+						if (article.id === articleId) {
+							const display = !article.display
+							this.$set(this.searchResults.results, index, {...article, display})
+						}
+					})
+				} else {
+					this.articles.forEach((article, index) => {
+						if (article.id === articleId) {
+							const display = !article.display
+							this.$set(this.articles, index, {...article, display})
+						}
+					})
+				}
+			},
+
+			filterArticlesBySection: function (sectionId) {
+				return this.articles.filter(article => {
+					return article.section_id === sectionId
+				})
+			},
+
+			getCategories: function () {
+				axios
+					.get(`${ZENDESK_API}/categories`)
+					.then(({data}) => {
+						if (window.location.search.split('category=')[1]) {
+							data.categories.forEach(cat => cat.name.toLowerCase().includes(window.location.search.split('category=')[1]) && this.loadCategory(cat))
+						}
+						this.categories = data.count ? data.categories : []
+						this.selectView('categories')
+					})
+			},
+
+      getArticles: function (pageNumber = 1) {
+        axios
+          .get(`${ZENDESK_API}/categories/${this.category.id}/articles?per_page=100&page=${pageNumber}`)
+          .then(({data}) => {
+            if (data.count) {
+              this.articles.push(...data.articles)
+  
+              if (data.page !== data.page_count) {
+                this.getArticles(++pageNumber)
+              }
+            }
+          })
+      },
+
+			getSections: function () {
+				axios
+					.get(`${ZENDESK_API}/categories/${this.category.id}/sections?per_page=100`)
+					.then(({data}) => {
+						this.sections = data.count ? data.sections : []
+						this.selectView('articles')
+					})
+			},
+
+			loadCategory: function (category) {
+				this.category = category
+
+				this.getSections()
+				this.getArticles()
+			},
+
+			searchArticles: _.debounce(function () {
+				this.searchResults = {}
+
+				if (!this.search) {
+					return
+				}
+
+				axios
+					.get(`${ZENDESK_API}/articles/search`, {params: {query: this.search}})
+					.then(({data}) => {
+						this.searchResults = data
+            this.selectView('search')
+					})
+			}, 500),
+
+			selectView: function (view) {
+				if (view === 'categories') {
+					this.article = {}
+					this.articles = []
+					this.category = {}
+					this.sections = []
+          if (!window.location.href.includes('categories')) {
+            history.pushState({}, "", "/pages/frequently-asked-questions/categories")
+          }
+				} else if (view === 'articles') {
+					this.article = {}
+          if (!window.location.href.includes('articles')) {
+            history.pushState({}, "", "/pages/frequently-asked-questions/articles")
+          }
+				} else if (view === 'search') {
+          if (!window.location.href.includes('search')) {
+            history.pushState({}, "", "/pages/frequently-asked-questions/search")
+          }
+        }
+
+				this.view = view
+			}
+		},
+
+		mounted () {
+			this.getCategories()
+		}
+	});
+
+	if (window.location.href.includes('frequently-asked-questions')) {
+		window.addEventListener('popstate', function(event) {
+      // The popstate event is fired each time when the current history entry changes
+      if (window.location.href.includes('articles') && app.view !== 'articles') {
+        app.selectView('articles')
+      } else if (window.location.href.includes('categories') && app.view !== 'categories') {
+        app.selectView('categories')
+      } else if (window.location.href.includes('search') && app.view !== 'search') {
+        app.selectView('search')
+      }
+    }, false);
+	}
+
+</script>
+
+{% schema %}
+  {
+  "name": "FAQ",
+  "class": "faq-page",
+  "settings": [
+  {
+  "type": "text",
+  "id": "title",
+  "label": "Title"
+  },
+  {
+  "type": "color",
+  "id": "text_color",
+  "label": "Color",
+  "default": "#084b6d"
+  },
+  {
+  "type": "image_picker",
+  "id": "background",
+  "label": "Background Image"
+  }
+  ],
+  "blocks": [
+  {
+  "type": "heading",
+  "name": "Heading",
+  "settings": [
+  {
+  "type": "text",
+  "id": "title",
+  "label": "Title"
+  }
+  ]
+  },
+  {
+  "type": "question",
+  "name": "Question",
+  "settings": [
+  {
+  "type": "text",
+  "id": "title",
+  "label": "Title"
+  },
+  {
+  "type": "richtext",
+  "id": "content",
+  "label": "Content"
+  }
+  ]
+  }
+  ]
+  }
+{% endschema %}

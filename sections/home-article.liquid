@@ -1,0 +1,80 @@
+{%- assign _section = section.settings -%}
+{%- assign article_img = _section.article_image -%}
+{%- assign article_img_mob = _section.article_left_mobile | default: article_img -%}
+{%- assign article_thumb = _section.article_thumb -%}
+{%- assign right_img_mobile = _section.mobile_right_image | default: article_thumb -%}
+
+<div class="product-article animate">
+  <div class="container">
+    <div class="flex-row justify">
+      <div class="side-image">
+        {%- include 'lazyload-image' _image: article_img, image_params: '700x', additional_classes: 'hidden-xs' -%} 
+        {%- include 'lazyload-image' _image: article_img_mob, image_params: '400x', additional_classes: 'visible-xs-block' -%} 
+      </div><!-- /.side-image -->
+      <div class="side-content">
+        {%- if section.settings.article_title != blank -%}
+          <h3>{{ section.settings.article_title }}</h3>
+        {%- endif -%}
+        <p>{{ section.settings.article_content }}</p>
+        <a href="{{section.settings.article_url}}" class="btn btn--border">
+          {{ 'products.product.read_more' | t }}
+        </a>
+        <div class="bottom-image">
+          {%- if section.settings.article_thumb or product.metafields.product.mobile_right_image -%}
+            {%- include 'lazyload-image' _image: article_thumb, image_params: '600x', additional_classes: 'hidden-xs' -%} 
+            {%- include 'lazyload-image' _image: right_img_mobile, image_params: '400x', additional_classes: 'visible-xs-block' -%} 
+          {%- endif -%}
+        </div><!-- /.bottom-image -->
+      </div><!-- /.side-content -->
+    </div><!-- /.flex-row -->
+  </div><!-- /.container -->
+</div><!-- /.product-article -->
+
+{% schema %}
+  {
+    "name": "Article",
+    "settings": [
+      {
+        "id": "article_image",
+        "type": "image_picker",
+        "label": "Image"
+      },
+      {
+        "id": "article_left_mobile",
+        "type": "image_picker",
+        "label": "Image (Mobile)"
+      },
+      {
+        "id": "article_title",
+        "type": "text",
+        "label": "Article Title"
+      },
+      {
+        "id": "article_content",
+        "type": "textarea",
+        "label": "Article Content"
+      },
+      {
+        "id": "article_url",
+        "type": "url",
+        "label": "Article URL"
+      },
+      {
+        "id": "article_thumb",
+        "type": "image_picker",
+        "label": "Article Thumbnail Image"
+      },
+      {
+        "id": "mobile_right_image",
+        "type": "image_picker",
+        "label": "Article Mobile Right Image"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Article",
+        "category": "Dynamic"
+      }
+    ]
+  }
+{% endschema %}

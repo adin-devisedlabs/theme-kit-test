@@ -1,0 +1,297 @@
+
+{%- assign _section = section.settings -%}
+
+{%- for block in section.blocks -%}
+  {%- if block.type == 'carousel' -%}
+    {%- assign carouselCount = carouselCount | plus: 1 -%}
+  {%- endif -%}
+{%- endfor -%}
+
+{%- for block in section.blocks -%}
+  {%- assign _block = block.settings -%}
+  {%- if carouselCount > 0 and forloop.index == 1 -%}
+    <div class="lp-carousel-alt carousel--hero" id="lpHeroCarouselAlt">
+  {%- endif -%}
+  <div class="carousel__img">
+    <div 
+      class="intro animate animated lazyload" 
+      data-bg="url({{_block.image | img_url: '2048x'}})" 
+      {% if _block.text_align == 'right' %}
+        style="justify-content: flex-end"
+      {% elsif _block.text_align == 'center' %} 
+        style="justify-content: center" 
+      {% endif %}
+    >
+        {%- if _block.imageMob -%}
+          <div class="mobile-image visible-xs-block">
+            {%- include 'lazyload-image' _image: _block.imageMob, original_width: '600' -%}
+          </div><!-- /.mobile-image -->
+        {%- endif -%}
+        <!-- <div class="intro__content left-padding {% if _block.align_right %}right-padding right-text-align{% endif %} {% if _block.hide_text_desktop %}visible-xs-block{% endif %}"> -->
+        <div 
+          class="intro__content 
+          {% if _block.text_align == 'left' %} 
+            left-padding 
+          {% elsif _block.text_align == 'right' %} 
+            right-padding right-text-align 
+          {% else %} 
+            center-text-align 
+          {% endif %} 
+          {% if _block.hide_text_desktop %} 
+            visible-xs-block 
+          {% endif %}"
+        >
+          {%- if _block.eyebrow != blank -%}
+            <h6>{{_block.eyebrow}}</h6>
+          {%- endif -%}
+          {%- if _block.title != blank -%}
+            <h2 class="title--large">{{_block.title}}</h2>
+          {%- endif -%}
+          {%- if _block.subheader_text != blank -%}
+            <h3>{{_block.subheader_text}}</h3>
+          {%- endif -%}
+          {%- if _block.promo -%}
+            <p class="intro__promo">{{ _block.promo }}</p>
+          {%- endif -%}
+          <p {% if _block.align_right %}class="right-float"{% endif %}>{{ _block.content }}</p>
+          <div class="clear-both"></div>
+          <div class="icons">
+            {%- for icon in all_products[_section.product].metafields.product.icon -%}
+              {{ icon | img_tag }}
+            {%- endfor -%}
+          </div><!-- /.icons -->
+          <div class="add-to-cart-btn-wrapper">
+            <a href="{{_block.link_url}}" class="btn btn--border add-to-cart-btn">Shop Now</a>
+          </div>
+          <div class="disclaimer-wrapper">
+            <p>May not be combined with other offers</p>
+            <p>Offer expires on 4/12/2020 at 11:59pm PT</p>
+          </div>
+        </div><!-- /.intro__content -->
+      </div><!-- /.intro -->
+  </div>
+
+  {%- if carouselCount > 0 and forloop.index == carouselCount -%}
+    </div>
+  {%- endif -%}
+{%- endfor -%}
+
+<style>
+.lp-carousel-alt .intro {
+  display: flex;
+  padding: 0;
+  height: calc(100vh - 128px);
+}
+
+.lp-carousel-alt .intro .intro__content {
+  align-self: center;
+  max-width: 900px;
+}
+
+.lp-carousel-alt .intro h2.title--large {
+  margin-bottom: 30px;
+  font-size: 70px;
+}
+
+.lp-carousel-alt .intro p {
+  max-width: 648px;
+  margin: auto;
+}
+
+.lp-carousel-alt .icons img {
+  max-width: 55px;
+  margin-right: 12px;
+}
+
+.intro__promo {
+  margin-top: 40px;
+  font-size: 25px;
+  line-height: 35px;
+}
+
+.lp-carousel-alt .add-to-cart-btn-wrapper {
+  margin-top: 30px;
+}
+
+.lp-carousel-alt .center-text-align {
+  text-align: center;
+}
+
+.lp-carousel-alt .disclaimer-wrapper {
+  margin-top: 60px;
+}
+
+@media screen and (max-width: 1000px) {
+  .lp-carousel-alt .into .intro__content {
+    max-width: 500px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .intro__content h3 {
+    font-size: 22px;
+  }
+
+  .lp-carousel-alt .intro {
+    display: block;
+    height: auto;
+  }
+
+  .lp-carousel-alt .intro .intro__content {
+    max-width: 100%;
+    text-align: left;
+    margin-bottom: 4em;
+  }
+
+  .intro__content .intro__promo {
+    font-size: 22px;
+    line-height: 32px;
+  }
+
+  .intro__content.left-padding {
+    padding-top: 20px;
+  }
+}
+
+.intro__content.left-padding {
+  text-align: left;
+}
+
+.intro__content h6 {
+  margin-bottom: 45px;
+}
+
+.intro__content p a {
+  text-decoration: none;
+  font-weight: 700;
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script> 
+
+  $(document).ready(function() {
+
+    $('.linkToIngredients').click(function() {
+      linkToIngredients();
+    })
+
+    if (window.location.href.indexOf('cart=expanded') > -1) {
+      if ($('.cart-count').hasClass('visible')) {
+        $('#shopify-section-header .mini-cart').addClass('show');
+      } 
+    } 
+  })
+
+
+  function linkToIngredients() {
+    window.location.href = '#key-ingredients';
+  }
+</script>
+
+{% schema %}
+{
+  "name": "Egghunt Carousel 3",
+  "settings": [
+    {
+      "id": "enable_autoslide",
+      "type": "checkbox",
+      "label": "Enable Autoslide"
+    },
+    {
+      "id": "autoslide_time",
+      "type": "range",
+      "min":       2,
+      "max":       12,
+      "step":      1,
+      "label": "Autoslide Time (Seconds)",
+      "default":   5
+    },
+    {
+      "id": "autoplayHoverPause",
+      "type": "checkbox",
+      "label": "Pause Autoslide on hover"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Carousel image",
+      "type": "carousel",
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Image"
+        },
+        {
+          "id": "imageMob",
+          "type": "image_picker",
+          "label": "Image (Mobile)"
+        },
+        {
+          "id": "eyebrow",
+          "type": "text",
+          "label": "Eyebrow Text"
+        },
+        {
+          "id": "title",
+          "type": "text",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "subheader_text",
+          "label": "Subheader Text"
+        },
+        {
+          "id": "promo",
+          "type": "textarea",
+          "label": "Promo"
+        },
+        {
+          "id": "content",
+          "type": "textarea",
+          "label": "Content"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Link URL"
+        },
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link Text"
+        },
+        {
+          "type":      "select",
+          "id":        "text_align",
+          "label":     "Text Align",
+          "options": [
+            { "value": "left", "label": "Left"},
+            { "value": "center", "label": "Center"},
+            { "value": "right", "label": "Right"}
+          ],
+          "default":   "left"
+        },
+        {
+          "type": "checkbox",
+          "id": "hide_text_desktop",
+          "label": "Hide Text on Desktop",
+          "default": false
+        },
+        {
+          "type": "range",
+          "id": "bottom_section_margin_right",
+          "label": "Bottom Animation Margin Right",
+          "unit": "%",
+          "min": 10,
+          "max": 70,
+          "step": 1,
+          "default": 13
+        }
+      ]
+    }
+  ] 
+}
+{% endschema %}

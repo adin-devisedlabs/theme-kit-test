@@ -1,0 +1,82 @@
+{%- assign _section = section.settings -%}
+{%- assign section_subtitle = _section.subtitle -%}
+{%- assign section_title = _section.title -%}
+{%- assign section_content = _section.content -%}
+{%- assign section_bgcolor = _section.bgcolor -%}
+
+<div class="story animate" {%- include 'inline-style' bgcolor: section_bgcolor  -%}>
+  <div class="flex-row justify">
+    <div class="content">
+      {%- if section_subtitle != blank -%}
+        <h6>{{section_subtitle}}</h6>  
+      {%- endif -%}
+      {%- if section_title != blank -%}
+        <h2>{{section_title}}</h2>
+      {%- endif -%}
+      {{ section_content }}
+    </div><!-- /.content -->
+    <div class="icons">
+      <ul>
+        {%- for block in section.blocks -%}
+          {%- assign _block = block.settings -%}
+          {%- assign block_icon = _block.icon -%}
+          {%- assign block_title = _block.title -%}
+          <li>
+            {{ block_icon | img_url: '126x' | img_tag }}
+            {%- if block_title != blank -%}
+              <span>{{block_title}}</span>
+            {%- endif -%}
+          </li>
+        {%- endfor -%}
+      </ul>
+    </div><!-- /.icons -->
+  </div><!-- /.flex-row -->
+</div><!-- /.story -->
+
+
+{% schema %}
+{
+  "name": "Story",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content"
+    },
+    {
+      "type": "color",
+      "id": "bgcolor",
+      "label": "Background Color",
+      "default": "#faede5"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "icon",
+      "name": "Icon",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "icon",
+          "label": "Icon"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

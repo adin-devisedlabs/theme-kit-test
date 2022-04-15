@@ -1,0 +1,253 @@
+{%- assign _section = section.settings -%}
+{% for block in section.blocks %}
+  {% if block.type == 'hero' %}
+	<div class="mchero">
+      <div class="mchero__content"{% if block.settings.bodyBgColor != empty %} style="background:{{ block.settings.bodyBgColor }}"{% endif %}>
+        <div class="mchero__content__text">
+          {%- if block.settings.headingSmall != blank -%}
+            <small>{{ block.settings.headingSmall }}</small>
+          {%- endif -%}
+          <h2 class="title--large">{{ page.title }}</h2>
+          {%- if block.settings.bodyText != blank -%}
+            {{ block.settings.bodyText }}
+          {%- endif -%}
+        </div>
+        {% if block.settings.bodyImage %}
+          <img src="{{ block.settings.bodyImage | img_url: '2x' }}" alt="">
+        {% endif %}
+      </div>
+	</div>
+  {% endif %}
+  {% if block.type == 'sixty-forty' or block.type == 'sixty-forty-html' %}
+	<div class="sixty-forty sixty-forty--{{ block.settings.bodyImageAlign }} {{ block.type }}"{% if block.settings.bgColor != empty %} style="background:{{ block.settings.bgColor }}"{% endif %} id="section{{ block.id }}">
+      {% if block.settings.bodyText == 'contact-form' %}
+        {%- include 'lazyload-image' asset_image: true, _image: 'baby.jpg', image_tag: 'baby', additional_classes: 'img--mob' -%}
+        {%- include 'lazyload-image' file_image: true, _image: 'croc.png', image_tag: 'croc', additional_classes: 'croc' -%}
+      {% endif %}
+      <div class="sixty-forty__text{% if block.settings.bodyText == 'contact-form' %} contact-form{% endif %}"{% if block.settings.bodyBgColor != empty %} style="background:{{ block.settings.bodyBgColor }}; display: none;"{% endif %}>
+        <div class="sixty-forty__text__inner">
+          <small>{{ block.settings.headingSmall }}</small>
+          <h2 class="title--large">{{ block.settings.headingLarge }}</h2>
+          {% if block.settings.bodyText == 'contact-form' %}
+            <p style="margin-bottom: 30px;">If you're inquiring about a recent order, please include your order number or email address associated with that order.</p>
+          	{% include 'contact-form' %}
+          {% else %}
+            {{ block.settings.bodyText }}
+          {% endif %}
+        </div>
+      </div>
+      <div class="{% if block.settings.bodyImageHeading %}sixty-forty__text{% else %}sixty-forty__image{% endif %}"{% if block.settings.bodyImageBgColor != empty %} style="background:{{ block.settings.bodyImageBgColor }}"{% endif %} style="width: 100vw;">
+        <div>
+          {% if block.settings.bodyImageHeading %}
+            <h3>{{ block.settings.bodyImageHeading }}</h3>
+          {% endif %}
+          {% if block.settings.bodyImageContent %}
+            {{ block.settings.bodyImageContent }}
+          {% endif %}
+          {% if block.settings.bodyImage %}
+            <img src="{{ block.settings.bodyImage | img_url: '2x' }}" alt="" class="img--desk">
+          {% endif %}
+        </div>
+      </div>
+	</div>
+  {% endif %}
+{% endfor %}
+
+<div class="icon-with-text">
+  <div class="container">
+    <div class="flex-row">
+      <div class="press__contact">
+        <h4>Media Inquiries</h4>
+        <a href="mailto:{{ _section.media_email }}">{{ _section.media_email }}</a>
+      </div>
+
+      <div class="press__contact press__contact--mid">
+        <h4>Wholesale Inquiries</h4>
+        <a href="mailto:{{ _section.wholesale_email }}">{{ _section.wholesale_email }}</a>
+      </div>
+
+      <div class="press__contact press__contact--social">
+        <h4>Follow Us</h4>
+        <a href="{{ _section.social_fb }}" title="facebook">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 486.4 486.4"><path d="M273.4 159.4l.2-42c0-21.9 1.5-33.6 32.8-33.6h58V0h-83c-80.6 0-99.2 41.6-99.2 110l.1 49.4h-61.1v83.8h61.1v243.2h91.2V243.2h82.8l9-83.8h-91.9z"/></svg>
+        </a>
+        <a href="{{ _section.social_twitter }}" title="twitter">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 612 612"><path d="M612 116.3a250.7 250.7 0 0 1-72 19.7A126 126 0 0 0 595 66.6a253.1 253.1 0 0 1-79.8 30.5 125.6 125.6 0 0 0-214 114.5A356.4 356.4 0 0 1 42.7 80.4 125.5 125.5 0 0 0 81.5 248c-20.6-.7-40-6.4-56.9-15.8v1.6c0 60.8 43.3 111.5 100.7 123a127.2 127.2 0 0 1-56.7 2.1c16 50 62.3 86.2 117.3 87.2A251.9 251.9 0 0 1 0 498.1a354.9 354.9 0 0 0 192.4 56.5c231 0 357.2-191.3 357.2-357.2l-.4-16.3c24.7-17.6 46-39.7 62.8-64.8z"/></svg>
+        </a>
+        <a href="{{ _section.social_ig }}" title="instagram">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 169.1 169.1"><path d="M122.4 0H46.7C20.9 0 0 21 0 46.7v75.7c0 25.7 21 46.7 46.7 46.7h75.7c25.7 0 46.7-21 46.7-46.7V46.7C169 20.9 148 0 122.4 0zm31.7 122.4a31.7 31.7 0 0 1-31.7 31.7H46.7A31.7 31.7 0 0 1 15 122.4V46.7A31.7 31.7 0 0 1 46.7 15h75.7a31.7 31.7 0 0 1 31.7 31.7v75.7z"/><path d="M84.5 41a43.6 43.6 0 1 0 .1 87.2 43.6 43.6 0 0 0 0-87.2zm0 72a28.6 28.6 0 1 1 0-57.1 28.6 28.6 0 0 1 0 57.2zM130 28.3a11 11 0 0 0-11 11 11 11 0 0 0 11 11 11 11 0 0 0 7.8-18.8 11 11 0 0 0-7.9-3.2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+  {
+    "name": "Page Content",
+    "settings": [
+      {
+        "type": "text",
+        "id": "media_email",
+        "label": "Media Inquiries Email",
+		"default": "press@pipettebaby.com"
+      },
+      {
+        "type": "text",
+        "id": "wholesale_email",
+        "label": "Wholesale Inquiries Email",
+		"default": "sales@pipettebaby.com"
+      },
+      {
+        "type": "url",
+        "id": "social_fb",
+        "label": "Facebook URL"
+      },
+      {
+        "type": "url",
+        "id": "social_twitter",
+        "label": "Twitter URL"
+      },
+      {
+        "type": "url",
+        "id": "social_ig",
+        "label": "Instagram URL"
+      }
+    ],
+	"blocks": [
+      {
+        "name": "Hero section",
+		"type": "hero",
+        "settings": [
+          {
+            "id": "bgColor",
+            "type": "color",
+            "label": "Background Color"
+          },
+          {
+            "id": "bodyText",
+            "type": "html",
+            "label": "Body Text"
+          },
+          {
+            "id": "bodyImage",
+            "type": "image_picker",
+            "label": "Image"
+          }
+        ]
+      },
+      {
+        "name": "Sixty Forty section",
+		"type": "sixty-forty",
+        "settings": [
+          {
+            "id": "bgColor",
+            "type": "color",
+            "label": "Background Color"
+          },
+          {
+            "id": "headingSmall",
+            "type": "text",
+            "label": "Small Heading"
+          },
+          {
+            "id": "headingLarge",
+            "type": "text",
+            "label": "Large Heading"
+          },
+          {
+            "id": "bodyText",
+            "type": "richtext",
+            "label": "Body Text"
+          },
+          {
+            "id": "bodyImage",
+            "type": "image_picker",
+            "label": "Image"
+          },
+          {
+            "id": "bodyImageAlign",
+            "type": "select",
+            "label": "Image Alignment",
+            "options": [
+              { "value": "right", "label": "Right"},
+              { "value": "left", "label": "Left"}
+            ],
+			"default": "right"
+          }
+        ]
+      },
+      {
+        "name": "Sixty Forty HTML section",
+		"type": "sixty-forty-html",
+        "settings": [
+          {
+            "id": "bgColor",
+            "type": "color",
+            "label": "Background Color (Optional)"
+          },
+          {
+            "id": "headingSmall",
+            "type": "text",
+            "label": "Small Heading"
+          },
+          {
+            "id": "headingLarge",
+            "type": "text",
+            "label": "Large Heading"
+          },
+          {
+            "id": "bodyBgColor",
+            "type": "color",
+            "label": "Sixty Background Color (Optional)"
+          },
+          {
+            "id": "bodyText",
+            "type": "html",
+            "label": "Body Text"
+          },
+          {
+            "id": "bodyImageBgColor",
+            "type": "color",
+            "label": "Forty Background Color (Optional)"
+		  },
+          {
+            "id": "bodyImageHeading",
+            "type": "text",
+            "label": "Image Heading"
+          },
+		  {
+			"id": "bodyImageContent",
+			"type": "html",
+			"label": "Text content"
+		  },
+          {
+            "id": "bodyImage",
+            "type": "image_picker",
+            "label": "Image"
+          },
+          {
+            "id": "bodyImageAlign",
+            "type": "select",
+            "label": "Image Alignment",
+            "options": [
+              { "value": "right", "label": "Right"},
+              { "value": "left", "label": "Left"}
+            ],
+			"default": "right"
+          }
+        ]
+      }
+	]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+  $('.form--contact form').on('submit', function() {
+    $('.form--contact form')[0].after('<p>Thanks for submitting!</p>')
+    $('.form--contact form')[0].reset();
+  })
+{% endjavascript %}

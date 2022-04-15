@@ -1,0 +1,17 @@
+{%- if tag_meta.size != blank -%}
+  {%- assign tag_meta_arr = tag_meta | split: '|' -%}
+  <div class="tags{% if collection.metafields.collection.filter_title.size %} {{ collection-filter-tags }}{% endif %}">
+    <h5>{{ 'collections.filters.category' | t }}</h5>
+    <ul>
+      <li data-tag="*"{% unless current_tags.size > 0 %} class="active"{% endunless %}>
+        <a href="{{ collection.url }}">{{ 'collections.filters.all_tags' | t }}</a>
+      </li>
+      {%- for tag in tag_meta_arr -%}
+      
+        <li{% if current_tags contains tag %} class="active"{% endif %} data-tag="{{tag | handle}}">
+          {{ tag | link_to_tag: tag }}
+        </li>
+      {%- endfor -%}
+    </ul>
+  </div><!-- /.tags -->
+{%- endif -%}

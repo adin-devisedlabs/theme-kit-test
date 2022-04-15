@@ -1,0 +1,350 @@
+{% for block in section.blocks %}
+  {% if block.type == 'hero' %}
+	<div class="mchero">
+      <div class="mchero__content"{% if block.settings.bodyBgColor != empty %} style="background:{{ block.settings.bodyBgColor }}"{% endif %}>
+        <div class="mchero__content__text">
+          <small>{{ page.title }}</small>
+          <h2 class="title--large">{{ block.settings.heading }}</h2>
+          {%- if block.settings.bodyText != blank -%}
+            {{ block.settings.bodyText }}
+          {%- endif -%}
+        </div>
+        {% if block.settings.bodyImage %}
+          <img src="{{ block.settings.bodyImage | img_url: '2x' }}" alt="">
+        {% endif %}
+      </div>
+	</div>
+  {% endif %}
+  {% if block.type == 'sixty-forty' or block.type == 'sixty-forty-html' %}
+	<div class="sixty-forty sixty-forty--{{ block.settings.bodyImageAlign }} {{ block.type }}"{% if block.settings.bgColor != empty %} style="background:{{ block.settings.bgColor }}"{% endif %} id="section{{ block.id }}">
+      {% if block.settings.bodyText == 'contact-form' %}
+        {%- include 'lazyload-image' asset_image: true, _image: 'baby.jpg', image_tag: 'baby', additional_classes: 'img--mob' -%}
+        {%- include 'lazyload-image' file_image: true, _image: 'croc.png', image_tag: 'croc', additional_classes: 'croc' -%}
+      {% endif %}
+      <div class="sixty-forty__text"{% if block.settings.bodyBgColor != empty %} style="background:{{ block.settings.bodyBgColor }}"{% endif %}>
+        <div class="sixty-forty__text__inner">
+          <small>{{ block.settings.headingSmall }}</small>
+          <h2>{{ block.settings.headingLarge }}</h2>
+          {% if block.settings.bodyText == 'contact-form' %}
+          	{% include 'contact-form' %}
+          {% else %}
+            {{ block.settings.bodyText }}
+          {% endif %}
+        </div>
+      </div>
+      <div class="{% if block.settings.bodyImageHeading %}sixty-forty__text{% else %}sixty-forty__image{% endif %}"{% if block.settings.bodyImageBgColor != empty %} style="background:{{ block.settings.bodyImageBgColor }} url('{{ block.settings.bodyImage | img_url: '2x' }}');background-size:cover;"{% endif %}>
+        <div>
+          {% if block.settings.bodyImageHeading %}
+            <h3>{{ block.settings.bodyImageHeading }}</h3>
+          {% endif %}
+          {% if block.settings.bodyImageContent %}
+            {% if block.settings.bodyImageContent == 'perks-and-benefits' %}
+              <div class="flex-row">
+                {% for block in section.blocks %}
+                  {% if block.type == 'perk' %}
+                    <span>
+                      <img src="{{ block.settings.icon | img_url }}" alt="" class="img--perk">
+                      {{ block.settings.description }}
+                    </span>
+                  {% endif %}
+                {% endfor %}
+          	  </div>
+          	{% else %}
+          	  {{ block.settings.bodyImageContent }}
+          	{% endif %}
+          {% endif %}
+          {% if block.settings.bodyImage %}
+          	{% if block.settings.bodyImageMob != blank %}
+              <!-- <img src="{{ block.settings.bodyImage | img_url: '2x' }}" alt="" class="img--desk"> -->
+              <img src="{{ block.settings.bodyImageMob | img_url: '2x' }}" alt="" class="img--mob">
+            {% else %}
+              <img src="{{ block.settings.bodyImage | img_url: '2x' }}" alt="">
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+	</div>
+  {% endif %}
+{% endfor %}
+
+<div class="vacancies">
+  <h2>{{ section.settings.vacancyHeadline }}</h2>
+  <div class="flex-row">
+    {% for block in section.blocks %}
+      {% if block.type == 'vacancy' %}
+        <div class="vacancy">
+          <div class="vacancy__dept">{{ block.settings.department }}</div>
+          <div class="vacancy__role">{{ block.settings.role }}</div>
+          <div class="vacancy__location">{{ block.settings.location }}</div>
+      </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+  <a href="{{ section.settings.vacancyCTALink }}" target="_blank" class="btn btn--border">{{ section.settings.vacancyCTAText }}</a>
+</div>
+
+{% schema %}
+  {
+    "name": "Page Content",
+    "settings": [
+	  {
+		"id": "vacancyHeadline",
+		"type": "text",
+		"label": "Vacancy Section Headline",
+		"default": "Careers at Pipette"
+	  },
+	  {
+		"id": "vacancyCTAText",
+		"type": "text",
+		"label": "Vacancy CTA Text",
+		"default": "Explore our job openings"
+	  },
+	  {
+		"id": "vacancyCTALink",
+		"type": "url",
+		"label": "Vacancy CTA Link"
+	  }
+	],
+	"blocks": [
+      {
+        "name": "Hero section",
+		"type": "hero",
+        "settings": [
+          {
+            "id": "bgColor",
+            "type": "color",
+            "label": "Background Color"
+          },
+		  {
+            "id": "heading",
+            "type": "text",
+            "label": "Heading"
+          },
+          {
+            "id": "bodyText",
+            "type": "html",
+            "label": "Body Text"
+          },
+          {
+            "id": "bodyImage",
+            "type": "image_picker",
+            "label": "Image"
+          }
+        ]
+      },
+      {
+        "name": "Sixty Forty section",
+		"type": "sixty-forty",
+        "settings": [
+          {
+            "id": "bgColor",
+            "type": "color",
+            "label": "Background Color"
+          },
+          {
+            "id": "headingSmall",
+            "type": "text",
+            "label": "Small Heading"
+          },
+          {
+            "id": "headingLarge",
+            "type": "text",
+            "label": "Large Heading"
+          },
+          {
+            "id": "bodyText",
+            "type": "html",
+            "label": "Body Text"
+          },
+          {
+            "id": "bodyImage",
+            "type": "image_picker",
+            "label": "Image"
+          },
+          {
+            "id": "bodyImageMob",
+            "type": "image_picker",
+            "label": "Image (mobile)"
+          },
+          {
+            "id": "bodyImageAlign",
+            "type": "select",
+            "label": "Image Alignment",
+            "options": [
+              { "value": "right", "label": "Right"},
+              { "value": "left", "label": "Left"}
+            ],
+			"default": "right"
+          }
+        ]
+      },
+      {
+        "name": "Sixty Forty HTML section",
+		"type": "sixty-forty-html",
+        "settings": [
+          {
+            "id": "bgColor",
+            "type": "color",
+            "label": "Background Color (Optional)"
+          },
+          {
+            "id": "headingSmall",
+            "type": "text",
+            "label": "Small Heading"
+          },
+          {
+            "id": "headingLarge",
+            "type": "text",
+            "label": "Large Heading"
+          },
+          {
+            "id": "bodyBgColor",
+            "type": "color",
+            "label": "Sixty Background Color (Optional)"
+          },
+          {
+            "id": "bodyText",
+            "type": "html",
+            "label": "Body Text"
+          },
+          {
+            "id": "bodyImageBgColor",
+            "type": "color",
+            "label": "Forty Background Color (Optional)"
+		  },
+          {
+            "id": "bodyImageHeading",
+            "type": "text",
+            "label": "Image Heading"
+          },
+		  {
+			"id": "bodyImageContent",
+			"type": "html",
+			"label": "Text content"
+		  },
+          {
+            "id": "bodyImage",
+            "type": "image_picker",
+            "label": "Image"
+          },
+          {
+            "id": "bodyImageMob",
+            "type": "image_picker",
+            "label": "Image (mobile)"
+          },
+          {
+            "id": "bodyImageAlign",
+            "type": "select",
+            "label": "Image Alignment",
+            "options": [
+              { "value": "right", "label": "Right"},
+              { "value": "left", "label": "Left"}
+            ],
+			"default": "right"
+          }
+        ]
+      },
+      {
+        "name": "Perk/Benefit",
+		"type": "perk",
+        "settings": [
+          {
+            "id": "icon",
+            "type": "image_picker",
+            "label": "Icon"
+          },
+          {
+            "id": "description",
+            "type": "text",
+            "label": "Perk description"
+          }
+        ]
+      },
+      {
+        "name": "Job Vacancy",
+		"type": "vacancy",
+        "settings": [
+          {
+            "id": "department",
+            "type": "text",
+            "label": "Department"
+          },
+		  {
+            "id": "role",
+            "type": "text",
+            "label": "Role"
+          },
+		  {
+            "id": "location",
+            "type": "text",
+            "label": "Location"
+          }
+        ]
+      }
+	]
+  }
+{% endschema %}
+
+{% stylesheet %}
+  .template-page--careers .mchero__content__text {
+	margin-left: auto;
+	margin-right: auto;
+	max-width: 75%;
+  }
+
+  .mchero h2.title--large {
+	margin-top: .5em;
+	margin-bottom: .5em;
+  }
+
+  .mchero .btn {
+	margin-top: 1em;
+  }
+
+  .sixty-forty h2 {
+  	margin-top: 1em;
+  }
+
+  #section1566509054180 .flex-row {
+	flex-wrap: wrap;
+  }
+
+  #section1566509054180 .flex-row span {
+	flex: 0 0 33.33%;
+	padding: 1.5em .5em;
+    text-align: center;
+  }
+
+  @media all and (min-width: 600px) and (max-width: 1150px) {
+    #section1566509054180 .flex-row span {
+      flex: 0 0 50%;
+	}
+  }
+
+  #section1566509054180 img {
+	display: block;
+	margin: 1em auto .75em;
+  }
+
+  .vacancies {
+	padding: 4em;
+	text-align: center;
+  }
+
+  .vacancy__dept {
+	font-weight: bold;
+	margin-bottom: 1em;
+	text-transform: uppercase;
+  }
+
+  .vacancy__location {
+	color: #747474;
+  }
+
+  .vacancies .flex-row {
+	margin-bottom: 3em;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

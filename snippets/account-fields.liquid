@@ -1,0 +1,62 @@
+<section class="section-account">
+
+	<div class="section__inner">
+		{%- include 'account', fragment: 'sidebar' -%}
+
+		<div class="section__content">
+			<div class="flex-row justify">
+				<div class="flex-item">
+					<h4>{{ 'customer.account.personal' | t }}</h4>
+          {%- unless edit -%}
+            <p>
+              {{ customer.name }}<br/>
+              {{ customer.email }}<br/>
+              {%- if customer.addresses.size > 0 -%}
+                {{ customer.default_address.phone }}
+              {%- endif -%}
+            </p>
+          {%- endunless -%}
+				</div><!-- /.flex-item -->
+				<div class="flex-item">
+          {%- if edit -%}
+            <a href="/account">Cancel</a> 
+          {%- else -%}
+					  <a href="/account?view=edit">{{ shop.metafields.locales.edit }}</a> 
+          {%- endif -%}
+				</div><!-- /.flex-item -->
+        {%- if edit -%}
+          <div class="flex-item">
+            <div class="update-form">
+              {% include 'customer-fields' %}
+            </div><!-- /.update-form -->
+          </div><!-- /.flex-item -->
+        {%- endif -%}
+			</div><!-- /.flex-row -->
+			<div class="flex-row justify">
+				<div class="flex-item">
+					<h4>{{ 'customer.account.password' | t }}</h4>
+          <p class="pass-placeholder">
+            ••••••••••••••••
+          </p><!-- /.pass-placeholder -->
+				</div><!-- /.flex-item -->
+				<div class="flex-item">
+					{% form 'recover_customer_password' %}
+						<input type="hidden" name="email" value="{{customer.email}}" >
+						<button type="submit">{{ 'customer.account.edit' | t }}</button>
+					{% endform %}
+				</div><!-- /.flex-item -->
+			</div><!-- /.flex-row -->
+
+			{%- if customer.tags contains 'Active Subscriber' or customer.tags contains 'Inactive Subscriber' -%}
+				<h4>Subscription</h4>
+				<!-- Begin ReCharge code -->
+				<p id="rc_link_container">
+					You can manage your subscription <a href="/tools/recurring/login">here.</a>
+				</p>
+				<!-- End ReCharge code -->
+			{%- endif -%}
+
+		</div><!-- /.section__content -->
+	</div><!-- /.section__inner -->
+</section><!-- /.section-account -->
+

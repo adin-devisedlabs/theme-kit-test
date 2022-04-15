@@ -1,0 +1,139 @@
+{% unless product.type == 'hidden' or product.title contains 'Free' or product.title contains 'FREE' %}
+<div class="fixed-form visible">
+  <div class="flex-row visible-xs-block">
+    <div class="flex-item title-wrapper">
+      <!-- <p class="product-title">{{ product.title }}</p> -->
+      <div class="qty">
+        <a href="#!" class="qty-minus qty-edit" aria-label="Decrease quantity">
+          <span tabindex="0"></span>
+        </a>
+        <input type="text" name="quantity" data-mirror="true" value="1" aria-label="quantity value" />
+        <a href="#!" class="qty-plus qty-edit" aria-label="Increase quantity">
+          <span tabindex="0"></span>
+        </a>
+      </div><!-- /.qty -->
+      <!-- SITE-WIDE PROMO TEXT -->
+      <!-- <p class="product-title" style="letter-spacing: 0.125rem">
+        No code
+        <br>
+        required
+      </p> -->
+    </div><!-- /.flex-item -->
+    <div class="flex-item atc-wrapper js-fixed-form">
+      <!-- <a href="#" class="js-fixed-form {% unless product.metafields.subscriptions.subscription_id %}{% if product.variants.size < 2 %}ajax-add{% endif %}{% endunless %}">{% if product.metafields.subscriptions.subscription_id %}Buy Once or Subscribe {% else %}Buy Now{% endif %}</a> -->
+        {%- if _product.available -%}
+          <a href="#" aria-label="Add {{ product.title }} to cart" class="js-fixed-form {% unless product.metafields.subscriptions.subscription_id %}{% if product.variants.size < 2 %}ajax-add{% endif %}{% endunless %}">
+            {% if settings.enable_custom_cta %}
+            <!-- SITE-WIDE PROMO TEXT -->
+              <!-- CTA global tag exclusion -->
+              {% if _tags contains "cta-exclude" %}
+                {{- 'products.product.add_to_cart' | t -}}
+              {% else %}
+              <!-- SITE-WIDE PROMO TEXT -->
+                {{settings.cta_text}}
+            {% endif %}
+          {% else %}
+            Add to Cart
+          {% endif %}
+          </a>
+        {%- else -%}
+          <a href="#product_form_{{product.id}}" class="js-fixed-form">
+            <!-- {% if product.id == 4993532493910 or product.id == 4993532461142 %}
+              Coming Soon
+            {% else %} -->
+              Notify Me When Available
+            <!-- {% endif %} -->
+          </a>
+        {%- endif -%}
+    </div>
+  </div><!-- /.visible-xs-block -->
+  <div class="flex-row hidden-xs">
+    <div class="flex-item">
+      <h5>{{  product.title }}</h5>
+      {% comment %}
+      <div class="custom-select-wrapper variant-select-wrapper">
+          <span class="current{% unless product.variants.size > 1 %} no-arrow{% endunless %}">{{ product.title }}</span>
+          {% if product.variants.size > 1 %}
+            <div class="custom-select__dropdown">
+              <ul>
+                <li>Choose {{product.options[0]}}:</li>
+                {%- for variant in product.variants -%}
+                  <!-- <li>
+                    <input type="radio" id="radio-{{variant.id}}" name="variant-select" class="variant-select" value="{{variant.id}}" {% if forloop.first %}checked{% endif %}/>
+                    <div class="icon-radio"></div>
+                    <label for="radio-{{variant.id}}">{{ variant.title }}</label>
+                  </li> -->
+                  <li>
+                    <input type="radio" id="radio-{{variant.id}}" name="variant-select" class="variant-select" value="{{variant.id}}" />
+                    <div class="icon-radio"></div><!-- /.icon-radio -->
+                    <label for="radio-{{variant.id}}">{{ variant.title }}</label>
+                  </li>
+                {%- endfor -%}
+              </ul>
+            </div><!-- /.custom-select__dropdown -->
+          {% endif %}
+      </div>
+      {% endcomment %}
+    </div><!-- /.flex-item -->
+    <div class="flex-item">
+      <div class="custom-select-wrapper shipping-interval-select-wrapper">
+        <span class="current{% unless product.metafields.subscriptions.subscription_id %} no-arrow{% endunless %}">{{ 'products.product.one_time' | t }} {% if product.metafields.subscriptions.subscription_id %}{{ product.price | money_without_trailing_zeros }}{% endif %}</span>
+        {%- if product.metafields.subscriptions.subscription_id -%}
+          <div class="custom-select__dropdown">
+            <ul>
+              {%- for interval in shipping_interval_frequency -%}
+                <li data-value="{{interval}}">
+                  <input type="radio" id="radio-{{interval}}" name="interval" value="{{interval}}" />
+                  <div class="icon-radio"></div><!-- /.icon-radio -->
+                  <label for="radio-{{interval}}">{{ 'products.product.delivery_every' | t: days: interval }}</label>
+                </li>
+              {%- endfor -%}
+              <li>
+                <input type="radio" id="radio-onetime" name="interval" value="onetime" checked/>
+                <div class="icon-radio"></div><!-- /.icon-radio -->
+                <label for="radio-onetime">
+                  {{ 'products.product.one_time' | t }} {{ product.price | money_without_trailing_zeros }}
+                </label>
+              </li>
+            </ul>
+          </div><!-- /.custom-select__dropdown -->
+        {%- endif -%}
+      </div><!-- /.custom-select-wrapper -->
+    </div><!-- /.flex-item -->
+    <div class="flex-item">
+      <label class="qty-label">{{ 'products.product.quantity' | t }}</label>
+      <div class="qty">
+        <a href="#!" class="qty-minus qty-edit" aria-label="Decrease quantity">
+          <span tabindex="0"></span>
+        </a>
+        <input type="text" name="quantity" data-mirror="true" value="1" aria-label="quantity value" />
+        <a href="#!" class="qty-plus qty-edit" aria-label="Increase quantity">
+          <span tabindex="0"></span>
+        </a>
+      </div><!-- /.qty -->
+    </div><!-- /.flex-item -->
+    <div class="flex-item js-fixed-form">
+      {%- if _product.available -%}
+        <a href="#" class="js-fixed-form {% unless product.metafields.subscriptions.subscription_id %}{% if product.variants.size < 2 %}ajax-add{% endif %}{% endunless %}" aria-label="Add {{ product.title }} to cart">
+          {% unless product.template_suffix contains 'prepay' %}
+            {{ 'products.product.add_to_cart' | t }}
+          {% else %}
+            PRE-ORDER
+          {% endunless %}
+          <span class="price">
+            {%- include 'price' with _product -%}
+          </span>
+        </a>
+      {%- else -%}
+        <a href="#product_form_{{product.id}}" class="js-fixed-form">
+          <!-- {% if product.id == 4993532493910 or product.id == 4993532461142 %}
+            Coming Soon
+          {% else %} -->
+            Notify Me When Available
+          <!-- {% endif %} -->
+        </a>
+      {%- endif -%}
+    </div><!-- /.flex-item -->
+  </div><!-- /.flex-row -->
+</div><!-- /.fixed-form -->
+{% endunless %}

@@ -1,0 +1,337 @@
+<div class="flex-row">
+	{%- include 'breadcrumbs' -%}
+</div>
+
+<!-- Begin ReCharge code -->
+{% include 'subscription-cart-footer' %}
+
+{%- assign gift_wrap = all_products[settings.gift_product] -%}
+
+{%- assign gift_wrap_added = false -%}
+
+<!-- GWP Promo Code -->
+{%- assign gwp_variantID = cart.attributes.discounted_product | plus: 0 -%}
+{%- assign gwp_code = cart.attributes.discount_code -%}
+
+<!-- GWP Auto Add  -->
+{%- assign gwp_variantID_auto_add = cart.attributes.discounted_product_auto_add | plus: 0 -%}
+<!-- GWP Auto Add w/ Threshold -->
+{%- assign gwp_variantID_auto_add_threshold = cart.attributes.discounted_product_auto_add_threshold | plus: 0 -%}
+<!-- GWP Auto Add w/ Threshold -->
+{%- assign gwp_variantID_auto_add_threshold_2 = cart.attributes.discounted_product_auto_add_threshold_2 | plus: 0 -%}
+<!-- GWP Auto Add w/ Qualifying product -->
+{%- assign gwp_variantID_auto_add_qualifying_product = cart.attributes.discounted_product_auto_add_qualifying_product | plus: 0 -%}
+<!-- GWP Auto Add w/ Qualifying collection -->
+{%- assign gwp_variantID_auto_add_qualifying_collection = cart.attributes.discounted_product_auto_add_qualifying_collection | plus: 0 -%}
+
+{% if settings.enable_gwp_pick_threshold == true %}
+	{% assign gwp_pick_threshold_amount = settings.gwp_pick_threshold_amount | times: 100 %}
+	{% if cart.total_price > gwp_pick_threshold_amount %}
+	  {% assign checkout_subtotal_over_pick_gwp_threshold = true %}
+	{% else %}
+	  {% assign checkout_subtotal_over_pick_gwp_threshold = false %}
+	{% endif %}
+{% endif %}
+
+  <div class="modal-gwp micromodal-slide results" id="modal-gwp-cart" aria-hidden="true">
+    <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+      <div class="modal__wrapper" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true">
+          <header class="modal__header">
+            <h3 class="section__subtitle">Pick <span class="bold">2 FREE <br>FULL-SIZE</span> Products</h3>
+            <button id="modal_cls_btn" class="modal__close close" aria-label="Close modal" data-micromodal-close></button>
+          </header>
+          <main class="modal__content" id="modal-results-content">
+            <article class="section__article">
+              <h4>Choose any <span class="bold">TWO</span>:</h4>
+              <ul class="gwp-list">
+              </ul>
+            </article>
+          </main>
+          <div class="button__wrapper">
+            <button class="btn btn--border cart" id="pick-gwp-btn">
+              ADD TO CART
+              <br>
+              (FOR FREE)
+            </button>
+          </div>
+        </div>
+    </div>
+    </div>
+  </div>
+
+<!-- End ReCharge code -->
+<form action="/cart" method="post" novalidate class="form form--default form--cart">
+	{%- if cart.item_count > 0 -%}
+
+		<div class="form__body">
+			<h2>
+				{{- 'cart.general.title' | t -}}
+			</h2>
+			{%- assign shipping_price = settings.price_free_shipping | times: 100 -%}
+			{%- if cart.total_price < shipping_price -%}
+				{%- assign price_diff = shipping_price | minus: cart.total_price | money -%}
+				<p class="shipping-text">{{ 'layout.cart.shipping_price' | t: price: price_diff }}</p>
+			{%- else -%}
+				<p class="shipping-text">{{ 'layout.cart.shipping_free' | t }} <a href="{{ settings.shopping_url }}">{{ 'layout.cart.continue' | t }}</a></p>
+			{%- endif -%}
+
+			{%- include 'gwp-promocode-minicart', checkout_subtotal_over_pick_gwp_threshold: checkout_subtotal_over_pick_gwp_threshold -%}
+
+			<div class="table table--cart">
+				<table>
+					<thead>
+						<tr>
+							<th class="table__name" >
+								{{- 'cart.label.name' | t -}}
+							</th>
+
+							<th></th>
+
+							<th class="table__quantity">
+								{{- 'cart.label.quantity' | t -}}
+							</th>
+
+							<th class="table__price">
+								{{- 'cart.label.price' | t -}}
+							</th>
+
+							<th>
+							</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						{%- for line_item in cart.items -%}
+							{%- if gift_wrap.id == line_item.product.id -%}
+								{%- assign gift_wrap_added = true -%}
+							{%- endif -%}
+							{% assign line_item_url = line_item.url %}
+							{% if line_item.product.type == 'hidden' %}
+								{% assign line_item_url = '#' %}
+							{% endif %}
+							<tr>
+
+								<td class="table__image">
+									<a href="{{line_item_url}}" class="item-image" style="background-image: url({{line_item.image | img_url: '220x'}})"></a>
+								</td>
+
+								<td class="table__name">
+									<a href="{{- line_item_url -}}" class="table__product">
+										{{- line_item.product.title -}}
+									</a>
+
+									{%- if line_item.variant_id == gwp_variantID and gwp_code.size > 1 -%}
+										<p class="gwp_cart_item_note">Free Gift w/ code {{gwp_code}}<br>Discount applied at Checkout</p>
+									{%- endif -%}
+
+									{%- if line_item.variant_id == gwp_variantID_auto_add_qualifying_product-%}
+										<p class="gwp_cart_item_note">{{settings.gwp_auto_add_specific_product_cart_message}}</p>
+									{%- elsif line_item.variant_id == gwp_variantID_auto_add_threshold -%}
+										<p class="gwp_cart_item_note">Free gift for orders {{settings.gwp_auto_add_threshold_amount | plus: 0.01 | times: 100 | money_without_trailing_zeros}}+</p>
+									{%- elsif line_item.variant_id == gwp_variantID_auto_add_threshold_2 -%}
+										<p class="gwp_cart_item_note">Free gift for orders {{settings.gwp_auto_add_threshold_amount_2 | plus: 0.01 | times: 100 | money_without_trailing_zeros}}+</p>
+									{%- elsif line_item.variant_id == gwp_variantID_auto_add_qualifying_collection -%}
+										<p class="gwp_cart_item_note">{{settings.gwp_auto_add_specific_collection_cart_message}}</p>
+									{%- elsif line_item.variant_id == gwp_variantID_auto_add_qualifying_collection_2 -%}
+										<p class="gwp_cart_item_note">{{settings.gwp_auto_add_specific_collection_cart_message_2}}</p>
+									{%- elsif line_item.product.title == 'Hand Sanitizer' -%}
+										<!-- <p class="gwp_cart_item_note" style="font-weight: bold;margin-bottom: 0;">Order ships in up to  7 business days</p>  -->
+										<!-- <p class="gwp_cart_item_note" style="font-weight: bold;">Cannot ship to PO Boxes</p> -->
+									{%- endif -%}
+
+									<div class="price visible-xs-block">
+										{{- line_item.price | money -}}{% if line_item.properties.subscription_id != blank %}/mo{% endif %}
+									</div><!-- /.price -->
+
+									{%- unless line_item.variant.title contains 'Default' or line_item.variant.title contains 'Ships' -%}
+										<p class="table__variant">{{- line_item.variant.title -}}</p><!-- /.table__variant -->
+									{%- endunless -%}
+
+									{% if line_item.title contains 'Custom Bundle' %}
+										{% assign bundleID = '' %}
+
+										{% for property in line_item.properties %}
+											{% if property[0] == 'bundle_id' %}
+												{% assign bundleID = property[1] %}
+											{% endif %}
+										{% endfor %}
+										{% assign bundleURL = "/pages/build-your-bundle?bundle-id=" | append: bundleID %}
+										<a href="{{bundleURL}}" class="mini-cart__bundle-link">Edit your Bundle</a>
+									{% endif %}
+
+									{%- assign property_size = line_item.properties | size -%}
+
+									{%- if property_size > 0 -%}
+										<p class="table__properties">
+											{%- for p in line_item.properties -%}
+												{%- unless p.last == blank or p.first == "subscription_id" or p.first == "shipping_interval_frequency" or p.first == "shipping_interval_unit_type" or p.first contains 'bundle' -%}
+													<span>
+														{{- p.first -}}:
+
+														{%- if p.last contains '/uploads/' -%}
+															<a href="{{- p.last -}}">{{- p.last | split: '/' | last -}}</a>
+														{%- else -%}
+															{{- p.last -}}
+														{%- endif -%}
+													</span>
+												{%- endunless -%}
+											{%- endfor -%}
+											{% if line_item.properties.subscription_id != blank %}
+												{%- assign line_price = line_item.price | money -%}
+												<p>{{ 'layout.cart.recharge_text' | t: price: line_price, days: line_item.properties.shipping_interval_frequency }}</p>
+											{% endif %}
+										</p><!-- /.table__properties -->
+									{%- endif -%}
+
+									<div class="visible-xs-block">
+										{%- unless gift_wrap.id == line_item.product.id -%}
+											{%- unless line_item.product.type == 'hidden' or line_item.product.type == 'hidden-displayATC' -%}
+											{% if line_item.title contains 'Fragrance Free' or line_item.variant.title contains 'Fragrance Free'%}
+												<div class="qty">
+													<a href="#!" class="qty-minus qty-edit" aria-label="Decrease quantity">
+														<span tabindex="0"></span>
+													</a>
+													<input class="cart-qty" type="text" name="updates[{{line_item.variant_id}}]" data-mirror="true" value="{{ line_item.quantity }}" aria-label="quantity value" />
+													<a href="#!" class="qty-plus qty-edit" aria-label="Increase quantity">
+														<span tabindex="0"></span>
+													</a>
+												</div><!-- /.qty -->
+											{% elsif line_item.title contains 'Free' %}
+											{% else %}
+												<div class="qty">
+													<a href="#!" class="qty-minus qty-edit" aria-label="Decrease quantity">
+														<span tabindex="0"></span>
+													</a>
+													<input class="cart-qty" type="text" name="updates[{{line_item.variant_id}}]" data-mirror="true" value="{{ line_item.quantity }}" aria-label="quantity value" />
+													<a href="#!" class="qty-plus qty-edit" aria-label="Increase quantity">
+														<span tabindex="0"></span>
+													</a>
+												</div><!-- /.qty -->
+											{% endif %}
+											{%- endunless -%}
+										{%- endunless -%}
+									</div><!-- /.visible-xs-block -->
+								</td>
+
+								<td class="table__quantity hidden-xs" data-attr="{{- 'cart.label.quantity' | t -}}">
+									{%- unless gift_wrap.id == line_item.product.id -%}
+										{%- unless line_item.product.type == 'hidden' or line_item.product.type == 'hidden-displayATC' or line_item.title contains 'Free' -%}
+											<div class="qty">
+												<a href="#!" class="qty-minus qty-edit" aria-label="Decrease quantity">
+													<span tabindex="0"></span>
+												</a>
+												<input class="cart-qty" type="text" name="updates[{{line_item.variant_id}}]" data-mirror="true" value="{{ line_item.quantity }}" aria-label="quantity value" />
+												<a href="#!" class="qty-plus qty-edit" aria-label="Increase quantity">
+													<span tabindex="0"></span>
+												</a>
+											</div><!-- /.qty -->
+										{%- endunless -%}
+									{%- endunless -%}
+								</td>
+
+								<td class="table__price hidden-xs" data-attr="{{- 'cart.label.price' | t -}}">
+									{{- line_item.price | money -}}{% if line_item.properties.subscription_id != blank %}/mo{% endif %}
+								</td>
+
+								<td class="table__remove">
+									<a href="/cart/change?line={{- forloop.index -}}&amp;quantity=0" class="js-remove"></a>
+								</td>
+							</tr>
+						{%- endfor -%}
+					</tbody>
+				</table>
+
+				{%- if settings.gift_product != blank and gift_wrap.available -%}
+					{%- unless gift_wrap_added -%}
+						<div class="gift-wrap">
+							<a class="checkbox add-btn js-add" href="/cart/add?id={{gift_wrap.first_available_variant.id}}" >
+								<span></span>
+								{%- assign git_wrap_price = gift_wrap.price | money -%}
+								{{ 'layout.cart.gift_text' | t: price: git_wrap_price }}
+							</a><!-- /.checkbox -->
+						</div><!-- /.gift-wrap -->
+					{%- endunless -%}
+				{%- endif -%}
+			</div><!-- /.table table-cart -->
+		</div><!-- /.form-body -->
+
+		<div class="form__actions">
+			<h3>{{ 'cart.general.order_summary' | t }}</h3>
+			<div class="total_row">
+				<h6>{{- 'cart.general.subtotal' | t -}}</h6>
+				<span class="price">{{- cart.total_price | money -}}</span>
+			</div><!-- /.total_row -->
+			<p>{{- 'cart.general.shipping_at_checkout' | t -}}</p>
+			<button type="submit" name="checkout" class="btn btn--border btn--checkout">
+				{{- 'cart.general.checkout' | t -}}
+			</button>
+
+			{% comment %}
+			{%- if additional_checkout_buttons -%}
+				<div class="form__additional-buttons">
+					{{- content_for_additional_checkout_buttons -}}
+				</div>
+			{%- endif -%}
+			{% endcomment %}
+		</div><!-- /.form__actions -->
+	{%- else -%}
+		<div class="form__empty">
+			<h2>
+				{{- 'cart.general.title' | t -}}
+			</h2>
+
+			<p>
+				{{- 'cart.general.empty' | t -}}
+			</p>
+
+			<p>
+				{{- 'cart.general.continue_browsing_html' | t -}}
+			</p>
+		</div><!-- /.cart-empty -->
+	{%- endif -%}
+</form>
+
+<style>
+  .form--cart .form__actions .afterpay-paragraph {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .afterpay-text1 {
+    margin-right: 5px;
+  }
+  .afterpay-logo-link {
+    display: flex;
+    align-items: center;
+  }
+  .afterpay-logo-link img.afterpay-logo {
+    margin: 0 8px 0 0;
+  }
+  .afterpay-link {
+    font-weight: bolder;
+    font-size: 18px;
+  }
+</style>
+
+<script type="text/javascript" src="https://static-us.afterpay.com/javascript/present-afterpay.js"></script>
+<script>
+  const cartItems = {{ cart.items | json }};
+  const isGiftCard = (item) => item.product_type === "Gift Card";
+  const hasGiftCardItem = cartItems.some(isGiftCard);
+  const apConfig = {
+    priceSelector: '.form__actions .total_row',
+    amount: {{cart.total_price | json}},
+    locale: 'en_US',
+    currency: 'USD',
+    giftCard: hasGiftCardItem,
+    minMaxThreshold: {
+		  min: 0.04,
+      max: 100000,
+    },
+  };
+  document.addEventListener('DOMContentLoaded', function() {
+    new presentAfterpay(apConfig).init();
+  });
+</script>

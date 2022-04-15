@@ -1,0 +1,174 @@
+{%- assign _section = section.settings -%}
+
+{% if _section.hide == false %}
+<div class="community lp-community animate" {%- include 'inline-style' bgcolor: section_background_color -%}>
+  <div class="community__header">
+    {%- if _section.eyebrow != blank -%}
+      <h6>{{_section.eyebrow}}</h6>
+    {%- endif -%}
+    {%- if _section.title != blank -%}
+      <h2>{{_section.title | newline_to_br }}</h2>
+    {%- endif -%}
+  </div><!-- /.community__header -->
+  <div class="community--image-grid">
+    {% for block in section.blocks %}
+      <div class="community--image-wrapper">
+        <img src="{{block.settings.image | img_url: 'master'}}" alt="community image"/>
+      </div>
+    {% endfor %}
+  </div><!-- /.slider -->
+</div><!-- /.community -->
+
+<div id="myModal" class="lp-modal lp-hide">
+  <div class="lp-modal-content">
+    <span class="lp-close-modal">&times;</span>
+    <img src="" alt="community image" class="community-image-enlarged"/>
+  </div>
+</div>
+{% endif %}
+
+{% javascript %}
+  $('body').on('click', '.community--image-wrapper img', function() {
+    // $('.lp-modal').show();
+    $('.lp-modal').toggleClass('lp-hide');
+    let imageSrc = $(this).attr('src');
+    $('.community-image-enlarged').attr('src', imageSrc);
+  })
+
+  $('body').on('click', '.lp-close-modal', function() {
+    $('.lp-modal').toggleClass('lp-hide');
+  })
+
+  $('body').on('click', '.lp-modal', function() {
+    $('.lp-modal').toggleClass('lp-hide');
+  })
+  $('body').on('click', '.lp-modal-content', function(e) {
+    e.stopPropagation();
+  })
+{% endjavascript %}
+
+{% stylesheet %}
+.lp-community {
+	text-align: center;
+	max-width: 1000px;
+	margin: 0 auto;
+}
+
+.lp-community .community--image-grid {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.lp-community .community--image-wrapper {
+	flex-basis: 25%;
+	width: 25%;
+	padding: 10px;
+}
+
+.lp-community .community--image-wrapper img {
+	border: 1px solid #d3d3d34f;
+	margin: 0;
+}
+
+.lp-modal {
+	display: flex;
+	position: fixed;
+	z-index: 999;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+	background-color: black;
+	background-color: rgba(0, 0, 0, 0.4);
+	text-align: center;
+}
+
+.lp-modal-content {
+	background-color: #fefefe;
+	margin: auto;
+	padding: 20px;
+	border: 1px solid #888;
+	width: 80%;
+	height: auto;
+	min-height: 80%;
+}
+
+.lp-modal-content .community-image-enlarged {
+	margin-top: 50px;
+}
+
+.lp-close-modal {
+	color: #084b6d;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+}
+
+.lp-close-modal:hover,
+.lp-close-modal:focus {
+	color: #000;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.lp-hide {
+	display: none !important;
+}
+
+@media screen and (max-width: 1000px) {
+	.lp-community {
+		padding: 70px 20px 64px;
+	}
+}
+
+@media screen and (max-width: 767px) {
+	.lp-community .community--image-wrapper {
+		flex-basis: 50%;
+		width: 50%;
+	}
+}
+{% endstylesheet %}
+  
+{% schema %}
+{
+  "name": "Community",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "hide",
+      "label": "Hide Section"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow Text"
+    },
+    {
+      "type": "textarea",
+      "id": "title",
+      "label": "Title"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color",
+      "default": "#f2f7fa"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Community Images",
+      "type": "image",
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Image",
+          "info": "Square images only"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

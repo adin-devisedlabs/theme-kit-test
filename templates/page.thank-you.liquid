@@ -1,0 +1,124 @@
+<div class="container">
+  <div class="flex-row">
+    {%- include 'breadcrumbs' -%}
+  </div>
+  <div class="lp-page--default">
+    <!-- <h2 class="lp-page--title">{{page.title}}</h2> -->
+    <div class="page__content bestseller-sample-set-wrapper" style="text-align: center;">
+      {{page.content}}
+    </div><!-- /.page__content -->
+    <div class="bestseller-sample-set-cta-wrapper">
+      <a href="/collections/baby">
+        <button class="btn btn--border lp-button">Shop Now</button>
+      </a>
+    </div>
+    <!-- Bestsellers Section -->
+    <div class="lp-bestsellers-section">
+      <h2>Our bestsellers</h2>
+      <p>Meet the skin-comforting baby essentials parents are loving.</p>
+      <div class="collection__items grid-uniform">
+        {% for product in collections['bestsellers'].products limit: 4 %}
+          {% unless product.id == 4313475579990 %}
+            {% include 'product-item' with product %}
+          {% endunless %}
+        {% endfor %}
+      </div>
+      <div class="lp-button-wrapper">
+        <a href="/collections/baby">
+          <button class="lp-button">Shop bestsellers</button>
+        </a>
+      </div>
+    </div>
+    <!-- END Bestsellers Section -->
+  </div>
+</div><!-- /.container -->
+
+<style>
+.lp-page--default .lp-page--title {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.thank-you-image {
+  margin: 0 auto;
+  max-width: 100%;
+}
+.bestseller-sample-set-cta-wrapper {
+  text-align: center;
+  margin-top: 50px;
+}
+.lp-page--default {
+  padding: 25px 0 100px;
+}
+.lp-bestsellers-section {
+  background-color: #fffefb;
+  text-align: center;
+  padding: 100px 0;
+}
+
+.lp-bestsellers-section .collection__items {
+  background: transparent;
+}
+.lp-bestsellers-section .collection__items .product__item-link {
+  padding: 28px 0 48px;
+}
+
+.lp-bestsellers-section .collection__items .overlay_image, .overlay-product {
+  display: none !important;
+}
+
+.lp-button-wrapper {
+  margin-top: 40px;
+}
+
+.lp-button {
+  font-size: 14px;
+  line-height: 1.14;
+  font-weight: 700;
+  padding: 19px 40px;
+  border: 2px solid #084b6d;
+  background: transparent;
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+  $(document).ready(function() {
+    {% assign gwp_2_in_cart = false %}
+    {% assign gwp_2_variant_id = 31019404722262 %}
+    // console.log('gwp_vriantid', {{gwp_2_variant_id}});
+
+    {%- for line_item in cart.items -%}
+      {% if line_item.variant_id == gwp_2_variant_id %}
+        {% assign gwp_2_in_cart = true %} 
+      {% endif %}
+    {%- endfor -%}
+
+    $('.bestseller-sample-set-wrapper img').on('click', function(e) {
+      {%- if gwp_2_in_cart == false -%}
+        e.preventDefault();
+
+        $.ajax({
+          url: '/cart/update.js',
+          method: 'POST',
+          dataType: 'json',
+          data: {
+            updates: { 
+              {{gwp_2_variant_id}}: 1
+            }
+          },
+          success:function() {
+            window.location.href = '/?cart=expanded';
+          },
+          error: function(err) {
+            console.log('error:', err)
+          }
+        });
+      {%- endif -%}
+    })
+    
+
+  })
+  
+</script>
+  
+  

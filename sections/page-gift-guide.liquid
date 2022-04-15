@@ -1,0 +1,305 @@
+{% assign priceLimit1 = section.settings.price_limit_1 | times: 100 %}
+{% assign priceLimit2 = section.settings.price_limit_2 | times: 100 %}
+{% assign priceLimit3 = section.settings.price_limit_3 | times: 100 %}
+
+{% assign collectionSorted = collections[section.settings.collection].products | sort: 'price' %}
+
+{%- if section.settings.banner -%}
+	<div class="collection__head lazyload{% if section.settings.banner_mobile %} hidden-xs{% endif %}" data-bg="url({{ section.settings.banner | img_url: '2048x' }})">
+    <h6>{{section.settings.banner_text_eyebrow}}</h6>
+    {{section.settings.banner_text}}
+	</div>
+{%- endif -%}
+
+{%- if section.settings.banner_mobile -%}
+	<div class="collection__head lazyload visible-xs-block" style="padding:0;">
+    <img src="{{ section.settings.banner_mobile | img_url: '600x' }}" style="margin: 0;" />
+	</div>
+{%- endif -%}
+
+<div class="category-nav">
+  <div class="category-nav__inner">
+    <a href="#section_1">{{section.settings.section_1_title}}</a>
+    <a href="#section_2">{{section.settings.section_2_title}}</a>
+    <a href="#section_3">{{section.settings.section_3_title}}</a>
+    <a href="#section_4">{{section.settings.section_4_title}}</a>
+  </div>
+</div>
+
+<div class="price-banner" id="section_1">
+  <img src="{{section.settings.section_banner_1 | img_url: 'master'}}" class="section-banner hidden-xs" />
+  <img src="{{section.settings.section_banner_1_mobile | img_url: 'master'}}" class="section-banner visible-xs-block" />
+</div>
+
+<div class="collection__items">
+  {% for _product in collections[section.settings.section_1_collection].products %}
+    {%- include 'product-item' with _product -%}
+  {% endfor %}
+</div><!-- /.collection__items -->
+
+<div class="price-banner" id="section_2">
+  <img src="{{section.settings.section_banner_2 | img_url: 'master'}}" class="section-banner hidden-xs" />
+  <img src="{{section.settings.section_banner_2_mobile | img_url: 'master'}}" class="section-banner visible-xs-block" />
+</div>
+
+<div class="collection__items">
+  {% for _product in collections[section.settings.section_2_collection].products %}
+    {%- include 'product-item' with _product -%}
+  {% endfor %}
+</div><!-- /.collection__items -->
+
+<div class="price-banner" id="section_3">
+  <img src="{{section.settings.section_banner_3 | img_url: 'master' }}" class="section-banner hidden-xs" />
+  <img src="{{section.settings.section_banner_3_mobile | img_url: 'master' }}" class="section-banner visible-xs-block" />
+</div>
+
+<div class="collection__items">
+  {% for _product in collections[section.settings.section_3_collection].products %}
+    {%- include 'product-item' with _product -%}
+  {% endfor %}
+</div><!-- /.collection__items -->
+
+<div class="price-banner " id="section_4">
+  <img src="{{section.settings.section_banner_4 | img_url: 'master'}}" class="section-banner hidden-xs" />
+  <img src="{{section.settings.section_banner_4_mobile | img_url: 'master'}}" class="section-banner visible-xs-block" />
+</div>
+
+<div class="collection__items">
+  {% for _product in collections[section.settings.section_4_collection].products %}
+    {%- include 'product-item' with _product -%}
+  {% endfor %}
+</div><!-- /.collection__items -->
+
+{% stylesheet %}
+#shopify-section-page-gift-guide .collection__items {
+	padding-bottom: 50px;
+}
+
+#shopify-section-page-gift-guide .collection__items:before {
+	content: "";
+	display: block;
+	height: 100px;
+	margin: -100px 0 0;
+}
+
+#shopify-section-page-gift-guide .collection__head {
+	color: #fff;
+	background-position: center;
+}
+
+#shopify-section-page-gift-guide .collection__head h6 {
+	margin-bottom: 30px;
+	font-size: 17.5px;
+}
+
+#shopify-section-page-gift-guide .price-banner {
+	text-align: center;
+	padding: 0;
+	font-size: 25px;
+	font-family: 'Recoleta', serif;
+}
+
+#shopify-section-page-gift-guide .price-banner img {
+	width: 100%;
+}
+
+#shopify-section-page-gift-guide .category-nav {
+	padding: 20px 30px;
+}
+
+#shopify-section-page-gift-guide .category-nav .category-nav__inner {
+	display: flex;
+	justify-content: space-between;
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+#shopify-section-page-gift-guide .category-nav .category-nav__inner a {
+	text-decoration: none;
+	color: #245f40;
+	font-size: 16px;
+}
+
+#shopify-section-page-gift-guide .category-nav .category-nav__inner a:hover {
+	font-weight: 700;
+}
+
+@media screen and (max-width: 767px) {
+	#shopify-section-page-gift-guide .category-nav__inner a {
+		font-size: 14px;
+		text-align: center;
+	}
+
+	#shopify-section-page-gift-guide .collection__items .product__item {
+		-ms-flex-preferred-size: 50%;
+		flex-basis: 50%;
+		max-width: 50%;
+		height: auto;
+	}
+
+	#shopify-section-page-gift-guide .collection__items .product__item .product__item-image {
+		height: 260px;
+	}
+
+	#shopify-section-page-gift-guide .price-banner {
+		margin-top: -145px;
+		padding-top: 145px;
+	}
+}
+
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gift Guide",
+  "class": "page-gift-guide",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "banner",
+      "label": "Banner (Desktop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_mobile",
+      "label": "Banner (Mobile)"
+    },
+    {
+      "type": "text",
+      "id": "banner_text_eyebrow",
+      "label": "Banner Eyebrow Text"
+    },
+    {
+      "type": "text",
+      "id": "banner_text",
+      "label": "Banner Text"
+    },
+    {
+      "type": "image_picker",
+      "id": "section_banner_1",
+      "label": "Section 1 Banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "section_banner_1_mobile",
+      "label": "Section 1 BannerMobile"
+    },
+    {
+      "type": "text",
+      "id": "section_1_title",
+      "label": "Section 1 Title"
+    },
+    {
+      "type": "collection",
+      "id": "section_1_collection",
+      "label": "Section 1 Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "section_banner_2",
+      "label": "Section 2 Banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "section_banner_2_mobile",
+      "label": "Section 2 Banner Mobile"
+    },
+    {
+      "type": "text",
+      "id": "section_2_title",
+      "label": "Section 2 Title"
+    },
+    {
+      "type": "collection",
+      "id": "section_2_collection",
+      "label": "Section 2 Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "section_banner_3",
+      "label": "Section 3 Banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "section_banner_3_mobile",
+      "label": "Section 3 Banner Mobile"
+    },
+    {
+      "type": "text",
+      "id": "section_3_title",
+      "label": "Section 3 Title"
+    },
+    {
+      "type": "collection",
+      "id": "section_3_collection",
+      "label": "Section 3 Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "section_banner_4",
+      "label": "Section 4 Banner"
+    },
+    {
+      "type": "image_picker",
+      "id": "section_banner_4_mobile",
+      "label": "Section 4 Banner Mobile"
+    },
+    {
+      "type": "text",
+      "id": "section_4_title",
+      "label": "Section 4 Title"
+    },
+    {
+      "type": "collection",
+      "id": "section_4_collection",
+      "label": "Section 4 Collection"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "section_1",
+      "name": "Section 1",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product (Section 1)"
+        }
+      ]
+    },
+    {
+      "type": "section_2",
+      "name": "Section 2",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product (Section 2)"
+        }
+      ]
+    },
+    {
+      "type": "section_3",
+      "name": "Section 3",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product (Section 3)"
+        }
+      ]
+    },
+    {
+      "type": "section_4",
+      "name": "Section 4",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product (Section 4)"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

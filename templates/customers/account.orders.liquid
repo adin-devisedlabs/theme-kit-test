@@ -1,0 +1,96 @@
+<section class="section-account">
+
+	<div class="section__inner">
+		{%- include 'account', fragment: 'sidebar' -%}
+
+		<div class="section__content">
+			<h4>{{ 'customer.account.order_history' | t }}</h4>
+			{%- paginate customer.orders by 20 -%}
+				{%- if customer.orders.size != 0 -%}
+
+					<div class="table-order">
+						<table>
+							<thead>
+								<tr class="order">
+									<th class="order__number">
+										{{- 'customer.orders.order_number' | t -}}
+									</th>
+
+									<th class="order__date">
+										{{- 'customer.orders.date' | t -}}
+									</th>
+
+									<th class="order__total">
+										{{- 'customer.orders.total' | t -}}
+									</th>
+
+									<th class="order__fulfillment-status">
+										{{- 'customer.orders.track_shipment' | t -}}
+									</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								{%- for order in customer.orders -%}
+									<tr class="order">
+										<td
+											class="order__number"
+											data-heading="{{- 'customer.orders.order_number' | t -}}"
+										>
+											{{- order.name | link_to: order.customer_url -}}
+										</td>
+
+										<td
+											class="order__date"
+											data-heading="{{- 'customer.orders.date' | t -}}"
+										>
+											{{- order.created_at | date: '%B %d, %Y' -}}
+										</td>
+
+										<td
+											class="order__fulfillment-status"
+											data-heading="{{- 'customer.orders.fulfillment_status' | t -}}"
+										>
+											{{- order.total_price | money -}}
+										</td>
+
+										<td
+											class="order__total"
+											data-heading="{{- 'customer.orders.total' | t -}}"
+										>
+											{%- assign fullfilment_link = '' -%}
+											{%- for line_item in order.line_items -%}
+												{%- if line_item.fulfillment.tracking_number -%}
+													{% if line_item.fulfillment.tracking_url contains 'auspost' %}
+														{%- capture fullfilment_link -%}{{fullfilment_link}}{{ line_item.fulfillment.tracking_number | link_to: 'https://www.fedex.com/apps/fedextrack/?action=track&tracknumbers=' + line_item.fulfillment.tracking_number }},{%- endcapture -%}
+													{% else %}
+														{%- capture fullfilment_link -%}{{fullfilment_link}}{{ line_item.fulfillment.tracking_number | link_to: line_item.fulfillment.tracking_url }},{%- endcapture -%}
+													{% endif %}
+													
+												{%- endif -%}
+											{%- endfor -%}
+											{%- assign fullfilment_link = fullfilment_link | split: ',' | uniq | join: ',' -%}
+											{%- if fullfilment_link != blank -%}
+												{{ fullfilment_link }}
+											{%- else -%}
+												{{- order.fulfillment_status -}}
+											{%- endif -%}
+										</td>
+									</tr>
+								{%- endfor -%}
+							</tbody>
+						</table>
+					</div><!-- /.table -->
+
+					{%- include 'pagination' -%}
+				{%- else -%}
+					<div class="no-oders">
+						<p>
+							{{- 'customer.orders.none' | t -}}
+						</p>
+					</div><!-- /.no-oders -->
+				{%- endif -%}
+			{%- endpaginate -%}
+		</div><!-- /.section__content -->
+	</div><!-- /.section__inner -->
+</section><!-- /.section-account -->

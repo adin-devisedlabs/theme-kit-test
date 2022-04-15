@@ -1,0 +1,738 @@
+{% for block in section.blocks %}
+  {% assign _block = block.settings %}
+  {% if block.type == 'container' %}
+    <div class="afterpay afterpay-lp promo__banner" style="background-color: {{_block.promoBgColor}};">
+      <img src="{{ _block.logo | img_url: 'master' }}" alt="Afterpay logo" class="logo">
+      <p>is here. Upgrade the way you pay. </p>
+    </div>
+    <div 
+      class="afterpay intro animate lazyload {% if forloop.first%} animated{% endif %}" 
+      data-bg="url({{_block.image | img_url: 'master'}})"
+      {% if _block.text_align == 'right' %}
+        style="justify-content: flex-end;background-position:right;{% if _block.bgColor != empty %}background-color:{{ _block.bgColor }};{% endif %}"
+      {% elsif _block.text_align == 'center' %} 
+        style="justify-content: center;background-position:right;{% if _block.bgColor != empty %}background-color:{{ _block.bgColor }};{% endif %}"
+      {% else %}
+        style="{% if _block.bgColor != empty %}background-color:{{ _block.bgColor }};{% endif %}background-position:right;"  
+      {% endif %}
+    >
+      {%- if _block.imageMob -%}
+        <div class="mobile-image visible-xs-block">
+          {%- include 'lazyload-image' _image: _block.imageMob, image_params: 'master' -%}
+        </div><!-- /.mobile-image -->
+      {%- endif -%}
+      <div 
+        class="intro__content 
+        {% if _block.text_align == 'left' %} 
+          left-padding 
+        {% elsif _block.text_align == 'right' %} 
+          right-padding 
+          {% if _block.text_align_left == false%}right-text-align{% endif %}
+        {% elsif _block.text_align == 'center' %} 
+            center-text-align 
+        {% endif %} 
+        {% if _block.text_align_left %}
+          left-text-align
+        {% endif %}
+        {% if _block.hide_text_desktop %} 
+          visible-xs-block 
+        {% endif %}"
+        style="color: {{block.settings.text_color}};"
+      >
+        {%- if _block.eyebrow != blank -%}
+          <h6>{{_block.eyebrow}}</h6>
+        {%- endif -%}
+        {%- if _block.title != blank -%}
+          {% if forloop.first %}
+            <h2 class="title--large">{{_block.title}}</h2>
+          {% else %}
+            <h2>{{_block.title}}</h2>
+          {% endif %}
+        {%- endif -%}
+        {%- if _block.promo != blank -%}
+          <p class="intro__promo">{{ _block.promo }}</p> 
+        {%- endif -%} 
+        <img src="{{ _block.logo | img_url: 'master' }}" alt="Afterpay logo" class="logo hidden-xs">
+      </div><!-- /.intro__content -->
+    </div><!-- /.intro -->
+  {% endif %}
+  {% if block.type == 'iconsSection' %}
+    <div class="afterpay animate icons--section" style="background-color: {{_block.bgColor}};">
+      {%- if _block.title != blank -%}
+        <h2>{{_block.title}}</h2>
+      {% endif %}
+      <div class="icons--container">
+        <div>
+          <img src="{{ _block.calIcon | img_url: 'master' }}" alt="calendar icon" class="icon">
+          <h5 class="subtitle">{{_block.calSubtitle}}</h5>
+          <p class="disclaimer">{{_block.calDisclaimer}}</p>
+        </div>
+        <div>
+          <img src="{{ _block.cardIcon | img_url: 'master' }}" alt="card icon" class="icon">
+          <h5 class="subtitle">{{_block.cardSubtitle}}</h5>
+          <p class="disclaimer">{{_block.cardDisclaimer}}</p>
+        </div>
+        <div>
+          <img src="{{ _block.approvalIcon | img_url: 'master' }}" alt="approval icon" class="icon">
+          <h5 class="subtitle">{{_block.approvalSubtitle}}</h5>
+          <p class="disclaimer">{{_block.approvalDisclaimer}}</p>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if block.type == 'infoSection' %}
+    <div class="afterpay animate info--section" style="background-color: {{_block.bgColor}};">
+      {%- if _block.title != blank -%}
+        <h2>{{_block.title}}</h2>
+      {% endif %}
+      <div class="conditions--container">
+        {% for block in section.blocks %}
+          {% if block.type == 'afterpayCondition' %}
+            <div class="content__wrapper">
+              <img src="https://cdn.shopify.com/s/files/1/0140/8847/0614/files/check_mark.gif?v=1620766490" alt="check mark" class="checkmark">
+              <h6 class="condition">{{block.settings.condition}}</h6>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {%- include 'link' url: _block.link_url, text: _block.link_text, tabindex: true, btn_border: true, custom_class: 'join' -%}
+    </div>
+  {% endif %}
+  {% if block.type == 'accountSection' %}
+    <div class="afterpay animate info--section" style="background-color: {{_block.bgColor}};">
+      <div class="account--container">
+        <h2>{{_block.title}}</h2>
+        <div class="info--content">
+          {{_block.content}}
+        </div>
+        {%- include 'link' url: _block.link_url, text: _block.link_text, tabindex: true, btn_border: true, custom_class: 'account' -%}
+        <p>{{_block.infoText}}</p>
+      </div>
+    </div>
+  {% endif %}
+  {% if block.type == 'faqSection' %}
+    <div class="afterpay faq animate">
+      {%- if _block.title != blank -%}
+        <h2>{{_block.title}}</h2>
+      {% endif %}
+      <div class="faq--container">
+        {% for block in section.blocks %}
+          {% assign _block = block.settings %}
+          {%- if block.type == 'question' -%}
+              {%- assign block_title = _block.title -%}
+              {%- assign block_content = _block.content -%}
+              <div class="qa-row {{class_type}} animate">
+                <div class="question">
+                  <h6>{{ block_title }}</h6>
+                  <span class="toggle-icon"></span>
+                </div><!-- /.question -->
+                <div class="answer">
+                  {{block_content}}
+                </div><!-- /.answer -->
+              </div><!-- /.qa-row -->
+              {%- if class_type == 'odd' -%}
+                {%- assign class_type = 'even' -%}
+              {% else %}
+                {%- assign class_type = 'odd' -%}
+              {%- endif -%}
+          {%- endif -%}
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+{% endfor %}
+
+<style>
+  .afterpay.afterpay-lp.promo__banner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    min-height: 48px;
+  }
+  .afterpay.promo__banner img.logo {
+    width: 110px;
+    margin-bottom: 0;
+    margin-right: 0.5rem;
+  }
+  .afterpay.afterpay.promo__banner p {
+    margin-bottom: 0;
+    font-size: 15px;
+  }
+  .afterpay.intro {
+    display: flex;
+    padding: 0;
+    height: 830px;
+  }
+  
+  .afterpay.intro .intro__content {
+    align-self: center;
+    max-width: 50%;
+  }
+
+  .afterpay .left-padding {
+    padding-left: 150px;
+  }
+  .afterpay.intro h2.title--large {
+    margin-bottom: 25px;
+    max-width: 600px;
+  }
+
+  .intro__content.left-padding {
+    text-align: left;
+  }
+  
+  .afterpay .intro__content h6 {
+    margin-bottom: 45px;
+    font-size: 24px;
+    margin-top: 2rem;
+  }
+  .afterpay img.logo {
+    max-width: 300px;
+  }
+  .afterpay.icons--section {
+    padding: 4rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .afterpay .icons--container {
+    display: flex;
+    justify-content: space-evenly;
+    width: 80%;
+    max-width: 1100px;
+    margin-top: 1.5rem;
+  }
+  .afterpay .icons--container div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 1rem;
+    text-align: center;
+    width: 310px;
+  }
+  .afterpay h5.subtitle {
+    font-size: 28px;
+    font-family: "Recoleta", arial, sans-serif;
+    padding: 1rem 0;
+  }
+  .afterpay p.disclaimer {
+    font-size: 15px;
+  }
+  .afterpay img.icon {
+    width: 200px;
+  }
+  .afterpay.info--section {
+    padding: 4rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .afterpay .btn--border.join {
+    margin: 3rem 0 0;
+  }
+  .afterpay .btn--border.account {
+    margin: 2rem 0;
+  }
+  .afterpay .account--container {
+    max-width: 700px;
+    text-align: center;
+  }
+  .afterpay .info--content p {
+    margin-bottom: 2rem;
+  }
+  .afterpay .conditions--container {
+    display: flex;
+    max-width: 1200px;
+  }
+  .afterpay.info--section .content__wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    padding: 0 1rem;
+  }
+  .afterpay h6.condition {
+    font-size: 20px;
+    font-weight: 300;
+    text-transform: none;
+    line-height: 1.2;
+    letter-spacing: unset;
+  }
+  .afterpay img.checkmark {
+    width: 120px;
+    padding-bottom: 1rem;
+  }
+  .afterpay.faq {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4rem 1.5rem;
+  }
+  .afterpay.faq .faq--container {
+    width: 100%;
+    max-width: 1200px;
+  }
+  .afterpay.faq .qa-row {
+    padding: 24px 55px 24px 66px;
+  }
+  .afterpay.faq .qa-row:not(.odd) {
+    background-color: #f2f7fa;
+  }
+  .afterpay.faq .question {
+    position: relative;
+    cursor: pointer;
+    padding-right: 20px;
+  }
+  .afterpay.faq .question .toggle-icon {
+    position: absolute;
+    right: 2px;
+    top: 8px;
+    width: 11px;
+    height: 11px;
+    pointer-events: none;
+    -webkit-transition: -webkit-transform 0.3s;
+    transition: -webkit-transform 0.3s;
+    -o-transition: transform 0.3s;
+    transition: transform 0.3s;
+    transition: transform 0.3s, -webkit-transform 0.3s; }
+  .afterpay.faq .question .toggle-icon:before, .afterpay.faq .question .toggle-icon:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    background-color: #094a6e;
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%); }
+  .afterpay.faq .question .toggle-icon:before {
+    width: 100%;
+    height: 2px; }
+  .afterpay.faq .question .toggle-icon:after {
+    height: 100%;
+    width: 2px; }
+  .afterpay.faq .answer {
+    display: none;
+    padding-top: 16px; }
+  .afterpay.faq .answer p {
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 1.5;
+    margin: 0; }
+  .afterpay.faq .active .question .toggle-icon {
+    -webkit-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    transform: rotate(-45deg); }
+  .afterpay.faq .question h6 {
+    margin: 0;
+    text-transform: none;
+    font-weight: 400;
+    font-size: 20px;
+    letter-spacing: 0;
+  }
+  .afterpay.faq .qa-row.active h6 {
+    font-weight: 700;
+  }
+  .afterpay.faq .answer p {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin: 0;
+    padding-bottom: 0.7rem;
+  }
+  @media screen and (max-width: 1600px) {
+    .afterpay.intro {
+      height: 800px;
+    }
+  }
+  @media screen and (max-width: 1500px) {
+    .afterpay.intro {
+      height: 760px;
+    }
+    .afterpay.intro h2.title--large {
+      max-width: 500px;
+      font-size: 70px;
+    }
+  }
+  @media screen and (max-width: 1400px) {
+    .afterpay.intro {
+      height: 700px;
+    }
+    .afterpay img.icon {
+      width: 150px;
+    }
+    .afterpay .icons--container div {
+      width: 300px;
+    }
+  }
+  @media screen and (max-width: 1300px) {
+    .afterpay.intro {
+      height: 600px;
+    }
+    .afterpay.intro h2.title--large {
+      max-width: 450px;
+      font-size: 65px;
+    }
+    .afterpay img.logo {
+      max-width: 200px;
+      position: unset;
+      bottom: unset;
+    }
+    .afterpay .icons--container {
+      width: 85%;
+    }
+  }
+  @media screen and (max-width: 1150px) {
+    .afterpay.intro h2.title--large {
+      max-width: 400px;
+      font-size: 60px;
+    }
+    .afterpay .left-padding {
+      padding-left: 90px;
+    }
+    .afterpay .icons--container {
+      width: 90%;
+    }
+  }
+  @media screen and (max-width: 1000px) {
+    .afterpay.intro {
+      height: 500px;
+    }
+    .afterpay .left-padding {
+      padding-left: 60px;
+    }
+    .afterpay .intro__content h6 {
+      margin-bottom: 1rem;
+      margin-top: 1rem;
+    }
+  }
+  @media screen and (max-width: 850px) {
+    .afterpay.intro h2.title--large {
+      font-size: 55px;
+    }
+  }
+  @media screen and (max-width: 767px) {
+    .afterpay.intro {
+      height: unset;
+      display: flex;
+      flex-direction: column;
+      background-image: none !important;
+    }
+    .afterpay.intro .intro__content {
+      max-width: unset;
+      width: 100%;
+    }
+    .afterpay .icons--container {
+      flex-direction: column;
+      align-items: center;
+    }
+    .afterpay .conditions--container {
+      flex-direction: column;
+      text-align: center;
+    }
+    .afterpay .icons--container {
+      width: 100%;
+    }
+    .afterpay.faq .qa-row {
+      padding: 24px 25px 24px 26px;
+    }
+    .afterpay img.icon {
+      width: 100px;
+    }
+    .afterpay .left-padding {
+      padding-left: 2rem;
+    }
+    .afterpay.intro h2.title--large {
+      font-size: 44px;
+    }
+    .afterpay img.logo {
+      width: 150px;
+    }
+    .afterpay.intro .mobile-image {
+      margin-bottom: 0;
+    }
+  }
+  @media screen and (max-width: 500px) {
+    .afterpay.promo__banner {
+      flex-wrap: wrap;
+    }
+    .afterpay h2 {
+      font-size: 34px;
+      text-align: center;
+    }
+    .afterpay img.checkmark {
+      width: 70px;
+      padding-top: 1rem;
+    }
+    .afterpay h5.subtitle {
+      font-size: 26px;
+    }
+    .afterpay.icons--section, .afterpay.info--section, .afterpay.faq {
+      padding: 2rem 1.5rem;
+    }
+    .afterpay.icons--section h2 {
+      margin-bottom: 0;
+    }
+    .afterpay .info--content p {
+      margin-bottom: 1rem;
+    }
+    .afterpay.faq .qa-row {
+      padding: 20px;
+    }
+    .afterpay.faq .question .toggle-icon {
+      top: 50%;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Page Content",
+  "settings": [],
+  "blocks": [
+    {
+      "name": " Bg Image Container",
+	    "type": "container",
+      "settings": [
+      {
+        "id": "promoBgColor",
+        "type": "color",
+        "label": "Promo Banner Background Color"
+      },
+      {
+        "id": "image",
+        "type": "image_picker",
+        "label": "Image"
+      },
+      {
+        "id": "imageMob",
+        "type": "image_picker",
+        "label": "Image (Mobile)"
+      },
+      {
+        "id": "bgColor",
+        "type": "color",
+        "label": "Background Image Color"
+      },
+      {
+        "id": "text_color",
+        "type": "color",
+        "label": "Text Color",
+        "default": "#ffffff" 
+      },
+      {
+        "id": "eyebrow",
+        "type": "text",
+        "label": "Eyebrow Text"
+      },
+      {
+        "id": "title",
+        "type": "text",
+        "label": "Title"
+      },
+      {
+        "id": "promo",
+        "type": "text",
+        "label": "Promo"
+      },
+      {
+        "id": "logo",
+        "type": "image_picker",
+        "label": "Logo"
+      },
+      {
+        "type":      "select",
+        "id":        "text_align",
+        "label":     "Text Position",
+        "options": [
+          { "value": "left", "label": "Left"},
+          { "value": "center", "label": "Center"},
+          { "value": "right", "label": "Right"}
+        ],
+        "default":   "left"
+      },
+      {
+        "type": "checkbox",
+        "id": "text_align_left",
+        "label": "Text Align Left?",
+        "default": true
+      }
+      ]
+    },
+    {
+      "name": "Icons Section",
+	    "type": "iconsSection",
+      "settings": [
+      {
+        "id": "title",
+        "type": "text",
+        "label": "Title"
+      },
+      {
+        "id": "bgColor",
+        "type": "color",
+        "label": "Background Color"
+      },
+      {
+        "id": "calIcon",
+        "type": "image_picker",
+        "label": "Calendar Icon"
+      },
+      {
+        "id": "calSubtitle",
+        "type": "text",
+        "label": "Calendar Subtitle"
+      },
+      {
+        "id": "calDisclaimer",
+        "type": "text",
+        "label": "Calendar Disclaimer"
+      },
+      {
+        "id": "cardIcon",
+        "type": "image_picker",
+        "label": "Card Icon"
+      },
+      {
+        "id": "cardSubtitle",
+        "type": "text",
+        "label": "Card Subtitle"
+      },
+      {
+        "id": "cardDisclaimer",
+        "type": "text",
+        "label": "Card Disclaimer"
+      },
+      {
+        "id": "approvalIcon",
+        "type": "image_picker",
+        "label": "Approval Icon"
+      },
+      {
+        "id": "approvalSubtitle",
+        "type": "text",
+        "label": "Approval Subtitle"
+      },
+      {
+        "id": "approvalDisclaimer",
+        "type": "text",
+        "label": "Approval Disclaimer"
+      }
+      ]
+    },
+    {
+      "name": "Info Section",
+	    "type": "infoSection",
+      "settings": [
+      {
+        "id": "title",
+        "type": "text",
+        "label": "Title"
+      },
+      {
+        "id": "bgColor",
+        "type": "color",
+        "label": "Background Color"
+      },
+      {
+        "type": "url",
+        "id": "link_url",
+        "label": "Link URL"
+      },
+      {
+        "type": "text",
+        "id": "link_text",
+        "label": "Link Text",
+        "default": "Join Now"
+      }
+      ]
+    },
+    {
+      "name": "Afterpay Condition",
+	    "type": "afterpayCondition",
+      "settings": [
+      {
+        "id": "condition",
+        "type": "text",
+        "label": "Condition Text"
+      }
+      ]
+    },
+    {
+      "name": "Account Section",
+	    "type": "accountSection",
+      "settings": [
+      {
+        "id": "title",
+        "type": "text",
+        "label": "Title"
+      },
+      {
+        "id": "bgColor",
+        "type": "color",
+        "label": "Background Color"
+      },
+      {
+        "type": "textarea",
+        "id": "content",
+        "label": "Content"
+      },
+      {
+        "type": "url",
+        "id": "link_url",
+        "label": "Link URL"
+      },
+      {
+        "type": "text",
+        "id": "link_text",
+        "label": "Link Text",
+        "default": "Join Now"
+      },
+      {
+        "type": "richtext",
+        "id": "infoText",
+        "label": "Info Text"
+      }
+      ]
+    },
+    {
+      "name": "FAQ Section",
+	    "type": "faqSection",
+      "settings": [
+      {
+        "id": "title",
+        "type": "text",
+        "label": "Title"
+      }
+      ]
+    },
+    {
+      "type": "question",
+      "name": "Question",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "textarea",
+          "id": "content",
+          "label": "Content"
+        }
+      ]
+    } 
+  ]
+}
+{% endschema %}
+
+<script>
+$('.afterpay.faq .question').on('click', function () {
+  var $this = $(this);
+  var $parent = $this.parent();
+  $parent.toggleClass('active');
+  $parent.find('.answer').stop(true).slideToggle();
+  $('.afterpay.faq .answer').not($parent.find('.answer')).slideUp();
+  $('.qa-row').not($parent).removeClass('active');
+});
+</script>

@@ -1,0 +1,204 @@
+{% if settings.enable_gwp_promocode %}
+	let codeWord = [],
+		variantID = [],
+		threshold = [],
+		gwpRetries = 3;
+
+	//CODE WORD ARRAY PUSH
+	{% if settings.gwp_discount_code_1 != '' %}codeWord.push('{{- settings.gwp_discount_code_1-}}'){% endif %}
+	{% if settings.gwp_discount_code_2 != '' %}codeWord.push('{{- settings.gwp_discount_code_2-}}'){% endif %}
+	{% if settings.gwp_discount_code_3 != '' %}codeWord.push('{{- settings.gwp_discount_code_3-}}'){% endif %}
+	{% if settings.gwp_discount_code_4 != '' %}codeWord.push('{{- settings.gwp_discount_code_4-}}'){% endif %}
+
+	//VARIANT ARRAY PUSH
+	{% if settings.gwp_discount_gift_product_1 != '' %}variantID.push('{{- settings.gwp_discount_gift_product_1-}}'){% endif %}
+	{% if settings.gwp_discount_gift_product_2 != '' %}variantID.push('{{- settings.gwp_discount_gift_product_2-}}'){% endif %}
+	{% if settings.gwp_discount_gift_product_3 != '' %}variantID.push('{{- settings.gwp_discount_gift_product_3-}}'){% endif %}
+	{% if settings.gwp_discount_gift_product_4 != '' %}variantID.push('{{- settings.gwp_discount_gift_product_4-}}'){% endif %}
+
+
+	//CODE WORD ARRAY PUSH
+	{% if settings.gwp_discount_gift_threshold_1 != '' %}threshold.push('{{- settings.gwp_discount_gift_threshold_1 | times: 100 -}}'){% endif %}
+	{% if settings.gwp_discount_gift_threshold_2 != '' %}threshold.push('{{- settings.gwp_discount_gift_threshold_2 | times: 100 -}}'){% endif %}
+	{% if settings.gwp_discount_gift_threshold_3 != '' %}threshold.push('{{- settings.gwp_discount_gift_threshold_3 | times: 100 -}}'){% endif %}
+	{% if settings.gwp_discount_gift_threshold_4 != '' %}threshold.push('{{- settings.gwp_discount_gift_threshold_4 | times: 100 -}}'){% endif %}
+
+	//ADDS and REMOVES GIFT TO CART
+	function updatePromoMessage(code)   {
+		let disIndex = codeWord.indexOf(code),
+				currentCart = parseInt($('.total-line__price .order-summary__emphasis').attr('data-checkout-subtotal-price-target')),
+				gwp_product_to_add;
+
+		{% if settings.gwp_discount_code_1 != '' %}
+			let foo_1 = ((codeWord[0] == code && currentCart >= threshold[disIndex]) ? 1 : 0);
+			if (foo_1 == 1) { gwp_product_to_add = {{- settings.gwp_discount_gift_product_1 -}} }
+		{% endif%}
+		{% if settings.gwp_discount_code_2 != '' %}
+			let foo_2 = ((codeWord[1] == code && currentCart >= threshold[disIndex]) ? 1 : 0);
+			if (foo_2 == 1) { gwp_product_to_add = {{- settings.gwp_discount_gift_product_2 -}} }
+		{% endif%}
+		{% if settings.gwp_discount_code_3 != '' %}
+			let foo_3 = ((codeWord[2] == code && currentCart >= threshold[disIndex]) ? 1 : 0);
+			if (foo_3 == 1) { gwp_product_to_add = {{- settings.gwp_discount_gift_product_3 -}} }
+		{% endif%}
+		{% if settings.gwp_discount_code_4 != '' %}
+			let foo_4 = ((codeWord[3] == code && currentCart >= threshold[disIndex]) ? 1 : 0);
+			if (foo_4 == 1) { gwp_product_to_add = {{- settings.gwp_discount_gift_product_4 -}} }
+		{% endif%}
+
+		// if (gwp_product_to_add.length < 1) {
+		// 	gwp_product_to_add = '';
+		// }
+		
+		$.ajax({
+			url: '/cart/update.js',
+			method: 'POST',
+			dataType: 'json',
+			data: {
+				updates: { 
+					{% if settings.gwp_discount_code_1 != '' %}{{- settings.gwp_discount_gift_product_1-}} : foo_1{% endif%}
+					{% if settings.gwp_discount_code_2 != '' %},{{- settings.gwp_discount_gift_product_2-}} : foo_2{% endif%}
+					{% if settings.gwp_discount_code_3 != '' %},{{- settings.gwp_discount_gift_product_3-}} : foo_3{% endif%}
+					{% if settings.gwp_discount_code_4 != '' %},{{- settings.gwp_discount_gift_product_4-}} : foo_4{% endif%}
+				},
+				attributes: {
+					'discount_code': code,
+					'discounted_product': gwp_product_to_add
+				}
+      },
+      success:function(data, status, jqXHR) {
+				// console.log('data', data);
+				// $('button[data-trekkie-id="apply_discount_button"].btn--loading').removeClass('btn--loading');
+				window.location.reload();
+      },
+      error: function(err) {
+				console.log('error:', err) 
+				if (gwpRetries > 0) {
+					gwpRetries--;
+					updatePromoMessage();
+				}
+      }
+		});
+	}
+
+	$(document).ready(function(){
+		setTimeout(function() {
+			//REMOVE CODE FOR ITEMS DELETED FROM CART
+			let existingCode = $('.tag .reduction-code__text:eq(0)').text(),
+			existingGift = ($('.product[data-variant-id='+variantID[0]+']').length) + ($('.product[data-variant-id='+variantID[1]+']').length) + ($('.product[data-variant-id='+variantID[2]+']').length);
+
+			if ((codeWord.indexOf(existingCode) > -1) && existingGift == 0 ){
+				$('.tags-list , .total-line--reduction').hide();
+				$('.tag__button').click()
+			}	
+			if (window.location.pathname.indexOf('orders') == -1) {
+				if (codeWord.indexOf(existingCode) == -1 && existingGift == 1) {
+					updatePromoMessage('');
+				}
+
+				if (codeWord.indexOf(existingCode) > -1 && existingGift != 1) {
+					updatePromoMessage(existingCode);
+				}
+			}
+		}, 1000);
+
+
+		// CHECKING IF DISCOUNT IS APPLIED BY CLICKING APPLY BUTTON
+		$('body').on('click', 'button[data-trekkie-id="apply_discount_button"]', function(e) {
+			$(this).addClass('btn--loading');
+			
+			let code = $(this).parent().children('.field__input-wrapper').find('input').val().toUpperCase();
+			updatePromoMessage(code);			
+		});
+		$('body').on('submit', '.order-summary__section .edit_checkout', function(e) {
+			let code = $(this).find('.field__input-wrapper input').val();
+			if (typeof(code) != 'undefined' && code !== null) {
+				updatePromoMessage(code.toUpperCase());
+			}
+		});
+
+		// REMOVE DISCOUNT CODE BY CLICKING 'X'
+		$('body').on('click', '.tag__button', function (e) { 
+			$('button[data-trekkie-id="apply_discount_button.btn--loading').addClass('btn--loading');
+			let existingCode = $('.tag .reduction-code__text:eq(0)').text();
+			if (codeWord.indexOf(existingCode) > -1) {
+				updatePromoMessage('');  
+			}
+		});
+
+		$('body').on('click', '.notice__close', function(e) {
+			e.preventDefault();
+
+			$('.notice--warning').hide();
+		});
+	});
+{% endif %} 
+
+
+
+
+$(document).ready(function() {
+	if ($(window).width() <= 999) {
+		$('#order-summary').removeClass('order-summary--is-collapsed').addClass('order-summary--is-expanded');
+	}
+
+	// Check Customer Accepts Marketing option checked by default:
+	$('#checkout_buyer_accepts_marketing').attr('checked', 'checked');
+
+	// Email validation - Checkout
+	$('#checkout_email').on('keyup', function() {
+		emailValidation($(this), $('.step__footer__continue-btn'));
+	})
+
+	function emailValidation(element, button) {
+		let email = element.val();
+
+		if (!emailIsValid(email)) {
+			button.attr('disabled', true);
+			$('.email-validation-warning').length ? '' : element.after('<p class="email-validation-warning">Please enter a valid email address</p>');
+		} else {
+			button.attr('disabled', false);
+			$('.email-validation-warning').remove();
+		}
+	}
+
+	function emailIsValid(email) {
+		return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(email)
+	}
+
+	// Address validation - Checkout
+	$('#checkout_shipping_address_address1').on('keyup', function() { 
+		addressValidation($(this), $('.step__footer__continue-btn'));
+	})
+
+	function addressValidation(element, button) {
+		let address = element.val();
+
+		if (!addressIsValid(address)) {
+			button.attr('disabled', true);
+			$('.address-validation-warning').length ? '' : element.after('<p class="address-validation-warning">We do not ship to PO Boxes. Please enter a different address.</p>')
+		} else {
+			button.attr('disabled', false);
+			$('.address-validation-warning').remove();
+		}
+	}
+
+	function addressIsValid(address) {
+		let pattern = /^ *((#\d+)|((box|bin)[-. \/\\]?\d+)|(.*p[ \.]? ?(o|0)[-. \/\\]? *-?((box|bin)|b|(#|num)?\d+))|(p(ost)? *(o(ff(ice)?)?)? *((box|bin)|b)? *\d+)|(p *-?\/?(o)? *-?box)|post office box|((box|bin)|b) *(number|num|#)? *\d+|(num|number|#) *\d+)/i;
+		return !pattern.test(address);
+	}
+
+	// Checkout warning message - PO Box
+
+	function appendPreorderWarning() {
+		// $('.main__header nav').after('<p class="pobox-warning" style="margin-bottom: 0;">Please Note: Only one promo code can be applied per order.</p>');
+		$('#checkout_reduction_code').attr('placeholder', 'Promotion code (1 per order)');
+	}
+	appendPreorderWarning();  
+
+	function updateNewsletterLabel() {
+		$('label[for="checkout_buyer_accepts_marketing"]').html('<p class="newsletter-disclaimer">Stay up to date on new products and promotions. By signing up for emails, I accept the <span><a href="/pages/privacy-policy" target="_blank">Privacy Policy</a></span> and the <span><a href="/pages/terms-of-service" target="_blank">Terms of Service</a></span>.</p>')
+	}
+	updateNewsletterLabel();
+	
+})

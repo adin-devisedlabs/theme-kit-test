@@ -1,0 +1,177 @@
+<div class="advent-calendar-wrapper">
+  {% for block in section.blocks %}
+    <div 
+      class="ac-grid 
+      ac-hoverable 
+      {% if block.settings.width == 'two' %}ac-grid--2{% elsif block.settings.width == 'three'%}ac-grid--3{% endif %}"
+      id="ac-grid--{{forloop.index}}"
+      style="background-color: {{block.settings.bg_color}};color: {{block.settings.text_color}};"  
+    >
+      <h2 class="ac-grid__text">{{forloop.index}}</h2>
+      <div class="ac-grid__unavailable">
+        <h6>SORRY!</h6>
+        <p>This offer is no longer available</p>
+      </div>
+      {% if block.settings.text != blank %}
+        <a href="{{block.settings.link_url}}">
+          <div class="ac-grid__gift">
+            <h5>{{block.settings.text}}</h5>
+          </div>
+        </a>
+      {% endif %}
+    </div>
+  {% endfor %}
+</div>
+
+<style>
+  .advent-calendar-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .ac-grid {
+    flex-basis: 16.6666%;
+    width: 16.6666%;
+    height: calc(100vw / 6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2.5vw;
+    text-align: center;
+  }
+  .ac-grid--2 {
+    width: calc(100% / 3);
+    flex-basis: calc(100% / 3);
+  }
+  .ac-grid--3 {
+    width: calc(100% / 2);
+    flex-basis: calc(100% / 2);
+  }
+  .ac-grid__unavailable, .ac-grid__gift {
+    display: none;
+  }
+  .ac-grid:hover {
+    cursor: pointer;
+  }
+  .ac-grid h5, .ac-grid h6, .ac-grid p {
+    font-size: 24px;
+  }
+  .ac-grid a {
+    text-decoration: none;
+  }
+
+  .todayActive:hover {
+    background-image: url("https://cdn.shopify.com/s/files/1/0140/8847/0614/files/Asset_4_288x-8.png?v=1606266200");
+    background-size: contain;
+    cursor: pointer;
+  }
+
+  .ac-hoverable:hover .ac-grid__text, .todayActive:hover .ac-grid__text {
+    display: none;
+  }
+
+  .ac-hoverable:hover .ac-grid__unavailable {
+    display: block;
+  }
+  .todayActive:hover .ac-grid__unavailable {
+    display: none;
+  }
+  .todayActive:hover .ac-grid__gift {
+    display: block;
+  }
+
+  @media screen and (min-width: 768px) and (max-width: 1600px) {
+    .ac-grid h5, .ac-grid h6, .ac-grid p {
+      font-size: 1.5vw;
+    }
+  }
+
+  @media screen and (max-width: 767px) {
+    .ac-grid {
+      flex-basis: 33.33%;
+      width: 33.33%;
+      height: calc(100vw / 3);
+      padding: 5vw;
+    }
+    .ac-grid--2 {
+      width: 66.66%;
+      flex-basis: 66.66%;
+    }
+    .ac-grid--3 {
+      width: 100%;
+      flex-basis: 100%;
+    }
+
+    .ac-grid h6 {
+      font-size: 2.5vw;
+    }
+    .ac-grid h5, .ac-grid p {
+      font-size: 3vw;
+    }
+
+  }
+</style>
+
+{% javascript %}
+  let today = new Date();
+  let todayDate = today.getDate();
+  console.log('today::', todayDate);
+
+  $('#ac-grid--'+todayDate).addClass('todayActive');
+
+  for (let i = (todayDate + 1); i < 25; i++) {
+    $('#ac-grid--'+i+' p').text('Come back soon for more holiday cheer');
+    $('#ac-grid--'+i+' h6').text('Hang Tight!');
+  }
+
+
+
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Advent Calendar",
+  "settings": [
+  ],
+  "blocks": [
+    {
+      "name": "Daily Deal",
+      "type": "deal",
+      "settings": [
+        {
+          "type":      "select",
+          "id":        "width",
+          "label":     "Width",
+          "options": [
+            { "value": "one", "label": "1"},
+            { "value": "two", "label": "2"},
+            { "value": "three", "label": "3"}
+          ],
+          "default":   "one"
+        },
+        {
+          "id": "text_color",
+          "type": "color",
+          "label": "Text Color",
+          "default": "#ffffff" 
+        },
+        {
+          "id": "bg_color",
+          "type": "color",
+          "label": "Background Color",
+          "default": "#15422e" 
+        },
+        {
+          "id": "text",
+          "type": "text",
+          "label": "Gift Name"
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Link URL"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,868 @@
+<div class="bundle-editpage__wrapper">
+  <div class="intro-banner">
+    <div class="intro-banner__image flex-box hidden-xs">
+      <img src="{{section.settings.banner_desktop | img_url: 'master'}}" alt="Instructions: Pick any of the bestselling products you see below to add to your bundle. When you’ve picked four, we bundle it all up for you—and you can see just how much you saved. It’s that easy." />
+    </div>
+    <div class="intro-banner__image flex-box visible-xs-block">
+      <img src="{{section.settings.banner_mobile | img_url: '700x' }}" alt="Instructions: Pick any of the bestselling products you see below to add to your bundle. When you’ve picked four, we bundle it all up for you—and you can see just how much you saved. It’s that easy." />
+    </div>
+  </div>
+  <div class="edit-section__wrapper flex-row">
+    <div class="current-bundle__wrapper minimized">
+      <div class="current-bundle__header">
+        <h4>Your Bundle</h4>
+        <div class="current-bundle__progress-outer">
+          <div class="current-bundle__progress-inner"></div>
+        </div>
+        <div class="current-bundle__progress-textwrapper flex-row">
+          <p class="current-bundle__progress-text">
+            Add 4 items to save 20%
+          </p>
+          <span><b class="button"></b></span>
+        </div>
+      </div>
+      <div class="current-bundle__selections flex-row">
+        <div class="current-bundle__selection">
+          <div class="current-bundle__selection-inner">
+            <span class="current-bundle__selection-remove">&#10005;</span>
+            <img src="https://cdn.shopify.com/s/files/1/0140/8847/0614/files/Bag_Icon_6aa3db68-13ff-4d86-ad3a-4a9063675828.png?v=1597689187" alt="Bundle Selection" />
+          </div>
+        </div>
+        <div class="current-bundle__selection">
+          <div class="current-bundle__selection-inner">
+            <span class="current-bundle__selection-remove">&#10005;</span>
+            <img src="https://cdn.shopify.com/s/files/1/0140/8847/0614/files/Bag_Icon_6aa3db68-13ff-4d86-ad3a-4a9063675828.png?v=1597689187" alt="Bundle Selection" />
+          </div>
+        </div>
+        <div class="current-bundle__selection">
+          <div class="current-bundle__selection-inner">
+            <span class="current-bundle__selection-remove">&#10005;</span>
+            <img src="https://cdn.shopify.com/s/files/1/0140/8847/0614/files/Bag_Icon_6aa3db68-13ff-4d86-ad3a-4a9063675828.png?v=1597689187" alt="Bundle Selection" />
+          </div>
+        </div>
+        <div class="current-bundle__selection">
+          <div class="current-bundle__selection-inner">
+            <span class="current-bundle__selection-remove">&#10005;</span>
+            <img src="https://cdn.shopify.com/s/files/1/0140/8847/0614/files/Bag_Icon_6aa3db68-13ff-4d86-ad3a-4a9063675828.png?v=1597689187" alt="Bundle Selection" />
+          </div>
+        </div>
+      </div>
+      <div class="current-bundle__form">
+        {% for variant in all_products['custom-bundle'].variants %}
+          <input type="hidden" class="bundleOptions" value="{{variant.title}}" data-variant-id="{{variant.id}}"/>
+        {% endfor %}
+        <input type="hidden" id="selectedBundle" data-variant-id="" data-sku="" />
+        <input type="hidden" class="selectedProduct" id="selectedProduct-1" data-id="" data-img="" data-price="" data-title="" />
+        <input type="hidden" class="selectedProduct" id="selectedProduct-2" data-id="" data-img="" data-price="" data-title="" />
+        <input type="hidden" class="selectedProduct" id="selectedProduct-3" data-id="" data-img="" data-price="" data-title="" />
+        <input type="hidden" class="selectedProduct" id="selectedProduct-4" data-id="" data-img="" data-price="" data-title="" />
+
+        <div class="current-bundle__subtotal flex-row">
+          <h6>Subtotal</h6>
+          <p class="total_price">$0.00</p>
+        </div>
+        <div class="current-bundle__subtotal-discounted flex-row">
+          <h6>Discounted Subtotal</h6>
+          <p class="total_price">$0.00</p>
+        </div>
+        <p class="current-bundle__savings">You saved $0.00</p>
+        <button class="btn btn--border current-bundle__atc">All Done</button>
+      </div>
+    </div>
+
+    <div class="bundle-options__wrapper">
+      <div class="bundle-options__inner flex-row">
+        {% assign productOptions = collections[section.settings.collection] %}
+        {% for product in productOptions.products limit: 6 %}
+          <div class="product__item">
+            <input 
+              type="hidden" 
+              class="product__item-details" 
+              data-sku="{{product.selected_or_first_available_variant.sku}}" 
+              data-id="{{product.id}}" 
+              data-img="{{product.feature_image}}" 
+              data-price="{% if product.handle == 'shampoo-wash' %}12{% else %}{{product.price_max | money_without_currency }}{% endif %}" 
+              data-title="{{product.title}}" 
+            />
+            <div class="product__item-image">
+              {% assign productImage = product.featured_image %}
+              {%- include 'lazyload-image' _image: productImage, original_width: '600' -%} 
+            </div>
+            <div class="product__item-info">
+              <h4 class="product__item-title">{{product.title}}</h4>
+              <span class="stamped-product-reviews-badge stamped-main-badge" data-id="{{product.id}}" style="display: block;"></span>
+              <p class="product__item-price">
+                {% if product.handle == 'shampoo-wash' %}
+                  <span class="price__amount">
+                    <span class="money">$12</span>
+                  </span>
+                {% elsif product.handle == 'baby-balm' %}
+                  <span class="price__amount">
+                    <span class="money">$13</span>
+                  </span>
+                {% elsif product.handle == 'baby-lotion' %}
+                  <span class="price__amount">
+                    <span class="money">$10</span>
+                  </span>
+                {% else %}
+                  {%- include 'price' with product -%}
+                {% endif %}
+              </p>
+            </div>
+            <button class="btn btn--border bundle-option__atc">Add to Your Bundle</button>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-section animate">
+    <div class="flex-row">
+      <div class="image" style="background-image: url('https://cdn.accentuate.io/135774830678/9312753418326/PIP_PLP_ShopAll_38-v1565756169123.jpg?480x640')">
+      </div>
+      <div class="content">
+        <h2>No Compromise™ Baby Care</h2>
+        <p>Made with the highest standards and safest ingredients, Pipette products restore and replenish the key ingredients that make babies and moms so special. All of our products are clean, hypoallergenic, and tested by dermatologists.</p>
+        <a href="https://pipettebaby.myshopify.com/pages/ingredients" class="btn">Read More</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+{% stylesheet %}
+.bundle-editpage__wrapper p {
+	font-size: .8em;
+}
+
+.bundle-editpage__wrapper .btn--border {
+	background: transparent;
+	color: #084b6d;
+}
+
+.bundle-editpage__wrapper .current-bundle__atc:hover {
+	background: #084b6d !important;
+	color: #fffefb !important;
+}
+
+.bundle-editpage__wrapper .btn--border.selected {
+	background: #084b6d;
+	color: white;
+}
+
+.bundle-editpage__wrapper .intro-banner .intro-banner__image img {
+	margin-bottom: 0;
+	width: 100%;
+}
+
+.bundle-editpage__wrapper .intro-banner .intro-banner__text {
+	text-align: center;
+	margin: 20px;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	margin-top: -5px;
+}
+
+.bundle-editpage__wrapper .intro-banner .intro-banner__text p {
+	font-size: .8em;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper {
+	padding: 50px;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper {
+	-ms-flex-preferred-size: 35%;
+	flex-basis: 35%;
+	width: 35%;
+	padding: 30px;
+	background: #fafaf2;
+	height: -webkit-fit-content;
+	height: -moz-fit-content;
+	height: fit-content;
+	position: -webkit-sticky;
+	position: sticky;
+	top: 20px;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .current-bundle__progress-outer {
+	height: 15px;
+	border: 1px solid #d1e0c9;
+	border-radius: 10px;
+	background: #fff;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .current-bundle__progress-inner {
+	height: 15px;
+	background: #d1e0c9;
+	border-radius: 10px;
+	width: 0%;
+	margin-top: -1px;
+	margin-left: -1px;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper [class*="added-"] .current-bundle__progress-inner {
+	border: 1px solid #d1e0c9;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .added-one .current-bundle__progress-inner {
+	width: 25%;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .added-two .current-bundle__progress-inner {
+	width: 50%;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .added-three .current-bundle__progress-inner {
+	width: 75%;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .added-four .current-bundle__progress-inner {
+	width: 101%;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .current-bundle__progress-textwrapper {
+	justify-content: space-between;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .current-bundle__progress-text {
+	font-size: .8em;
+	padding: 10px 0;
+	margin-bottom: 0;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .current-bundle__selections {
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+	padding: 20px;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .current-bundle__selections .current-bundle__selection {
+	-ms-flex-preferred-size: 50%;
+	flex-basis: 50%;
+	width: 50%;
+	padding: 30px;
+	position: relative;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .current-bundle__selections .current-bundle__selection .current-bundle__selection-remove {
+	margin-bottom: -20px;
+	position: absolute;
+	right: 0;
+	right: 31px;
+	top: 25px;
+	display: none;
+	cursor: pointer;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .current-bundle__selections .current-bundle__selection.selected {
+	padding: 25px;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-flex: 1;
+	-ms-flex: 1 0 auto;
+	flex: 1 0 auto;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .current-bundle__selections .current-bundle__selection.selected .current-bundle__selection-inner {
+	background: #fff;
+	padding: 10px;
+	text-align: center;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .current-bundle__selections .current-bundle__selection.selected .current-bundle__selection-remove {
+	display: block;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .current-bundle__form .current-bundle__subtotal {
+	justify-content: space-between;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .current-bundle__form .current-bundle__subtotal .total_price {
+	font-weight: 700;
+	font-size: .8em;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .current-bundle__form .current-bundle__subtotal-discounted {
+	display: none;
+	justify-content: space-between;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .current-bundle__form .current-bundle__subtotal-discounted .total_price {
+	font-weight: 700;
+	font-size: .8em;
+}
+
+.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .current-bundle__form .btn {
+	background: transparent;
+	width: 100%;
+	margin-top: 10px;
+}
+
+.bundle-editpage__wrapper .bundle-options__wrapper {
+	-ms-flex-preferred-size: 65%;
+	flex-basis: 65%;
+	width: 65%;
+	padding: 20px;
+	margin: 0 20px;
+}
+
+.bundle-editpage__wrapper .bundle-options__wrapper .bundle-options__inner {
+	-ms-flex-wrap: wrap;
+	flex-wrap: wrap;
+}
+
+.bundle-editpage__wrapper .bundle-options__wrapper .bundle-options__inner .product__item {
+	-ms-flex-preferred-size: 33%;
+	flex-basis: 33%;
+	width: 33%;
+	padding: 20px;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-ms-flex-direction: column;
+	flex-direction: column;
+}
+
+.bundle-editpage__wrapper .bundle-options__wrapper .bundle-options__inner .product__item-info {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-ms-flex-direction: column;
+	flex-direction: column;
+	-webkit-box-flex: 1;
+	-ms-flex: 1 0 auto;
+	flex: 1 0 auto;
+	-webkit-box-pack: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+	margin: 20px 0;
+}
+
+.bundle-editpage__wrapper .bundle-options__wrapper .bundle-options__inner .stamped-product-reviews-badge {
+	margin: 10px 0;
+}
+
+.bundle-editpage__wrapper .bundle-options__wrapper .bundle-options__inner .product__item-image {
+	display: -ms-flexbox;
+	display: flex;
+	display: -webkit-box;
+	background: #fafaf2;
+	min-height: 275px;
+}
+
+.bundle-editpage__wrapper .bundle-options__wrapper .bundle-options__inner .product__item-price {
+	font-weight: 700;
+}
+
+@media screen and (max-width: 1023px) {
+	.flex-row {
+		-ms-flex-wrap: unset;
+		flex-wrap: unset;
+	}
+}
+
+@media screen and (min-width: 768px) and (max-width: 1224px) {
+	.bundle-editpage__wrapper .intro-banner .intro-banner__image {
+		margin: 0 auto;
+	}
+
+	.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper .current-bundle__selections .current-bundle__selection {
+		padding: 20px;
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-pack: center;
+		-ms-flex-pack: center;
+		justify-content: center;
+		-webkit-box-align: center;
+		-ms-flex-align: center;
+		align-items: center;
+	}
+
+	.bundle-editpage__wrapper .bundle-options__wrapper {
+		margin: 0;
+	}
+
+	.bundle-editpage__wrapper .bundle-options__wrapper .bundle-options__inner .product__item {
+		-ms-flex-preferred-size: 50%;
+		flex-basis: 50%;
+		width: 50%;
+	}
+
+	.bundle-editpage__wrapper .bundle-options__wrapper .bundle-options__inner .product__item .product__item-image {
+		min-height: unset;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.template-page--bundle-set-edit .header {
+		position: relative;
+	}
+
+	.bundle-editpage__wrapper .intro-banner .intro-banner__image img {
+		width: 100%;
+	}
+
+	.bundle-editpage__wrapper .edit-section__wrapper {
+		padding: 0;
+	}
+
+	.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__progress-textwrapper span {
+		height: 32px;
+		width: 32px;
+		padding-top: 6px;
+	}
+
+	.bundle-editpage__wrapper .edit-section__wrapper .button {
+		position: relative;
+		cursor: pointer;
+		display: block;
+		width: 32px;
+		height: 32px;
+	}
+
+	.bundle-editpage__wrapper .edit-section__wrapper .button:before {
+		content: '';
+		position: absolute;
+		top: 10px;
+		right: 10px;
+		width: 10px;
+		height: 10px;
+		border-right: 1px solid #084b6d;
+		border-bottom: 1px solid #084b6d;
+		-webkit-transform: rotate(225deg);
+		-ms-transform: rotate(225deg);
+		transform: rotate(225deg);
+	}
+
+	.bundle-editpage__wrapper .edit-section__wrapper .minimized .current-bundle__selections, .bundle-editpage__wrapper .edit-section__wrapper .minimized .current-bundle__form {
+		display: none;
+	}
+
+	.bundle-editpage__wrapper .edit-section__wrapper .minimized .current-bundle__progress-textwrapper span {
+		padding-top: 12px;
+	}
+
+	.bundle-editpage__wrapper .edit-section__wrapper .minimized .button:before {
+		-webkit-transform: rotate(45deg);
+		-ms-transform: rotate(45deg);
+		transform: rotate(45deg);
+		top: 0;
+	}
+
+	.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__wrapper {
+		-ms-flex-preferred-size: 100%;
+		flex-basis: 100%;
+		width: 100%;
+		top: 0;
+		z-index: 9;
+		padding: 20px;
+		padding-top: 30px;
+		max-height: 100vh;
+		overflow: scroll;
+	}
+
+	.bundle-editpage__wrapper .edit-section__wrapper .current-bundle__selections {
+		padding: 0;
+	}
+
+	.bundle-editpage__wrapper .bundle-options__wrapper {
+		-ms-flex-preferred-size: 100%;
+		flex-basis: 100%;
+		width: 100%;
+		margin: 0;
+	}
+
+	.bundle-editpage__wrapper .bundle-options__wrapper .bundle-options__inner .product__item {
+		-ms-flex-preferred-size: 50%;
+		flex-basis: 50%;
+		width: 50%;
+	}
+
+	.bundle-editpage__wrapper .bundle-options__wrapper .bundle-options__inner .product__item .product__item-image {
+		min-height: 175px;
+		display: block;
+	}
+}
+{% endstylesheet %}
+
+<script>
+  $(document).ready(function() {
+    let bundleSelections = [];
+    let bundleSubtotal = 0;
+    let defaultImage = 'https://cdn.shopify.com/s/files/1/0140/8847/0614/files/Bag_Icon_6aa3db68-13ff-4d86-ad3a-4a9063675828.png?v=1597689187';
+    let existingBundleVariantID = '';
+
+    if (window.location.href.indexOf('cart=expanded') > -1) {
+      if ($('.cart-count').hasClass('visible')) {
+        $('#shopify-section-header .mini-cart').addClass('show');
+      }
+    } 
+
+    $('.current-bundle__header .button').click(function() {
+      $('.current-bundle__wrapper').toggleClass('minimized');
+    })
+
+    $('.current-bundle__atc').click(function() {
+      if (bundleSelections.length == 4) {
+        checkForExistingBundle();
+      }
+    })
+
+    // Add or remove selection
+    $('.bundle-option__atc').click(function() {
+      let $this = $(this);
+
+      let productInfo = $(this).closest('.product__item').find('.product__item-details'),
+          productImageElement = $(this).closest('.product__item').find('.product__item-image img'),
+          productImage = productImageElement.data('src'),
+          productPrice = productInfo.data('price'),
+          productTitle = productInfo.data('title');
+
+      let selectedProductInfo = {
+        image: productImage,
+        price: productPrice,
+        title: productTitle
+      };
+
+      if ($(this).text().indexOf('Add') > -1) {
+        addSelection($this, productTitle, productPrice, productImage, selectedProductInfo);
+      } else {
+        removeSelection($this, productTitle, productPrice);
+      }
+
+
+      updateProgressBar();
+      
+    })
+
+    // Remove from summary section
+    $('.current-bundle__selection-remove').click(function() {
+      let removeTitle = $(this).next().attr('alt');
+      $(this).next().attr('src', defaultImage).attr('alt', 'Bundle Selection');
+      $(this).closest('.current-bundle__selection').removeClass('selected');
+
+      $('.product__item').each(function() {
+        if ($(this).find('.product__item-details').data('title') == removeTitle) {
+          $(this).find('.btn').removeClass('selected');
+          $(this).find('.btn').text('Add to your Bundle');
+          bundleSelections = bundleSelections.filter(function(a) {
+            return a.title !== removeTitle;
+          })
+          let productPrice = $(this).find('.product__item-details').data('price');
+          updateSubtotal(productPrice, false);
+          return false;
+        }
+      })
+
+      if ($(window).width() < 768 && bundleSelections.length == 3) {
+        $('.current-bundle__wrapper').addClass('minimized');
+      }
+
+      updateProgressBar();
+    })
+
+    function addSelection($this, productTitle, productPrice, productImage, selectedProductInfo) {
+      if (bundleSelections.length < 4) {
+        $this.toggleClass('selected');
+        $this.text('Remove from Bundle');
+        bundleSelections.push(selectedProductInfo);
+
+        $('.current-bundle__selection img').each(function() {
+          if ($(this).attr('alt') == "Bundle Selection") {
+            $(this).attr('src', productImage).attr('alt', productTitle);
+            $(this).closest('.current-bundle__selection').addClass('selected');
+            return false;
+          }
+        })
+        updateSubtotal(productPrice, true);
+      }
+    }
+
+    function removeSelection($this, productTitle, productPrice) {
+      $this.toggleClass('selected');
+      $this.text('Add to your Bundle');
+      bundleSelections = bundleSelections.filter(function(a) {
+        return a.title !== productTitle;
+      })
+
+      $('.current-bundle__selection img').each(function() {
+        if ($(this).attr('alt') == productTitle) {
+          $(this).attr('src', defaultImage).attr('alt', 'Bundle Selection');
+          $(this).closest('.current-bundle__selection').removeClass('selected');
+          return false;
+        }
+      })
+      updateSubtotal(productPrice, false);
+    }
+
+    function updateProgressBar() {
+      let numberSelections = bundleSelections.length,
+          classToAdd = '',
+          summaryMessage = 'Add 4 items to your bundle';
+
+      switch (numberSelections) {
+        case 1:  
+          classToAdd = 'added-one';
+          summaryMessage = 'Add 3 more items to save 20%';
+          break;
+        case 2: 
+          classToAdd = 'added-two';
+          summaryMessage = 'Add 2 more items to save 20%';
+          break;
+        case 3: 
+          classToAdd = 'added-three';
+          summaryMessage = 'Add 1 more item to save 20%';
+          break;
+        case 4: 
+          classToAdd = 'added-four';
+          summaryMessage = "You're good to go!";
+          break;
+        default:
+          classToAdd = '';
+      } 
+
+      let existingClasses = $('.current-bundle__header').attr("class").split(/\s+/);
+
+      $.each(existingClasses, function(index, existingClass) {
+        existingClass.indexOf('added') > -1 ? $('.current-bundle__header').removeClass(existingClass) : '';
+      })
+
+      $('.current-bundle__header').addClass(classToAdd);
+      $('.current-bundle__progress-text').text(summaryMessage);
+        
+    }
+
+    function updateSubtotal(price, add) {
+      add ? bundleSubtotal += parseFloat(price) : bundleSubtotal -= parseFloat(price);
+
+      if (bundleSelections.length === 4) {
+        let discount = (bundleSubtotal * 0.2).toFixed(2);
+        $('.current-bundle__savings').text('You saved $' + discount + ' (20% savings)');
+        assignSelectedBundle();
+        $('.current-bundle__wrapper').removeClass('minimized');
+      } else {
+        $('.current-bundle__savings').text('You saved $0.00');
+        clearSelectedBundle();
+      }
+
+      let currentSubtotal = bundleSubtotal.toFixed(2);
+      $('.current-bundle__subtotal .total_price').text('$' + currentSubtotal);
+
+      let subtotalWDiscount = (bundleSubtotal * 0.8).toFixed(2);
+      if (bundleSelections.length === 4) {
+        $('.current-bundle__subtotal-discounted').css('display', 'flex');
+        $('.current-bundle__subtotal-discounted .total_price').text('$' + subtotalWDiscount);
+        $('.current-bundle__subtotal .total_price').css('text-decoration', 'line-through');
+      } else {
+        $('.current-bundle__subtotal-discounted').hide();
+        $('.current-bundle__subtotal .total_price').css('text-decoration', 'unset');
+      }
+    }
+
+    function assignSelectedBundle() {
+      let titlesArray = bundleSelections.map(function(selection) {
+        return selection.title.toLowerCase();
+      })
+      titlesArray.sort();
+      let combinedTitles = titlesArray.join(', ');
+
+      // Assign selected bundle variant id
+      $('.bundleOptions').each(function() {
+        if ($(this).val().toLowerCase().indexOf(combinedTitles) > -1) {
+          $('#selectedBundle')
+            .data('variant-id', $(this).data('variant-id'))
+            .data('title', $(this).val());
+          return false;
+        }    
+      })
+      
+      // Assign product info in line item properties
+      $.each(bundleSelections, function(index, selection) {
+        let newIndex = index + 1;
+        $('#selectedProduct-' + newIndex)
+          .data('img', selection.image)
+          .data('price', selection.price)
+          .data('title', selection.title);
+      })
+    }
+
+    function clearSelectedBundle() {
+      $('#selectedBundle').data('variant-id', '');
+
+      $('.selectedProduct').each(function() {
+        $(this)
+          .data('title', '')
+          .data('img', '')
+          .data('price', '');
+      })
+    }
+
+    function checkForExistingBundle() {
+      let removeData = {
+        updates: {}
+      }
+      removeData['updates'][existingBundleVariantID] = 0;
+      
+      if (existingBundleVariantID.length > 1) {
+        $.ajax({
+          url: '/cart/update.js',
+          method: 'POST',
+          dataType: 'json',
+          data: removeData,
+          success:function(data, status, jqXHR) {
+            console.log('old bundle removed', data);
+            addBundleToCart();
+          },
+          error: function(err) {
+            console.log('error:', err) 
+          }
+        });
+      } else {
+        addBundleToCart();
+      }
+    }
+
+    function addBundleToCart() {
+      let bundleID = Date.now();
+      console.log('variantid', $('#selectedBundle').data('variant-id'))
+
+      let data = {
+        "quantity": 1,
+        "id": $('#selectedBundle').data('variant-id'),
+        "properties[bundle_variant_id]": $('#selectedBundle').data('variant-id'),
+        "properties[bundle_id]": bundleID,
+        "properties[bundle_item_1_title]": $('#selectedProduct-1').data('title'),
+        "properties[bundle_item_1_price]": $('#selectedProduct-1').data('price'),
+        "properties[bundle_item_1_image]": $('#selectedProduct-1').data('img'),
+        "properties[bundle_item_2_title]": $('#selectedProduct-2').data('title'),
+        "properties[bundle_item_2_price]": $('#selectedProduct-2').data('price'),
+        "properties[bundle_item_2_image]": $('#selectedProduct-2').data('img'),
+        "properties[bundle_item_3_title]": $('#selectedProduct-3').data('title'),
+        "properties[bundle_item_3_price]": $('#selectedProduct-3').data('price'),
+        "properties[bundle_item_3_image]": $('#selectedProduct-3').data('img'),
+        "properties[bundle_item_4_title]": $('#selectedProduct-4').data('title'),
+        "properties[bundle_item_4_price]": $('#selectedProduct-4').data('price'),
+        "properties[bundle_item_4_image]": $('#selectedProduct-4').data('img')
+      };
+
+      $.ajax({
+        type: 'POST',
+        url: '/cart/add.js',
+        data: data,
+        dataType: 'json',
+        success: function(data, status) {
+          console.log('bundle added', data);
+          updateMiniCart();
+
+          existingBundleVariantID.length ? window.location.href = '/pages/build-your-bundle?cart=expanded&bundle-id=' + bundleID : '';
+
+        },
+        error: function(err) {
+          console.log('error', err);
+        }
+      })
+
+      function updateHtml($html) {
+        const $miniCart = $('.mini-cart');
+        const $cartBag = $('.util-cart a');
+
+        $cartBag.html($html.find('.util-cart a').html());
+        $miniCart.html($html.find('.mini-cart').html());
+
+        $miniCart.removeClass('loading');
+        $miniCart.addClass('show');
+        $('.overlay-product').removeClass('loading');
+      }
+
+      function updateMiniCart(callback) {
+        $.ajax({
+          url: '/cart'
+        }).done(function (data) {
+          updateHtml($(data));
+        });
+      }
+    }
+    
+    function loadExistingBundle() {
+      let urlParams = new URLSearchParams(window.location.search);
+      let selectedBundleID = urlParams.get('bundle-id');
+
+      if (selectedBundleID && selectedBundleID !== null) {
+        {% for item in cart.items %}
+          {% if item.title contains 'Custom Bundle' %}
+            var bundleObject = {};
+            {% for property in item.properties %}
+              bundleObject['{{property[0]}}'] = '{{property[1]}}';
+            {% endfor %}
+
+            if (bundleObject.bundle_id == selectedBundleID) {
+              existingBundleVariantID = bundleObject.bundle_variant_id;
+              let selectedBundles = [];
+
+              for (let i = 1; i < 5; i++) {
+                let selectedProduct = {
+                  image: bundleObject['bundle_item_' + i + '_image'],
+                  price: bundleObject['bundle_item_' + i + '_price'],
+                  title: bundleObject['bundle_item_' + i + '_title']
+                }
+                
+                $('.product__item-details').each(function() {
+                  if ($(this).data('title') == selectedProduct.title) {
+                    let $this = $(this).closest('.product__item').find('.bundle-option__atc');
+                    addSelection($this, selectedProduct.title, selectedProduct.price, selectedProduct.image, selectedProduct);
+                  }
+                })
+                selectedBundles.push(selectedProduct);
+              }
+              
+              updateProgressBar();
+            }
+
+          {% endif %}
+        {% endfor %}
+      }
+    }
+
+    loadExistingBundle();
+  })
+
+
+</script>
+
+{% schema %}
+{
+  "name": "Bundle Edit Page",
+  "settings": [
+    {
+      "id": "collection",
+      "type": "collection",
+      "label": "Bundle Options Collection"
+    },
+    {
+      "id": "banner_desktop",
+      "type": "image_picker",
+      "label": "Banner (Desktop)"
+    },
+    {
+      "id": "banner_mobile",
+      "type": "image_picker",
+      "label": "Banner (Mobile)"
+    }
+  ]
+}
+{% endschema %}

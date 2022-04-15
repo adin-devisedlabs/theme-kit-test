@@ -1,0 +1,27 @@
+{%- if product.metafields.product.article_image != blank or product.metafields.product.article_title != blank or product.metafields.product.article_thumb != blank -%}
+  <div class="product-article animate">
+    <div class="container">
+      <div class="flex-row justify">
+        <div class="side-image">
+          {{ product.metafields.product.article_image | img_tag: '', 'hidden-xs' }}
+          {{ product.metafields.product.article_left_mobile | default: product.metafields.product.article_image | img_tag: '', 'visible-xs-block' }}
+        </div><!-- /.side-image -->
+        <div class="side-content">
+          {%- if product.metafields.product.article_title != blank -%}
+            <h3>{{ product.metafields.product.article_title }}</h3>
+          {%- endif -%}
+          {{ product.metafields.product.article_content }}
+          <a href="{{product.metafields.product.article_link}}" class="btn" target="_blank">
+            {{ 'products.product.read_more' | t }}
+          </a>
+          <div class="bottom-image">
+            {%- if product.metafields.product.article_thumb or product.metafields.product.mobile_right_image -%}
+              {{ product.metafields.product.article_thumb | img_tag: '', 'hidden-xs' }}
+              {{ product.metafields.product.mobile_right_image | default: product.metafields.product.article_thumb | img_tag: '', 'visible-xs-block' }}
+            {%- endif -%}
+          </div><!-- /.bottom-image -->
+        </div><!-- /.side-content -->
+      </div><!-- /.flex-row -->
+    </div><!-- /.container -->
+  </div><!-- /.product-article -->
+{%- endif -%}

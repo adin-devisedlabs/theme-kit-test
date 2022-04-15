@@ -1,0 +1,507 @@
+{%- assign _section = section.settings -%}
+
+{%- for block in section.blocks -%}
+  {%- if block.type == 'carousel' -%}
+    {%- assign carouselCount = carouselCount | plus: 1 -%}
+  {%- endif -%}
+  {%- if block.type == 'testimonial' -%}
+    {%- assign testimonialCount = testimonialCount | plus: 1 -%}
+	{%- if firstTestimonial == blank %}
+	  {%- assign firstTestimonial = forloop.index0 -%}
+	{%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<div class="flex-row">
+  {%- include 'breadcrumbs' -%}
+</div>
+{%- for block in section.blocks -%}
+  {%- assign _block = block.settings -%}
+  {%- case block.type -%}
+    {%- when 'carousel' -%}
+      {%- if carouselCount > 0 and forloop.index == 1 -%}
+        <div class="carousel carousel--hero" id="pressCarousel">
+      {%- endif -%}
+
+      <div class="carousel__img">
+        <img src="{{ _block.image | img_url: '2x' }}" alt="press image" {%- if _block.imageMob != blank -%} class="img--desk"{%- endif -%}>
+        {%- if _block.imageMob != blank -%}
+        	<img src="{{ _block.imageMob | img_url: '2x' }}" alt="press image" class="img--mob">
+        {%- endif -%}
+        <div class="carousel__text">
+          <small>{{ page.title }}</small>
+          <h2>"{{ _block.headingLarge }}"</h2>
+          <small>{{ _block.sourceInfo }}</small>
+        </div>
+      </div>
+
+      {%- if carouselCount > 0 and forloop.index == carouselCount -%}
+		</div>
+      {%- endif -%}
+  {%- endcase -%}
+{%- endfor -%}
+
+<div class="icon-with-text press">
+  <div class="container">
+    <div class="flex-row">
+  	  {%- for block in section.blocks -%}
+		{%- if block.type == 'press-release' -%}
+          <div class="press__item">
+            {% if block.settings.icon %}<img src="{{ block.settings.icon | img_url: '2x' }}" alt="">{% endif %}
+            <h3>{{ block.settings.heading }}</h3>
+            {{ block.settings.content }}
+            {%- if block.settings.link != blank -%}
+              <a href="{{ block.settings.link }}" class="btn">Read Now</a>
+            {%- endif -%}
+          </div>
+        {%- endif -%}
+	  {%- endfor -%}
+
+      <div class="press__contact">
+        <h4>Media Inquiries</h4>
+        <a href="mailto:{{ _section.media_email }}">{{ _section.media_email }}</a>
+      </div>
+
+      <div class="press__contact press__contact--mid press__contact--social">
+        <h4>Follow Us</h4>
+        <a href="{{ _section.social_fb }}" title="facebook">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 486.4 486.4"><path d="M273.4 159.4l.2-42c0-21.9 1.5-33.6 32.8-33.6h58V0h-83c-80.6 0-99.2 41.6-99.2 110l.1 49.4h-61.1v83.8h61.1v243.2h91.2V243.2h82.8l9-83.8h-91.9z"/></svg>
+        </a>
+        <a href="{{ _section.social_twitter }}" title="twitter">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 612 612"><path d="M612 116.3a250.7 250.7 0 0 1-72 19.7A126 126 0 0 0 595 66.6a253.1 253.1 0 0 1-79.8 30.5 125.6 125.6 0 0 0-214 114.5A356.4 356.4 0 0 1 42.7 80.4 125.5 125.5 0 0 0 81.5 248c-20.6-.7-40-6.4-56.9-15.8v1.6c0 60.8 43.3 111.5 100.7 123a127.2 127.2 0 0 1-56.7 2.1c16 50 62.3 86.2 117.3 87.2A251.9 251.9 0 0 1 0 498.1a354.9 354.9 0 0 0 192.4 56.5c231 0 357.2-191.3 357.2-357.2l-.4-16.3c24.7-17.6 46-39.7 62.8-64.8z"/></svg>
+        </a>
+        <a href="{{ _section.social_instagram }}" title="instagram">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 169.1 169.1"><path d="M122.4 0H46.7C20.9 0 0 21 0 46.7v75.7c0 25.7 21 46.7 46.7 46.7h75.7c25.7 0 46.7-21 46.7-46.7V46.7C169 20.9 148 0 122.4 0zm31.7 122.4a31.7 31.7 0 0 1-31.7 31.7H46.7A31.7 31.7 0 0 1 15 122.4V46.7A31.7 31.7 0 0 1 46.7 15h75.7a31.7 31.7 0 0 1 31.7 31.7v75.7z"/><path d="M84.5 41a43.6 43.6 0 1 0 .1 87.2 43.6 43.6 0 0 0 0-87.2zm0 72a28.6 28.6 0 1 1 0-57.1 28.6 28.6 0 0 1 0 57.2zM130 28.3a11 11 0 0 0-11 11 11 11 0 0 0 11 11 11 11 0 0 0 7.8-18.8 11 11 0 0 0-7.9-3.2z"/></svg>
+        </a>
+      </div>
+
+      <div class="press__contact">
+        <h4>Press Kit</h4>
+        <a href="{{ _section.presskit_url }}">Download</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+{%- for block in section.blocks -%}
+  {%- if block.type == 'icon-with-text' -%}
+    <div class="icon-with-text"{% if block.settings.bgColor != empty %} style="background:{{ block.settings.bgColor }}"{% endif %}>
+      <div class="container">
+        <div class="versus__header">
+          <h2>{{ block.settings.heading }}</h2>
+          {%- if block.settings.bodyText != '' -%}
+            {{ block.settings.bodyText }}
+          {%- endif -%}
+        </div>
+        <div class="flex-row">
+          <div>
+            {% if block.settings.icon1 %}<img src="{{ block.settings.icon1 | img_url: '2x' }}" alt="">{% endif %}
+            <h3>{{ block.settings.heading1 }}</h3>
+            {{ block.settings.content1 }}
+          </div>
+          <div>
+            {% if block.settings.icon2 %}<img src="{{ block.settings.icon2 | img_url: '2x' }}" alt="">{% endif %}
+            <h3>{{ block.settings.heading2 }}</h3>
+            {{ block.settings.content2 }}
+          </div>
+          <div>
+            {% if block.settings.icon3 %}<img src="{{ block.settings.icon3 | img_url: '2x' }}" alt="">{% endif %}
+            <h3>{{ block.settings.heading3 }}</h3>
+            {{ block.settings.content3 }}
+          </div>
+          <div>
+            {% if block.settings.icon4 %}<img src="{{ block.settings.icon4 | img_url: '2x' }}" alt="">{% endif %}
+            <h3>{{ block.settings.heading4 }}</h3>
+            {{ block.settings.content4 }}
+          </div>
+          <div>
+            {% if block.settings.icon5 %}<img src="{{ block.settings.icon5 | img_url: '2x' }}" alt="">{% endif %}
+            <h3>{{ block.settings.heading5 }}</h3>
+            {{ block.settings.content5 }}
+          </div>
+          <div>
+            {% if block.settings.icon6 %}<img src="{{ block.settings.icon6 | img_url: '2x' }}" alt="">{% endif %}
+            <h3>{{ block.settings.heading6 }}</h3>
+            {{ block.settings.content6 }}
+          </div>
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+{%- endfor -%}
+
+{%- for block in section.blocks -%}
+  {%- if block.type == 'testimonial' %}
+	{%- if testimonialCount > 0 and forloop.index0 == firstTestimonial -%}
+      <div class="carousel carousel--testimonials" id="testimonialCarousel">
+    {%- endif -%}
+    <div class="carousel__img">
+      <div class="carousel__text">
+        <small>What Parents Are Saying</small>
+        <div class="testimonial__rating">
+          {%- for i in (1..block.settings.rating) -%}
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 306 306"><path d="M153 230.8l94.3 68.8-35.6-112.2 94.3-66.3H191.3L153 6.4l-38.2 114.7H0l94.3 66.3-35.7 112.2z"/></svg>
+          {%- endfor -%}
+        </div>
+        <h2>"{{ block.settings.heading }}"</h2>
+        {{ block.settings.content }}
+        <h4>{{ block.settings.source }}</h4>
+      </div>
+    </div>
+	{%- if testimonialCount > 0 and forloop.index == section.blocks.size -%}
+      </div>
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.1/tiny-slider.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.1/min/tiny-slider.js"></script>
+<script>
+  $(document).ready(function(){
+    var heroSlider = tns({
+      container: '.carousel, #testimonialCarousel',
+      items: 1,
+      controls: false,
+      responsive: {
+      }
+    });
+
+    var testimonialSlider = tns({
+      container: '.carousel--testimonials',
+      items: 1,
+      controls: false,
+      responsive: {
+      }
+    });
+  });  
+</script>
+
+{% schema %}
+  {
+    "name": "Page content",
+    "settings": [
+      {
+        "type": "text",
+        "id": "media_email",
+        "label": "Media Inquiries Email",
+		"default": "press@pipettebaby.com"
+      },
+      {
+        "type": "url",
+        "id": "social_fb",
+        "label": "Facebook URL"
+      },
+      {
+        "type": "url",
+        "id": "social_twitter",
+        "label": "Twitter URL"
+      },
+      {
+        "type": "url",
+        "id": "social_ig",
+        "label": "Instagram URL"
+      },
+      {
+        "type": "url",
+        "id": "presskit_url",
+        "label": "Press Kit Download URL"
+      }
+    ],
+	"blocks": [
+      {
+        "name": "Carousel image",
+		"type": "carousel",
+        "settings": [
+          {
+            "id": "image",
+            "type": "image_picker",
+            "label": "Image"
+          },
+          
+          {
+            "id": "imageMob",
+            "type": "image_picker",
+            "label": "Image (Mobile)"
+          },
+          {
+            "id": "headingLarge",
+            "type": "text",
+            "label": "Large Heading"
+          },
+          {
+            "id": "sourceInfo",
+            "type": "text",
+            "label": "Source &amp; Date"
+          }
+        ]
+      },
+      {
+        "name": "Press Item",
+        "type": "press-release",
+        "settings": [
+          {
+            "id": "icon",
+            "type": "image_picker",
+            "label": "Logo"
+          },
+          {
+            "id": "heading",
+            "type": "text",
+            "label": "Heading (optional)"
+          },
+          {
+            "id": "content",
+            "type": "richtext",
+            "label": "Content"
+          },
+          {
+            "id": "link",
+            "type": "url",
+            "label": "Link"
+          }
+        ]
+      },
+      {
+        "name": "Icon with text columns",
+        "type": "icon-with-text",
+        "settings": [
+          {
+            "id": "bgColor",
+            "type": "color",
+            "label": "Background Color (Optional)"
+          },
+          {
+            "id": "heading",
+            "type": "text",
+            "label": "Heading"
+          },
+          {
+            "id": "bodyText",
+            "type": "richtext",
+            "label": "Body Text"
+          },
+          {
+            "id": "icon1",
+            "type": "image_picker",
+            "label": "Column 1 Image/Icon"
+          },
+          {
+            "id": "heading1",
+            "type": "text",
+            "label": "Column 1 Heading"
+          },
+          {
+            "id": "content1",
+            "type": "richtext",
+            "label": "Column 1 Content"
+          },
+          {
+            "id": "icon2",
+            "type": "image_picker",
+            "label": "Column 2 Image/Icon"
+          },
+          {
+            "id": "heading2",
+            "type": "text",
+            "label": "Column 2 Heading"
+          },
+          {
+            "id": "content2",
+            "type": "richtext",
+            "label": "Column 2 Content"
+          },
+          {
+            "id": "icon3",
+            "type": "image_picker",
+            "label": "Column 3 Image/Icon"
+          },
+          {
+            "id": "heading3",
+            "type": "text",
+            "label": "Column 3 Heading"
+          },
+          {
+            "id": "content3",
+            "type": "richtext",
+            "label": "Column 3 Content"
+          },
+          {
+            "id": "icon4",
+            "type": "image_picker",
+            "label": "Column 4 Image/Icon"
+          },
+          {
+            "id": "heading4",
+            "type": "text",
+            "label": "Column 4 Heading"
+          },
+          {
+            "id": "content4",
+            "type": "richtext",
+            "label": "Column 4 Content"
+          },
+          {
+            "id": "icon5",
+            "type": "image_picker",
+            "label": "Column 5 Image/Icon"
+          },
+          {
+            "id": "heading5",
+            "type": "text",
+            "label": "Column 5 Heading"
+          },
+          {
+            "id": "content5",
+            "type": "richtext",
+            "label": "Column 5 Content"
+          },
+          {
+            "id": "icon6",
+            "type": "image_picker",
+            "label": "Column 6 Image/Icon"
+          },
+          {
+            "id": "heading6",
+            "type": "text",
+            "label": "Column 6 Heading"
+          },
+          {
+            "id": "content6",
+            "type": "richtext",
+            "label": "Column 6 Content"
+          }
+        ]
+      },
+	  {
+        "name": "Parent Testimonial",
+		"type": "testimonial",
+        "settings": [
+          {
+            "id": "rating",
+            "type": "range",
+            "label": "Rating",
+			"min": 1,
+			"max": 5,
+			"default": 5
+          },
+          {
+            "id": "heading",
+            "type": "text",
+            "label": "Heading"
+          },
+          {
+            "id": "content",
+            "type": "richtext",
+            "label": "Content"
+          },
+          {
+            "id": "source",
+            "type": "text",
+            "label": "Name"
+          }
+        ]
+      }
+	]
+  }
+{% endschema %}
+
+{% stylesheet %}
+  .carousel__img {
+    text-align: center;
+  }
+
+  .carousel__img small {
+    display: block;
+    font-size: .9em;
+    font-weight: bold;
+    letter-spacing: 1px;
+    margin-bottom: .5em;
+    margin-top: .5em;
+    text-transform: uppercase;
+  }
+
+  .carousel--testimonials h4 {
+	margin-top: 1em; 
+  }
+
+  #pressCarousel-ow .carousel__text{
+    color: #fff; 
+  }
+
+  #pressCarousel-ow .carousel__img {
+    background: #000;
+  }
+
+  #pressCarousel-ow .carousel__img img {
+    margin-bottom: 0;
+    opacity: 0.75;
+  }
+
+  .testimonial__rating {
+	padding-top: 2em;
+	padding-bottom: 2em;
+  }
+
+  .testimonial__rating svg {
+	fill: #084b6d;
+	margin: .25em;
+	height: 24px;
+	width: 24px;
+  }
+
+  .tns-outer {
+    position: relative;
+  }
+
+  .tns-nav {
+    margin: 10px 0;
+	position: absolute;
+    left: 50%; bottom: 1em;
+    text-align: center;
+	transform: translateX(-50%);
+    z-index: 1;
+  }
+
+  .tns-nav > [aria-controls] {
+    width: 9px;
+    height: 9px;
+    padding: 0;
+    margin: 0 5px;
+    border-radius: 50%;
+    background: #ddd;
+    border: 0;
+  }
+
+  .tns-nav > .tns-nav-active,
+  #testimonialCarousel-ow .tns-nav > [aria-controls] {
+	background: #084b6d;
+  }
+
+  #testimonialCarousel-ow .tns-nav > .tns-nav-active {
+	background: #648d9e;
+  }
+
+  @media all and (min-width: 768px) {
+    .carousel__text h2,
+	.carousel--testimonials p {
+	  margin: auto;
+      max-width: 50%;
+    }
+  }
+
+  #testimonialCarousel-ow .carousel {
+    display: flex;
+  }
+
+  #testimonialCarousel-ow .carousel .carousel__img {
+    height: auto;
+  }
+
+  #testimonialCarousel-ow .carousel__img .carousel__text {
+    height: 100%;
+  }
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

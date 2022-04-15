@@ -1,0 +1,47 @@
+<section class="section-account">
+	<div class="section__inner">
+		{%- include 'account', fragment: 'sidebar' -%}
+
+		<div class="section__content">
+			<h4>{{ 'customer.addresses.title' | t }}</h4>
+			<div class="addresses">
+				{%- paginate customer.addresses by 50 -%}
+					{%- include 'address-single', address: customer.default_address -%}
+					{%- for address in customer.addresses -%}
+						{%- unless address.id == customer.default_address.id -%}
+							{%- include 'address-single' -%}
+						{%- endunless -%}
+					{%- endfor -%}
+
+					{%- include 'pagination', label: true, prev_next : true, pager: true -%}
+				{% endpaginate %}
+			</div><!-- /.addresses -->
+
+			<div class="addresses__actions">
+				<a href="#form--address-new" class="btn btn--new btn--new-main">
+					{{- 'customer.addresses.add_new' | t -}}
+				</a>
+			</div><!-- /.addresses__actions -->
+
+			<div class="form form--address form--address-new form--default" style="display: none;">
+				<div class="flex-row justify">
+					<h4>{{ 'customer.addresses.add_new' | t }}</h4>
+					<a href="#form--address-new" class="btn--new">
+						Cancel
+					</a>
+				</div><!-- /.flex-row -->
+				{%- form 'customer_address', customer.new_address -%}
+					{%- if form.errors -%}
+						<div class="form__error">
+							{{ form.errors | default_errors }}
+						</div><!-- /.form__error -->
+					{%- endif -%}
+
+					<div class="form__body">
+						{%- include 'form-address-body', index: 'new' -%}
+					</div><!-- /.form__body -->
+				{%- endform -%}
+			</div><!-- /.form -->
+		</div><!-- /.section__content -->
+	</div><!-- /.section__inner -->
+</section><!-- /.section-account -->

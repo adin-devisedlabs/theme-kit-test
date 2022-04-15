@@ -1,0 +1,41 @@
+{%- assign meta_size = '' -%}
+{%- assign meta_subtitle = '' -%}
+{%- assign meta_title = '' -%}
+{%- assign meta_pos_row = '' -%}
+{%- assign meta_pos_column = '' -%}
+{%- assign meta_image = '' -%}
+{%- assign meta_link = '' -%}
+
+{%- for ind in meta_positions -%}
+  {%- assign ind_int = ind | plus: 0 -%}
+  {%- if minus -%}
+    {%- assign ind_int = ind_int | minus: 1 -%}
+  {%- endif -%}
+
+  {%- if ind_int == main_index -%}
+    {%- assign meta_size = collection.metafields.collection.size[forloop.index0] | plus: 0 -%}
+    {%- assign meta_subtitle = collection.metafields.collection.subtitle[forloop.index0] -%}
+    {%- assign meta_title = collection.metafields.collection.title[forloop.index0] -%}
+    {%- assign meta_pos_row = collection.metafields.collection.text_position_row[forloop.index0] -%}
+    {%- assign meta_pos_column = collection.metafields.collection.text_position_column[forloop.index0] -%}
+    {%- assign meta_image = collection.metafields.collection.image[forloop.index0] -%}
+    {%- assign meta_link = collection.metafields.collection.box_link -%}
+
+    {%- if meta_title != blank %}
+      {%- if meta_link != blank -%}
+        <a href="{{meta_link}}" class="product__item product-banner animate size-{{meta_size}} lazyload pos-row-{{meta_pos_row}} pos-column-{{meta_pos_column}} " data-bg="url({{meta_image}})">
+      {%- else -%}
+        <div class="product__item product-banner size-{{meta_size}} animate lazyload pos-row-{{meta_pos_row}} pos-column-{{meta_pos_column}}" data-bg="url({{meta_image}})">
+      {%- endif -%}
+        {%- if meta_title != blank -%}
+          <h2>{{ meta_title | | newline_to_br }}</h2>
+        {%- endif -%}
+      {%- if meta_link != blank -%}
+        </a>
+      {%- else -%}
+        </div>
+      {%- endif -%}
+    {%- endif -%}
+  {%- endif -%}
+{%- endfor -%}
+

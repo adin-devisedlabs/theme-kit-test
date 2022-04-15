@@ -1,0 +1,91 @@
+<div class="section-comments">
+	{% if article.comments.size > 0 or comment.created_at %}
+		<h3 class="comment-title">{{ 'blogs.comments.title' | t }}</h3>
+		
+		<div class="comments">
+			{% if comment and comment.created_at %}
+				<div id="comment-{{ comment.id }}" class="comment">
+					<div class="comment-entry">
+						<div class="comment-author">
+							{{ comment.author }}
+						</div>
+
+						<div class="comment-meta">
+							{{ comment.created_at | date: format: 'long' }}
+						</div>
+
+						<div class="comment-text">
+							<p>{{ comment.content }}</p>
+						</div>
+					</div>
+				</div><!-- /.comment -->
+			{% endif %}
+
+			{% for comment in article.comments %}
+				<div id="comment-{{ comment.id }}" class="comment">
+					<div class="comment-entry">
+						<div class="comment-author">
+							{{ comment.author }}
+						</div>
+
+						<div class="comment-meta">
+							{{ comment.created_at | date: format: 'long' }}
+						</div>
+
+						<div class="comment-text">
+							<p>{{ comment.content }}</p>
+						</div>
+					</div>
+				</div><!-- /.comment -->
+			{% endfor %}
+		</div><!-- /.comments -->
+
+		{% include 'pagination' %}
+	{% endif %}
+
+	<div id="respond" class="comment-respond">
+		<h3 id="reply-title">
+			{{ 'blogs.comments.form_title' | t }}
+		</h3>
+
+		{% form "new_comment", article %}
+
+			{% if form.posted_successfully? %}
+				<p class="comment-notes">
+					{% if blog.moderated? %}
+						{{ 'blogs.comments.success_moderated' | t }}
+					{% else %}
+						{{ 'blogs.comments.success' | t }}
+					{% endif %}
+				</p>
+			{% endif %}
+
+			{% if form.errors %}
+				<p class="subtext error">{{ 'blogs.comments.error' | t }}</p>
+			{% endif %}
+
+			<p class="comment-form-author">
+				<label for="comment_author">{{ 'blogs.comments.name' | t }}</label>
+				<input type="text" id="comment_author" name="comment[author]" size="40" class="text" />
+			</p>
+
+			<p class="comment-form-email">
+				<label for="comment_email">{{ 'blogs.comments.email' | t }}</label>
+				<input type="text" id="comment_email" name="comment[email]" size="40" class="text" />
+			</p>
+
+			<p class="comment-form-comment">
+				<label for="comment_body">{{ 'blogs.comments.message' | t }}</label>
+				<textarea id="comment_body" name="comment[body]" cols="40" rows="5" class="text">{{form.body}}</textarea>
+			</p>
+
+			<p class="form-submit">
+				<input type="submit" value="{{ 'blogs.comments.post' | t }}" class="btn" id="submit" />
+			</p>
+
+			{% if blog.moderated? %}
+				<div class="notice">{{ 'blogs.comments.moderated' | t }}</div>
+			{% endif %}
+		{% endform %}
+	</div><!-- /.comment-respond -->
+</div><!-- /.section-comments -->

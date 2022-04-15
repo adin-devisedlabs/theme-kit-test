@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="{{ shop.locale }}">
+<head>
+	{%- include 'settings' -%}
+
+	{%- include 'head' -%}
+
+	{{ content_for_header }}
+  
+  	{% include 'bmdi-dl' %}
+    <!-- Google Tag Manager -->
+    
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    
+    })(window,document,'script','dataLayer','GTM-NRPTV3L');</script>
+    
+    <!-- End Google Tag Manager -->
+</head>
+
+<body class="{{ template_class }} page--{{ page.handle }}{% if page.handle contains 'shipping' or page.handle contains 'faq' %} template-page--faq{% endif %}">
+    <!-- Google Tag Manager (noscript) -->
+    
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NRPTV3L"
+    
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    
+    <!-- End Google Tag Manager (noscript) -->
+<div class="wrapper">
+	{%- section 'header' -%}
+
+	<div class="main">
+		{{ content_for_layout }}
+	</div><!-- /.main container clear -->
+
+	{%- section "footer" -%}
+</div><!-- /.wrapper -->
+{%- include 'ie-modal' -%}
+{{ theme_scripts }}
+<!-- Begin ReCharge code -->
+{% include 'subscription-theme-footer' %}
+<!-- End ReCharge code -->
+  
+  {% include 'swymSnippet' %}
+  
+
+</body>
+</html>

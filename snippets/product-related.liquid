@@ -1,0 +1,36 @@
+
+{%- if product.metafields.product.product != blank -%}
+  <div class="related-products animate gifts">
+    <div class="container">
+      {%- include 'product-related-chunk', heading: true -%}
+      <div class="flex-row">
+        {%- assign products = product.metafields.product.product | split: '|' -%}
+        {%- assign related_counter = 1 -%}
+        {%- for _product_handle in products limit: 4 -%}
+          {% unless all_products[_product_handle] == empty %}
+            {%- assign _product = all_products[_product_handle] -%}
+            {%- include 'product-related-chunk', body: true -%}
+          {% endunless %}
+        {%- endfor -%}
+        {% comment %}
+        {%- include 'product-related-chunk', link: product.metafields.product.related_url -%}
+        {% endcomment %}
+      </div><!-- /.flex-row -->
+    </div><!-- /.container -->
+  </div><!-- /.related-products -->
+{%- elsif collection -%}
+  <div class="related-products animate gifts">
+    <div class="container">
+      {%- include 'product-related-chunk', heading: true -%}
+      <div class="flex-row">
+        {%- assign related_counter = 0 -%}
+        {%- for _product in collection.products limit: 4 -%}
+          {%- include 'product-related-chunk', body: true -%}
+        {%- endfor -%}
+        {% comment %} 
+        {%- include 'product-related-chunk', link: collection.url -%}
+        {% endcomment %}
+      </div><!-- /.flex-row -->
+    </div><!-- /.container -->
+  </div><!-- /.related-products -->
+{%- endif -%}

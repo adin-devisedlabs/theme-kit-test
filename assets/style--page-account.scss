@@ -1,0 +1,22 @@
+/* All account pages */
+
+// Login page:
+.form--guest {
+  .form__actions {
+    text-align: left;
+
+    .btn--border {
+      background: transparent;
+    }
+
+    .btn--border:hover {
+      background: #084b6d;
+      color: #fffefb;
+    }
+  }
+}
+
+// Register page:
+.accept-terms-message {
+  font-size: 11px;
+}

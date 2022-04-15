@@ -1,0 +1,173 @@
+{% assign priceLimit1 = section.settings.price_limit_1 | times: 100 %}
+{% assign priceLimit2 = section.settings.price_limit_2 | times: 100 %}
+{% assign priceLimit3 = section.settings.price_limit_3 | times: 100 %}
+
+{% assign collectionSorted = collections[section.settings.collection].products | sort: 'price' %}
+
+{%- if section.settings.banner -%}
+	<div class="collection__head lazyload{% if section.settings.banner_mobile %} hidden-xs{% endif %}" data-bg="url({{ section.settings.banner | img_url: '2048x' }})">
+		{{section.settings.banner_text}}
+	</div>
+{%- endif -%}
+
+{%- if section.settings.banner_mobile -%}
+	<div class="collection__head lazyload visible-xs-block" data-bg="url({{ section.settings.banner_mobile | img_url: '600x' }})">
+		{{section.settings.banner_text}}
+	</div>
+{%- endif -%}
+
+<div class="price-banner blue" id="gifts_under_25">
+  <p class="price-text">Gifts under ${{section.settings.price_limit_1}}</p>
+</div>
+
+<div class="collection__items">
+  {% for _block in section.blocks %}
+    {% if _block.type == 'products_25' %}
+      {%- assign block_product = all_products[_block.settings.product] -%}
+      {%- include 'product-item' with block_product -%}
+    {% endif %}
+  {% endfor %}
+</div><!-- /.collection__items -->
+
+<div class="price-banner pink" id="gifts_under_50">
+  <p class="price-text">Gifts under ${{section.settings.price_limit_2}}</p>
+</div>
+
+<div class="collection__items">
+  {% for _block in section.blocks %}
+    {% if _block.type == 'products_50' %}
+      {%- assign block_product = all_products[_block.settings.product] -%}
+      {%- include 'product-item' with block_product -%}
+    {% endif %}
+  {% endfor %}
+</div><!-- /.collection__items -->
+
+<div class="price-banner yellow" id="gifts_under_100">
+  <p class="price-text">Gifts under ${{section.settings.price_limit_3}}</p>
+</div>
+
+<div class="collection__items">
+  {% for _block in section.blocks %}
+    {% if _block.type == 'products_100' %}
+      {%- assign block_product = all_products[_block.settings.product] -%}
+      {%- include 'product-item' with block_product -%}
+    {% endif %}
+  {% endfor %}
+</div><!-- /.collection__items -->
+
+{% stylesheet %}
+#shopify-section-page-gifts-under .collection__items {
+	padding-bottom: 50px;
+}
+
+#shopify-section-page-gifts-under .collection__items:before {
+	content: "";
+	display: block;
+	height: 100px;
+	margin: -100px 0 0;
+}
+
+#shopify-section-page-gifts-under .collection__head {
+	color: #fff;
+}
+
+#shopify-section-page-gifts-under .overlay-product {
+	bottom: 190px;
+}
+
+.price-banner {
+	text-align: center;
+	padding: 25px;
+	font-size: 25px;
+	font-family: 'Recoleta', serif;
+}
+
+.blue {
+	background: #f2f7fa;
+}
+
+.pink {
+	background: #faede5;
+}
+
+.yellow {
+	background: #fffde6;
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Gifts Under $",
+  "class": "page-gifts-under",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "banner",
+      "label": "Banner (Desktop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_mobile",
+      "label": "Banner (Mobile)"
+    },
+    {
+      "type": "text",
+      "id": "banner_text",
+      "label": "Banner Text"
+    },
+    {
+      "type": "text",
+      "id": "price_limit_1",
+      "label": "Price Limit 1",
+      "default": "25"
+    },
+    {
+      "type": "text",
+      "id": "price_limit_2",
+      "label": "Price Limit 2",
+      "default": "50"
+    },
+    {
+      "type": "text",
+      "id": "price_limit_3",
+      "label": "Price Limit 3",
+      "default": "100"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "products_25",
+      "name": "Under $25",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product (Under $25)"
+        }
+      ]
+    },
+    {
+      "type": "products_50",
+      "name": "Under $50",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product (Under $50)"
+        }
+      ]
+    },
+    {
+      "type": "products_100",
+      "name": "Under $100",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product (Under $100)"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

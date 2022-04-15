@@ -1,0 +1,460 @@
+{% assign articleSplit = article.content | split: '[BREAK]' %}
+{% assign articleTop = articleSplit[0] %}
+{% assign articleBottom = articleSplit[1] %}
+
+<div class="article--default">
+  <div class="article__listing">
+    <div class="flex-row">
+			{%- include 'breadcrumbs' -%}
+		</div>
+    <article class="article article--{{ article.tags | first | downcase | replace: ' ', '-' }}">
+      <header class="article__head{% if article.image %} article__head--with-image{% endif %}">
+        {%- if article.image -%}
+        <div class="article__image" style="background: url('{{ article.image | img_url: '2x' }}') center top no-repeat;">
+          {{ article.image | img_url: '500x' | img_tag: article.image.alt }}
+        </div><!-- /.article__image -->
+        {%- endif -%}
+
+        <div class="article__meta">
+          <div class="article__meta__inner">
+            <small>{{ article.tags | first | upcase }}</small>
+
+            <h2 class="article__title">
+              {{- article.title -}}
+            </h2>
+            {%- assign date_format = 'date_formats.short' | t -%}
+
+            {%- assign published_at = article.published_at | date: date_format -%}
+            {%- assign author_name = article.metafields.accentuate.author_name -%}
+
+            by {% if author_name != blank %}{{ author_name }}{% else %}{{ article.author }}{% endif %} – {{ published_at }}
+          </div>
+        </div><!-- /.article__meta -->
+      </header><!-- /.article__head -->
+
+      <div class="container">
+        <div class="article__body">
+          {{- articleTop -}}
+        </div><!-- /.article__body -->
+
+        {% if article.metafields.blog.featured_product != blank %}
+          <div class="featured-product">
+              <div class="featured-product__inner">
+                {% if article.handle == 'adrizer/3-reasons-why-this-is-the-healthiest-hand-sanitizer-on-the-market' or article.handle == 'adrizer/hand-sanitizer-br-q-a' %}
+                  {% assign product = all_products['hand-sanitizer-2'] %}
+                {% elsif article.handle == 'adrizer/3-reasons-why-this-is-the-healthiest-hand-sanitizer-on-the-market-1' %}
+                  {% assign product = all_products['hand-sanitizer-1'] %}
+                {% else %}
+                  {% assign product = all_products[article.metafields.blog.featured_product] %}
+                {% endif %}
+
+                <a href="{{ product.url }}" style="text-decoration: none;">
+                  <span class="featured-product__img">
+                    {{ product.featured_image | img_url: '600x' | img_tag: product.featured_image.alt }}
+                  </span>
+                </a>
+                <div class="featured-product__info">
+                  <a href="{{product.url}}" style="text-decoration: none;">
+                    <h4 class="product__item-title">
+                      {% if product.title == 'Hand Sanitizer Limited Time Offer' %}
+                        {% assign productTitle = product.title | split: 'Limited' %}
+                        {{productTitle[0]}}<br>Limited Time Offer
+                      {% else %}
+                        {{ product.title }}
+                      {% endif %}
+                    </h4>
+                  </a>
+
+                  <span class="stamped-product-reviews-badge stamped-main-badge" data-id="{{product.id}}" style="display: block; margin: 5px 0;"></span>
+                  
+                  <strong>{%- include 'price' with product -%}</strong>
+                  {% comment %}
+                  {% endcomment %}
+                  {% if article.handle == 'adrizer/hand-sanitizer-br-q-a-1' %}
+                    <p style="margin-top: -30px; margin-bottom: 30px;font-size: .75em;font-weight:700;">+ Free Shipping</p>
+                  {% endif %}
+                  
+                  <div>
+                    <a href="{{ product.url }}" class="btn">
+                      {% if article.handle contains 'adrizer/fda-reiterates-warning' %}
+                        Buy Now
+                      {% else %}
+                        Shop Now
+                      {% endif %}
+                    </a>
+                  </div>
+                </div>
+              </div>
+          </div>
+
+          {% if article.handle == 'adrizer/hand-sanitizer-br-q-a-1' %}
+            {% assign hsProducts = 'travel-hand-sanitizer,hand-sanitizer-1,hand-sanitizer-jumbo' %}
+            {% assign hsProductsArray = hsProducts | split: ',' %}
+
+              <div class="featured-products-hs">
+                <div class="featured-products-hs__inner flex-row">
+                  {% for productHandle in hsProductsArray %}
+                    {% assign productObject = all_products[productHandle] %}
+                    {% assign featuredImage = productObject.featured_image %}
+                    <div class="featured-product-hs product__item" id="{{productObject.handle}}">
+                      <div class="product__item-inner">
+                        {% case forloop.index %}
+                          {% when 1 %}
+                            {% assign productTitle = 'Travel Hand Sanitizer - 2oz' %}
+                          {% when 2 %}
+                            {% assign productTitle = 'Hand Sanitizer - 8oz' %}
+                          {% else %}
+                            {% assign productTitle = 'Jumbo Hand Sanitizer - 32oz' %}
+                        {% endcase %}
+                        <h3>{{productTitle}}</h3>
+                        <a href="{{productObject.url}}">
+                          <div class="product__item-image">
+                            {% if forloop.index == 2 %}
+                              <h6 class="product__badge best-value">Best Value</h6>
+                            {% endif %}
+                            {%- include 'lazyload-image' _image: featuredImage, original_width: '600' -%}
+                          </div>
+                        </a>
+                        <div class="featured-product__price-savings" {% if forloop.last %}style="display:flex;align-items:center;justify-content:center;"{% endif %}>
+                          <p class="product__item-price">
+                            <ins class="price__amount">
+                              <span class="money" style="font-weight: 700;">
+                                {{- productObject.price | money_without_trailing_zeros -}}
+                              </span><!-- /.money -->
+                            </ins>
+                          </p><!-- /.price -->
+                          <p class="featured-product__savings">
+                            {% if forloop.first %}
+                              Save 30%
+                            {% elsif forloop.index == 2 %}
+                              Save 40%
+                            {% endif %}
+                          </p>
+                        </div>
+                        {%- if productObject.available -%}
+                          {%- form 'product', productObject -%}
+                            <div class="qty">
+                              <a href="#!" class="qty-minus qty-edit" aria-label="Decrease quantity">
+                                <span tabindex="0"></span>
+                              </a>
+                              <input type="text" name="quantity" data-mirror="true" value="1" aria-label="quantity value" />
+                              <a href="#!" class="qty-plus qty-edit" aria-label="Increase quantity">
+                                <span tabindex="0"></span>
+                              </a>
+                            </div><!-- /.qty -->
+                            {% assign variantID = productObject.first_available_variant.id %}
+                            {% assign variantSku = productObject.first_available_variant.sku %}
+                            {% assign variantPrice = productObject.first_available_variant.price %}
+                
+                            <input type="hidden" name="id" value="{{ variantID }}">
+                            <input type="hidden" name="product_name" value="{{ _product.title }}">
+                            <input type="hidden" name="product_sku" value="{{ variantSku }}">
+                            <input type="hidden" name="product_price" value="{{ variantPrice }}">
+                            
+                            <button type="submit" class="btn btn--border cart">
+                              Add to Cart
+                            </button>
+                
+                          {%- endform -%}
+                        {%- else -%}
+                          <p>{{ 'products.product.sold_out' | t }}</p>
+                        {%- endif -%}
+                        <img src="https://cdn.shopify.com/s/files/1/0140/8847/0614/files/icons.png?v=1598646214" alt="product icons" class="featured-product-hs__icons" />
+                      </div>
+                    </div>
+                  {% endfor %}
+
+                </div>
+              </div>
+          {% endif %}
+
+        {% endif %}
+
+        {% if article.metafields.sta.products != blank %}
+          <div class="container">
+            <h3>Shop this article</h3>
+            <div class="sta__items">
+              {% assign articleProducts = article.metafields.sta.products | split: '|' %}
+              {% for product-handle in articleProducts %}
+                {% assign product = all_products[product-handle] %}
+                {% include 'product-item' with product %}
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+
+        {% if article.content contains '[BREAK]' %}
+          <div class="article__body">
+            {{- articleBottom -}}
+          </div><!-- /.article__body -->
+        {% endif %}
+      </div><!-- /.container -->
+    </article><!-- /.article -->
+  </div><!-- /.article__listing -->
+  
+  <div class="container article__social">
+    <div>
+      <h3>Tags</h3>
+      <span class="article__tags">
+      {% for tag in article.tags %}
+        <a href="{{ blog.url }}/tagged/{{ tag | handle }}" class="article__tag">{{ tag }}</a>
+      {% endfor %}
+      </span>
+    </div>
+    <div class="social-icons">
+      <h3>Share</h3>
+      <span class="article__share">
+        <a href="#" title="facebook" class="fbShare" aria-label="Share on FB">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 486.4 486.4"><path d="M273.4 159.4l.2-42c0-21.9 1.5-33.6 32.8-33.6h58V0h-83c-80.6 0-99.2 41.6-99.2 110l.1 49.4h-61.1v83.8h61.1v243.2h91.2V243.2h82.8l9-83.8h-91.9z"/></svg>
+        </a>
+        <a href="https://twitter.com/intent/tweet?text={{ article.title | append: ' by ' | append: shop.name | append: ' – ' | append: shop.url | append: article.url | url_encode }}" title="twitter" aria-label="Share on Twitter">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 612 612"><path d="M612 116.3a250.7 250.7 0 0 1-72 19.7A126 126 0 0 0 595 66.6a253.1 253.1 0 0 1-79.8 30.5 125.6 125.6 0 0 0-214 114.5A356.4 356.4 0 0 1 42.7 80.4 125.5 125.5 0 0 0 81.5 248c-20.6-.7-40-6.4-56.9-15.8v1.6c0 60.8 43.3 111.5 100.7 123a127.2 127.2 0 0 1-56.7 2.1c16 50 62.3 86.2 117.3 87.2A251.9 251.9 0 0 1 0 498.1a354.9 354.9 0 0 0 192.4 56.5c231 0 357.2-191.3 357.2-357.2l-.4-16.3c24.7-17.6 46-39.7 62.8-64.8z"/></svg>
+        </a>{%- comment -%}
+        <a href="https://www.instagram.com/pipettebaby/" title="instagram">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 169.1 169.1"><path d="M122.4 0H46.7C20.9 0 0 21 0 46.7v75.7c0 25.7 21 46.7 46.7 46.7h75.7c25.7 0 46.7-21 46.7-46.7V46.7C169 20.9 148 0 122.4 0zm31.7 122.4a31.7 31.7 0 0 1-31.7 31.7H46.7A31.7 31.7 0 0 1 15 122.4V46.7A31.7 31.7 0 0 1 46.7 15h75.7a31.7 31.7 0 0 1 31.7 31.7v75.7z"/><path d="M84.5 41a43.6 43.6 0 1 0 .1 87.2 43.6 43.6 0 0 0 0-87.2zm0 72a28.6 28.6 0 1 1 0-57.1 28.6 28.6 0 0 1 0 57.2zM130 28.3a11 11 0 0 0-11 11 11 11 0 0 0 11 11 11 11 0 0 0 7.8-18.8 11 11 0 0 0-7.9-3.2z"/></svg>
+        </a>{%- endcomment -%}
+      </span>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="//connect.facebook.net/en_US/all.js"></script> 
+<script>
+  jQuery('.fbShare').click(function(e){
+    e.preventDefault();
+    FB.init({ 
+      appId: '379042469677455',
+      oauth : true
+    });
+
+    FB.ui({
+      method: 'share',
+      href: '{{ shop.url | append: article.url }}',
+    }, function(response){});
+  });
+</script>
+
+{% if blog.comments_enabled? %}
+  {%- include 'article-comments' -%}
+{% endif %}
+
+<div class="container related">
+  {% assign articleTag = article.tags | first | upcase %}
+  {% include 'relatedblogs', articleTag: articleTag %}
+</div>
+
+{% if blog.previous_article or blog.next_article %}
+  <div class="prevnext">
+    <div class="container">
+      {% if blog.previous_article %}
+      	{% assign articleHandle = blog.previous_article | replace: '/blogs/', '' %}
+        <a href="{{ blog.previous_article }}" class="prev">
+          <span><img src="{{ 'arrow--left.png' | asset_url }}" alt="Previous article" /></span>
+          <span class="prev__content">
+            <span class="label">Previous</span>
+            {% for prevArticle in blog.articles %}
+              {% if prevArticle.handle == articleHandle %}
+                <h4>{{ prevArticle.title }}</h4>
+                {% break %}
+              {% endif %}
+            {% endfor %}
+          </span>
+        </a>
+      {% endif %}
+
+      {% if blog.next_article %}
+        {% assign articleHandle = blog.next_article | replace: '/blogs/', '' %}
+        <a href="{{ blog.next_article }}" class="next">
+          <span class="next__content">
+            <span class="label">Next</span>
+            {% for nextArticle in blog.articles %}
+              {% if nextArticle.handle == articleHandle %}
+                <h4>{{ nextArticle.title }}</h4>
+                {% break %}
+              {% endif %}
+            {% endfor %}
+          </span>
+          <span><img src="{{ 'arrow--right.png' | asset_url }}" alt="Next article" /></span>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+  $('.article__body img').each(function(){
+    $('<div class="img__caption">' + $(this).attr('alt') + '</div>').insertAfter(this);
+  });
+  
+  $('.article__body iframe').each(function(){
+    $(this).wrap('<div class="article__video"><div class="video"></div></div>');
+  });
+</script>
+
+{% if article.handle contains 'adrizer/3-reasons-why-this-is-the-healthiest-hand-sanitizer-on-the-market' or article.handle contains 'hand-sanitizer-br-q-a' %}
+  <style>
+    .article__body:first-child {
+      padding-bottom: 0;
+    }
+    .article__body:last-child {
+      padding-top: 0;
+    }
+    @media screen and (max-width: 767px) {
+      .image-float-right {
+        width: 100%;
+        padding-left: 0;
+      }
+    }
+    .article__image {
+      height: 50vh;
+      max-height: 60vh;
+      background-size: auto 180% !important;
+    }
+
+    .article--default .article__title {
+      font-size: 36px;
+    }
+
+    .featured-product {
+      /* display: none; */
+    }
+
+    .featured-products-hs {
+      display: none;
+    }
+
+    .featured-product-hs {
+      flex-basis: 33%;
+      width: 33%;
+      position: relative;
+    }
+
+    .featured-product-hs form {
+      display: flex;
+      justify-content: center;
+    }
+
+    .featured-product-hs.product__item {
+      padding: 15px;
+      display: flex;
+    }
+
+    .featured-product-hs .product__item-inner {
+      padding: 25px;
+      padding-top: 48px;
+      border: 2px solid #e1e2e0;
+      display: flex;
+      flex-direction: column;
+    }
+    .featured-product-hs .product__item-inner:hover {
+      border: 3px solid #d1e0c9;
+    }
+
+    .featured-product-hs .product__item-image {
+      background: #fafaf2;
+      position: relative;
+      height: 380px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .featured-product-hs h3 {
+      font-size: 1.2em;
+    }
+
+    .featured-product__savings {
+      font-size: 32px;
+      font-weight: bold;
+    }
+
+    .featured-product__price-savings {
+      flex: 1 0 auto;
+      margin-top: 40px;
+      margin-bottom: 35px;
+    }
+
+    .featured-product-hs__icons {
+      max-width: 75%;
+      margin: 0 auto;
+      margin-top: 25px;
+      margin-bottom: 10px;
+    }
+
+    .featured-product-hs .btn--border {
+      background: transparent;
+    }
+
+    .featured-product-hs form.loading::before {
+      top: 74.5%;
+      left: 45.5%;
+    }
+
+    @media screen and (max-width: 1024px) {
+      .featured-product-hs .qty {
+        display: none;
+      }
+    }
+
+    @media screen and (min-width: 768px) and (max-width: 900px) {
+      .featured-product-hs .product__item-image {
+        height: 275px;
+      }
+    }
+
+    @media screen and (max-width: 768px) {
+      .article__image {
+        background: none !important;
+        height: auto !important;
+      }
+
+      .featured-product-hs .product__item-inner {
+        padding: 15px;
+        padding-top: 25px;
+      }
+
+      .featured-product-hs .product__item-image {
+          height: 235px;
+      }
+
+      .featured-product__price-savings {
+        margin-top: 25px;
+        margin-bottom: 20px;
+      }
+    }
+
+    @media screen and (max-width: 767px) {
+      .featured-product-hs {
+        flex-basis: 100%;
+        width: 100%;
+      }
+
+      .article__image {
+        background: none !important;
+        height: auto !important;
+      }
+
+      .featured-product-hs .product__item-image {
+        height: auto;
+      }
+
+    }
+
+    @media screen and (max-width: 400px) {
+      #hand-sanitizer-1 .product__item-image, #hand-sanitizer-jumbo .product__item-image {
+        height: 300px;
+      }
+
+      .featured-product__price-savings {
+        margin-top: 25px;
+        margin-bottom: 20px;
+      }
+
+      .featured-product-hs .product__item-inner {
+        padding-top: 28px;
+      }
+    }
+  </style>
+{% endif %}

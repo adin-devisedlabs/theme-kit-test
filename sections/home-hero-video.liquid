@@ -1,0 +1,306 @@
+
+{%- assign _section = section.settings -%}
+
+<div class="carousel " id="hpHeroVideo">
+  <div class="carousel__img">
+    <div class="intro animate animated lazyload">
+      <video playsinline autoplay muted loop poster="https://cdn.shopify.com/s/files/1/0140/8847/0614/files/Desktop_84f4b503-a0af-48aa-8f18-1dbb0bbbffad.jpg?v=1587397754" id="bgvideo" class="video-desktop hero-video playing" width="100%" height="100%">
+        <source src="{{_section.video}}" type="video/mp4">
+      </video>
+      <video playsinline muted loop poster="https://cdn.shopify.com/s/files/1/0140/8847/0614/files/Desktop_84f4b503-a0af-48aa-8f18-1dbb0bbbffad.jpg?v=1587397754" id="bgvideomobile" class="video-mobile hero-video" width="100%" height="100%">
+        <source src="{{_section.video}}" type="video/mp4">
+      </video>
+      <div class="play-pause-icons">
+        <img src="https://cdn.shopify.com/s/files/1/0140/8847/0614/files/Play.png?v=1584048007" alt="play" class="hpHeroPlay"/>
+        <img src="https://cdn.shopify.com/s/files/1/0140/8847/0614/files/Pause_c1d3ab11-28f8-494d-99ab-24099b674597.png?v=1584048006" alt="play" class="hpHeroPause"/>
+      </div>
+      <div class="intro__content 
+        {% if _section.text_align == 'left' %} 
+          left-padding 
+        {% elsif _section.text_align == 'right' %} 
+          right-padding right-text-align 
+        {% else %} 
+          center-text-align 
+        {% endif %} "
+      >
+        {%- if _section.eyebrow != blank -%}
+          <h6>{{_section.eyebrow}}</h6>
+        {%- endif -%}
+        {%- if _section.title != blank -%}
+          <h2 class="title--large">{{_section.title}}</h2>
+        {%- endif -%}
+        {%- if _section.subheader_text != blank -%}
+          <h3>{{_section.subheader_text}}</h3>
+        {%- endif -%}
+        {%- if _section.promo != blank -%} 
+          <p class="intro__promo">{{ _section.promo }}</p>
+        {%- endif -%}
+        <p class="intro__copy {% if _section.text_align == 'right' %}right-float{% elsif _section.text_align == 'center' %}center-text-align{% endif %}">{{ _section.content }}</p>
+        <div class="clear-both"></div>
+        {%- include 'link' url: _section.link_url, text: _section.link_text, tabindex: true, btn_border: true -%}
+      </div>
+    </div><!-- /.intro -->
+  </div>
+</div>
+
+<style>
+  #hpHeroVideo .intro {
+    padding: 0;
+    height: auto;
+  }
+
+  #hpHeroVideo iframe {
+    width: 100%;
+    height: 100%;
+  }
+
+  #hpHeroVideo .video-desktop {
+    opacity: 0.8;
+  }
+
+  #hpHeroVideo .intro__content {
+    margin-top: 25px;
+  }
+
+  #hpHeroVideo .intro__content h2.title--large {
+    margin-bottom: 30px;
+  }
+
+  #hpHeroVideo .intro__content img {
+    max-width: 100px;
+    margin: 0 auto;
+    display: none;
+  }
+
+  #hpHeroVideo .intro__content .show-video {
+    display: block;
+  }
+
+  .video-desktop {
+    display: block;
+  }
+
+  .video-mobile {
+    display: none;
+  }
+
+  #hpHeroVideo .play-pause-icons {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 30px;
+    max-width: 90px; 
+  }
+
+  #hpHeroVideo .play-pause-icons .hpHeroPlay {
+    display: block;
+  }
+
+  #hpHeroVideo .play-pause-icons .hpHeroPause {
+    display: none;
+  }
+
+  #hpHeroVideo .video-playing .hpHeroPlay { 
+    display: none;
+  }
+
+  #hpHeroVideo .video-playing .hpHeroPause {
+    display: block;
+  }
+
+  @media screen and (max-width: 767px) {
+    .video-desktop {
+      display: none;
+    }
+
+    .video-mobile {
+      display: block;
+    }
+
+    #hpHeroVideo .intro__content {
+      margin-bottom: 40px;
+      text-align: left;
+    }
+
+    .play-pause-icons {
+      top: 56px;
+      left: 0;
+      right: 0;
+      margin-left: auto;
+      margin-right: auto;
+      width: 100vw;
+    }
+
+    .play-pause-icons img {
+      margin: 0 auto;
+    }
+  }
+
+  @media screen and (min-width: 768px) {
+    #hpHeroVideo .intro {
+      background: #000;
+    }
+
+    #hpHeroVideo .intro__content {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 100%;
+      margin-top: 0;
+      color: #fff;
+    }
+
+    #hpHeroVideo .intro__content h2.title--large {
+      font-size: 74px;
+    }
+
+    #hpHeroVideo .intro__content .btn {
+      border-color: #fff;
+    }
+
+    #hpHeroVideo .intro__content .btn:hover {
+      background: transparent !important;
+    }
+
+    #hpHeroVideo .intro__copy {
+      margin-bottom: 40px;
+      max-width: 652px;
+      font-size: 16px;
+    }
+  }
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+  if ($(window).width() > 767) {
+    $('.play-pause-icons').addClass('video-playing');
+  }
+  
+  $('.hero-video').click(function(e) {
+    handleVideoClick($(this));
+  })
+
+  $('.play-pause-icons').click(function() {
+    if ($(window).width() > 767) {
+      handleVideoClick($('.hero-video.video-desktop'));
+    } else {
+      handleVideoClick($('.hero-video.video-mobile'));
+    }
+  })
+
+  $('.intro__content').on('click', function() {
+    let currentVideo;
+
+    $('.hero-video').each(function() {
+      if ($(this).css('display') == 'block') {
+        currentVideo = $(this);
+      }
+    })
+
+    handleVideoClick(currentVideo);
+  })
+
+  function handleVideoClick($this) {
+    if ($this.hasClass('playing')) {
+      $this.get(0).pause();
+    } else {
+      $this.get(0).play()
+    }
+
+    $this.toggleClass('playing');
+    $('.play-pause-icons').toggleClass('video-playing');
+  }
+
+  verticallyCenterIcon();
+  $(window).on('resize', function() {
+    verticallyCenterIcon();
+  })
+
+  function verticallyCenterIcon() {
+    if ($(window).width() < 768) {
+      let videoHeight = $('.video-mobile').height();
+      let topPosition = (videoHeight / 2 - 50) + 'px';
+      $('.play-pause-icons').css('top', topPosition);
+    } else {
+      $('.play-pause-icons').css('top', 0);
+    }
+  }
+  
+</script>
+
+{% schema %}
+{
+  "name": "HP Hero Video", 
+  "settings": [
+    {
+      "id": "video",
+      "type": "text",
+      "label": "Video URL"
+    },
+    {
+      "id": "poster",
+      "type": "image_picker",
+      "label": "Video Poster",
+      "info": "This image will display first, then the video will display once the page loads"
+    },
+    {
+      "id": "imageMob",
+      "type": "image_picker",
+      "label": "Mobile Image",
+      "info": "This image will display first, then the video will display once the page loads"
+    },
+    {
+      "id": "eyebrow",
+      "type": "text",
+      "label": "Eyebrow Text"
+    },
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Title"
+    },
+    {
+      "id": "subheader_text",
+      "type": "text",
+      "label": "Subheader Text"
+    },
+    {
+      "id": "promo",
+      "type": "textarea",
+      "label": "Promo"
+    },
+    {
+      "id": "content",
+      "type": "textarea",
+      "label": "Content"
+    },
+    {
+      "id": "link_url",
+      "type": "url",
+      "label": "Button Link URL"
+    },
+    {
+      "id": "link_text",
+      "type": "text",
+      "label": "Button Text"
+    },
+    {	
+      "type":      "select",	
+      "id":        "text_align",	
+      "label":     "Text Align",	
+      "options": [	
+        { "value": "left", "label": "Left"},	
+        { "value": "center", "label": "Center"},	
+        { "value": "right", "label": "Right"}	
+      ],	
+      "default":   "left"	
+    }
+  ],
+  "presets": [
+    {
+      "name": "HP Hero Video",
+      "category": "Dynamic"
+    }
+  ]
+}
+{% endschema %}

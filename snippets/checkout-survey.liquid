@@ -1,0 +1,172 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<div class="checkout-survey__wrapper">
+  <h4 class="checkout-survey__header">One more thing: How did you hear about us?</h4>
+  <h4 class="checkout-survey__success">Thanks for responding!</h4>
+  <form class="checkout-survey__form">
+    <div>
+      <input type="radio" name="source" value="Instagram" />
+      <label for="Instagram">Instagram</label>
+    </div>
+    <div>
+      <input type="radio" name="source" value="Facebook" />
+      <label for="Facebook">Facebook</label>
+    </div>
+    <div>
+      <input type="radio" name="source" value="Pinterest" />
+      <label for="Pinterest">Pinterest</label>
+    </div>
+    <div>
+      <input type="radio" name="source" value="Friend" />
+      <label for="Friend">From a friend</label>
+    </div>
+    <div>
+      <input type="radio" name="source" value="Retailer" />
+      <label for="Retailer">From a retailer (i.e. Target, BuyBuyBaby, Amazon)</label>
+    </div>
+    <div>
+      <input type="radio" name="source" value="Other" id="checkout-survey__other" />
+      <label for="Other">Other: </label>
+      <input type="text" name="comment" class="checkout-survey__comment"/>
+    </div>
+    <input type="hidden" name="customer_email" value="{{checkout.email}}" />
+    <input type="hidden" name="city" value="{{checkout.billing_address.city}}" />
+    <input type="hidden" name="state" value="{{checkout.billing_address.province}}" />
+    <input type="hidden" name="order_value" value="{{checkout.total_price | money_without_currency}}" />
+    <input type="hidden" name="order_date" value="{{checkout.order.created_at}}" />
+    <div class="checkout-survey__submit-wrapper">
+      <button type="submit" class="btn btn--border">Submit</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  setTimeout(function() {
+    let customerHasResponded = localStorage.getItem('recentlyViewed') !== null ? JSON.parse(localStorage.getItem('pipette-checkout-survey')) : false;
+    
+    if (window.location.pathname.indexOf('order') > -1) {
+      if (!customerHasResponded) {
+      	$('.checkout-survey__wrapper').show();
+        $('.checkout-survey__submit-wrapper .btn').prop('disabled', true);
+      }
+    }
+  })
+  
+  $('.checkout-survey__form input[type="radio"]').on('change', function() {
+    if ($(this).val() == 'Other') {
+    	$('.checkout-survey__comment').addClass('show');
+      $('.checkout-survey__comment').focus();
+
+      if ($('.checkout-survey__comment').val()!= '') {
+        $('.checkout-survey__submit-wrapper .btn').prop('disabled', false);
+      } else {
+        $('.checkout-survey__submit-wrapper .btn').prop('disabled', true);
+      }
+    } else {
+    	$('.checkout-survey__comment').removeClass('show');
+      $('.checkout-survey__submit-wrapper .btn').prop('disabled', false);
+    }
+  	
+  })
+
+  $('.checkout-survey__comment').on('input', function() {
+    $('.checkout-survey__submit-wrapper .btn').prop('disabled', false);
+  })
+
+
+  $('.checkout-survey__form').submit(function(e) {
+    e.preventDefault();
+
+    if ($('#checkout-survey__other').prop('checked') && $('.checkout-survey__comment').val() == '') {
+      console.log('fill it out')
+      return false;
+    }
+
+    $('.checkout-survey__submit-wrapper button').css('disabled', true);
+    $('.checkout-survey__form').addClass('loading');
+
+    $.ajax({
+      url: 'https://script.google.com/macros/s/AKfycbyVilaOvLx1HqKlpHNra7XdBKyEDILAAgb3Zc7NNQ/exec',
+      method: 'POST',
+      dataType: 'json',
+      data: $('.checkout-survey__form').serialize(),
+      success: function(data) {
+        console.log('success', data);
+
+        $('.checkout-survey__form').hide();
+        $('.checkout-survey__header').hide();
+        $('.checkout-survey__success').show();
+
+        localStorage.setItem('pipette-checkout-survey', true);
+
+      },
+      error: function(err) {
+        console.log('err', err)
+      }
+    })
+  })
+</script>
+
+<style>
+  .checkout-survey__wrapper {
+    display: none;
+    padding: 30px;
+    background: #fff;
+    border: 1px solid;
+    border-radius: 10px;
+    margin-bottom: 50px;
+  }  
+  .checkout-survey__header {
+    color: #084b6d;
+  }
+  .checkout-survey__form {
+    margin: 30px 0 10px;
+  }
+  .checkout-survey__wrapper input[type="radio"] {
+    appearance: radio;
+  }
+  .checkout-survey__submit-wrapper {
+    margin-top: 30px;
+  }
+  .checkout-survey__success {
+    display: none;
+  }
+  .checkout-survey__form.loading::before {
+    content: "";
+    position: absolute;
+    top: 20%;
+    left: 35%;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    border: 2px solid #084b6d;
+    border-top: 2px solid #fffefb;
+    border-bottom: 2px solid #fffefb;
+    -webkit-animation: spinner 0.6s linear infinite;
+    animation: spinner 0.6s linear infinite;
+    z-index: 2;
+  }
+  .checkout-survey__form.loading::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fffefb;
+    opacity: 0.5;
+  }
+  .checkout-survey__form label {
+    cursor: default;
+  }
+  .checkout-survey__form input[type="radio"] {
+    cursor: pointer;
+  }
+  .checkout-survey__comment {
+  	display: none;
+    border-bottom: 1px solid
+  }
+  .checkout-survey__comment.show {
+  	display: inline;
+  }
+</style>

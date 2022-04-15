@@ -1,0 +1,147 @@
+<nav class="navigation" role="navigation">
+  <ul class="main-nav">
+    {%- for link in linklists[section_main_menu].links -%}
+      <li{% if link.active %} class="active"{% endif %}>
+        <a href="{{link.url}}" {% if link.links.size > 0 %} class="has-dropdown"{% endif %}>{{link.title}}</a>
+        {%- if link.links.size > 0 -%}
+          <ul class="menu__dropdown menu__dropdown--main">
+            {%- for sublink in link.links -%}
+              <li class="main_list">
+                <a href="{{sublink.url}}" class="menu_title {{sublink.title | handleize}}" aria-label={{sublink.title}}>{{sublink.title}}</a>
+                {%- if sublink.title != 'Featured' -%}
+                  {%- if sublink.links.size > 0 -%}
+                    {%- assign product_list = false -%}
+                    {%- if sublink.links[0].title contains '@' and sublink.links[0].type == 'product_link' -%}
+                      {%- assign product_list = true -%}
+                    {%- endif -%}
+                    <ul class="menu__dropdown menu__dropdown--sub{% if sublink.links[0].type == 'article_link' %} flex-row article-list{% elsif product_list %} flex-row products-dropdown{% endif %}">
+                      {%- for droplink in sublink.links -%}
+                        {%- assign linkData = '' -%}
+                        {%- assign droplink_title = droplink.title | split: '|' -%}
+                        {%- if droplink_title.size == 2 -%}
+                          {%- assign droplink_number = droplink_title | last -%}
+                        {%- endif -%}
+                        <li>
+                          {%- if droplink.type == 'article_link' -%}
+                            <a href="{{droplink.url}}">
+                              {%- include 'lazyload-image' _image: droplink.object.image, image_params: '600x' -%}
+                              <span class="title">{{ droplink.title }}</span>
+                            </a>
+                          {%- elsif droplink.type == 'product_link' and droplink.title contains '@' -%}
+                            <a href="{{droplink.url}}" aria-label="{{droplink.title}}">
+                              <span class="image" style="background-image: url({{droplink.object.featured_image | img_url: '600x' }})"></span><!-- /.image -->
+                            </a>
+                            <span class="title">
+                              {{ droplink.title | remove: "@" }}
+                            </span>
+                          {%- else -%}
+                            {%- assign title_handle = droplink.title | split: "|" | first | handle -%}
+                            <a href="{{droplink.url}}" class="{{title_handle}}">{{droplink_title | first}}</a>
+                          {%- endif -%}
+                        </li>
+                      {%- endfor -%}
+                    </ul>
+                  {%- endif -%}
+                {%- else -%}
+                  <!-- Learn Sub Menu -->
+                  {%- if settings.nav_item_1_image != '' -%}
+                    <ul class="menu__dropdown menu__dropdown--sub flex-row article-list learn-sub-menu">
+                      <li>
+                        <a href="{{settings.nav_item_1_url}}" aria-label="{{settings.nav_item_1_text}}">
+                          {%- include 'lazyload-image' _image: settings.nav_item_1_image, image_params: '600x', image_tag: settings.nav_item_1_text -%}
+                        </a>
+                        <span class="title">
+                          {{ settings.nav_item_1_text }}
+                        </span>
+                      </li>
+                      <li>
+                        <a href="{{settings.nav_item_2_url}}" aria-label="{{settings.nav_item_2_text}}">
+                          {%- include 'lazyload-image' _image: settings.nav_item_2_image, image_params: '600x', image_tag: settings.nav_item_2_text -%}
+                        </a>
+                        <span class="title">
+                          {{ settings.nav_item_2_text }}
+                        </span>
+                      </li>
+                      <li>
+                        <a href="{{settings.nav_item_3_url}}" aria-label="{{settings.nav_item_3_text}}">
+                          {%- include 'lazyload-image' _image: settings.nav_item_3_image, image_params: '600x', image_tag: settings.nav_item_3_text -%}
+                        </a>
+                        <span class="title">
+                          {{ settings.nav_item_3_text }}
+                        </span>
+                      </li>
+                    </ul>
+                  {%- endif -%}
+                  <!-- END Learn Sub Menu -->
+                {%- endif -%}
+              </li>
+              <!-- Offers pages preview -->
+              {%- if sublink.title == 'Offers' -%}
+              <li class="main_list">
+                <ul class="menu__dropdown menu__dropdown--sub flex-row article-list learn-sub-menu">
+                  {%- if settings.offers_nav_item_1_text != blank -%}
+                    <li>
+                      <a href="{{settings.offers_nav_item_1_url}}" aria-label="{{settings.offers_nav_item_1_text}}">
+                        {%- include 'lazyload-image' _image: settings.offers_nav_item_1_image, image_params: '600x', image_tag: settings.offers_nav_item_1_text -%}
+                      </a>
+                      <span class="title">
+                        {{ settings.offers_nav_item_1_text }}
+                      </span>
+                    </li>
+                  {%- endif -%}
+                  {%- if settings.offers_nav_item_2_text != blank -%}
+                    <li>
+                      <a href="{{settings.offers_nav_item_2_url}}" aria-label="{{settings.offers_nav_item_2_text}}">
+                        {%- include 'lazyload-image' _image: settings.offers_nav_item_2_image, image_params: '600x', image_tag: settings.offers_nav_item_2_text -%}
+                      </a>
+                      <span class="title">
+                        {{ settings.offers_nav_item_2_text }}
+                      </span>
+                    </li>
+                  {%- endif -%}
+                  {%- if settings.offers_nav_item_3_text != blank -%}
+                    <li>
+                      <a href="{{settings.offers_nav_item_3_url}}" aria-label="{{settings.offers_nav_item_3_text}}">
+                        {%- include 'lazyload-image' _image: settings.offers_nav_item_3_image, image_params: '600x', image_tag: settings.offers_nav_item_3_text -%}
+                      </a>
+                      <span class="title">
+                        {{ settings.offers_nav_item_3_text }}
+                      </span>
+                    </li>
+                  {%- endif -%}
+                </ul>
+              </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul><!-- /.main-dropdown -->
+        {%- endif -%}
+      </li>      
+    {%- endfor -%}
+  </ul>
+  <div class="visible-xs-block login-link">
+    <a href="/account" class="btn btn--border">
+      {%- if customer -%}
+        {{ 'layout.customer.account' | t }}   
+      {%- else -%}
+        {% comment %}{{ 'layout.customer.sign_in' | t }} {% endcomment %}
+        Account Sign In
+      {%- endif -%}
+    </a>
+  </div><!-- /.visible-xs-block -->
+</nav><!-- /.nav -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+  $('.menu__dropdown--sub li a.wellness-wednesday').mouseover(function() {
+    $('.menu__dropdown--sub li img.offers.wellness-wednesday').css('display', 'block');
+  });
+  $('.menu__dropdown--sub li a.wellness-wednesday').mouseout(function() {
+    $('.menu__dropdown--sub li img.offers.wellness-wednesday').css('display', 'none');
+  });
+  $('.menu__dropdown--sub li a.weekend-reward').mouseover(function() {
+    $('.menu__dropdown--sub li img.offers.weekend-reward').css('display', 'block');
+  });
+  $('.menu__dropdown--sub li a.weekend-reward').mouseout(function() {
+    $('.menu__dropdown--sub li img.offers.weekend-reward').css('display', 'none');
+  });
+</script>

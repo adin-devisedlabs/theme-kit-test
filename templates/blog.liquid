@@ -1,0 +1,48 @@
+<div class="flex-row">
+  {%- include 'breadcrumbs' -%}
+</div>
+
+{% section 'featured-article' %}
+
+<div class="blog__nav container">
+  <div class="blog__nav__inner">
+    <a href="https://pipettebaby.com/pages/blog/" class="active">All Articles</a>
+    {% for tag in blog.tags %}
+      <a href="{{ blog.url }}/tagged/{{ tag }}" class="tag--{{ tag | downcase }}">{{ tag }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="container blog__listing">
+  {%- paginate blog.articles by 6 -%}
+      {%- for article in blog.articles -%}
+        <div class="blog__listing__article" data-tags="{% for tag in article.tags %}{{ tag | downcase }}{% unless forloop.last %}-{% endunless %}{% endfor %}">
+          <a href="{{ article.url }}">
+            <img src="{{ article | img_url: 'grande' }}" alt="{{ article.image.alt }}">
+          </a>
+          <div>
+            <small>{{ article.tags | first | upcase }}</small>
+
+            <h3><a href="{{ article.url }}">{{ article.title }}</a></h3>
+            {{ article.excerpt_or_content | truncatewords: 15 }}
+          </div>
+          <a href="{{ article.url }}" class="btn">Read now</a>
+        </div>
+      {%- endfor -%}
+
+      {% if paginate.next %}
+        <div id="more-articles"><p>&darr; <a href="{{ paginate.next.url }}">More</a></p></div>        
+      {% endif %}
+      <div class="pageEnd">{{paginate.pages}}</div>
+      
+
+      <div id="article-list-foot"></div>
+      
+  {%- endpaginate -%}
+  
+  <!-- <div class="error none-found">No articles were found with the tag "<span></span>"</div> -->
+</div>
+
+<div class="container loading-ring-wrapper">
+  <div class="lds-ring"><div></div><div></div><div></div><div></div></div>
+</div>

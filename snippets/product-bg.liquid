@@ -1,0 +1,16 @@
+{%- if product.metafields.product.bg_image != blank or product.metafields.product.bg_title != blank  -%}
+  <div class="product-bg animate lazyload" {% if product.metafields.product.bg_image %}data-bg="url({{product.metafields.product.bg_image}})"{% endif %}>
+    <div class="container">
+      <div class="content">
+        {%- if product.metafields.product.bg_title != blank -%}
+          <h2>{{product.metafields.product.bg_title}}</h2>
+        {%- endif -%}
+        {{ product.metafields.product.bg_content }}
+        {%- if product.metafields.product.bg_icon != blank -%}
+          {{ product.metafields.product.bg_icon | img_tag }}
+        {%- endif -%}
+      </div><!-- /.content -->
+    </div><!-- /.container -->
+  </div><!-- /.product-bg -->
+{%- endif -%}
+

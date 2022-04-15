@@ -1,0 +1,17 @@
+<script type="text/javascript">
+	var Shopify = Shopify || {};
+	Shopify.theme = Shopify.theme || {};
+
+	Shopify.theme.locale = {
+		"products": {
+			"product": {
+				"sold_out" : {{ 'products.product.sold_out' | t | json }},
+				"sale" : {{ 'products.product.sale' | t | json }},
+				"unavailable" : {{ 'products.product.unavailable' | t | json }}
+			}
+		},
+		"cart": {
+			"error": {{ 'layout.cart.error' | t | json }}
+		}
+	}
+</script>

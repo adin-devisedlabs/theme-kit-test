@@ -1,0 +1,406 @@
+{% for block in section.blocks %}
+  {% if block.type == 'hero' %}
+	<div class="mchero">
+      <div class="mchero__content"{% if block.settings.bodyBgColor != empty %} style="background:{{ block.settings.bodyBgColor }}"{% endif %}>
+        <div class="mchero__content__text">
+          {%- if block.settings.headingSmall != blank -%}
+            <small>{{ block.settings.headingSmall }}</small>
+          {%- endif -%}
+          <h2 class="title--large">{{ block.settings.headingLarge }}</h2>
+          {%- if block.settings.bodyText != blank -%}
+            {{ block.settings.bodyText }}
+          {%- endif -%}
+        </div>
+        {% if block.settings.bodyImage %}
+          <img src="{{ block.settings.bodyImage | img_url: '2x' }}" alt="">
+        {% endif %}
+      </div>
+	</div>
+  {% endif %}
+  {% if block.type == 'sixty-forty' or block.type == 'sixty-forty-html' %}
+	<div class="sixty-forty sixty-forty--{{ block.settings.bodyImageAlign }} {{ block.type }}"{% if block.settings.bgColor != empty %} style="background:{{ block.settings.bgColor }}"{% endif %} id="section{{ block.id }}">
+      <div class="sixty-forty__text"{% if block.settings.bodyBgColor != empty %} style="background:{{ block.settings.bodyBgColor }}"{% endif %}>
+        <div class="sixty-forty__text__inner">
+          <small>{{ block.settings.headingSmall }}</small>
+          <h2 class="title--large">{{ block.settings.headingLarge }}</h2>
+          {{ block.settings.bodyText }}
+        </div>
+      </div>
+      <div class="{% if block.settings.bodyImageHeading %}sixty-forty__text{% else %}sixty-forty__image{% endif %}"{% if block.settings.bodyImageBgColor != empty %} style="background:{{ block.settings.bodyImageBgColor }}{% unless block.settings.bodyImageHeading or block.settings.bodyImageContent %} url('{{ block.settings.bodyImage | img_url: '2x' }}'){% endunless %};background-size:cover;"{% endif %}>
+        <div>
+          {% if block.settings.bodyImageHeading %}
+            <h3>{{ block.settings.bodyImageHeading }}</h3>
+          {% endif %}
+          {% if block.settings.bodyImageContent %}
+            {{ block.settings.bodyImageContent }}
+          {% endif %}
+          {% if block.settings.bodyImage %}
+            <img src="{{ block.settings.bodyImage | img_url: '2x' }}" alt="" class="img--desk">
+          {% endif %}
+          {% if block.id == '1565610799122' %}
+            {%- include 'lazyload-image' asset_image: true, _image: 'baby.jpg', image_tag: 'baby', additional_classes: 'img--mob' -%}
+          {% endif %}
+        </div>
+      </div>
+	</div>
+  {% endif %}
+  {% if block.type == 'versus' %}
+	<div class="versus">
+      <div class="container">
+        <div class="versus__header">
+          <h2>{{ block.settings.heading }}</h2>
+          {{ block.settings.bodyText }}
+        </div>
+        <div class="versus__columns">
+          <div>
+            <h3>{{ block.settings.versusHeading1 }}</h3>
+            {{ block.settings.versusContent1 }}
+          </div>
+          <div>
+            <h3>{{ block.settings.versusHeading2 }}</h3>
+            {{ block.settings.versusContent2 }}
+          </div>
+        </div>
+      </div>
+	</div>
+  {% endif %}
+  {% if block.type == 'icon-with-text' %}
+    <div class="icon-with-text"{% if block.settings.bgColor != empty %} style="background:{{ block.settings.bgColor }}"{% endif %}>
+      <div class="container">
+        <div class="versus__header">
+          <h2>{{ block.settings.heading }}</h2>
+          {%- if block.settings.bodyText != '' -%}
+            {{ block.settings.bodyText }}
+          {%- endif -%}
+        </div>
+        <div class="flex-row">
+          <div>
+            {% if block.settings.icon1 %}<img src="{{ block.settings.icon1 | img_url: '2x' }}" alt="">{% endif %}
+            <h3>{{ block.settings.heading1 }}</h3>
+            {{ block.settings.content1 }}
+          </div>
+          <div>
+            {% if block.settings.icon2 %}<img src="{{ block.settings.icon2 | img_url: '2x' }}" alt="">{% endif %}
+            <h3>{{ block.settings.heading2 }}</h3>
+            {{ block.settings.content2 }}
+          </div>
+          <div>
+            {% if block.settings.icon3 %}<img src="{{ block.settings.icon3 | img_url: '2x' }}" alt="">{% endif %}
+            <h3>{{ block.settings.heading3 }}</h3>
+            {{ block.settings.content3 }}
+          </div>
+          <div>
+            {% if block.settings.icon4 %}<img src="{{ block.settings.icon4 | img_url: '2x' }}" alt="">{% endif %}
+            <h3>{{ block.settings.heading4 }}</h3>
+            {{ block.settings.content4 }}
+          </div>
+          <div>
+            {% if block.settings.icon5 %}<img src="{{ block.settings.icon5 | img_url: '2x' }}" alt="">{% endif %}
+            <h3>{{ block.settings.heading5 }}</h3>
+            {{ block.settings.content5 }}
+          </div>
+          <div>
+            {% if block.settings.icon6 %}<img src="{{ block.settings.icon6 | img_url: '2x' }}" alt="">{% endif %}
+            <h3>{{ block.settings.heading6 }}</h3>
+            {{ block.settings.content6 }}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+{% endfor %}
+
+{% schema %}
+  {
+    "name": "Page Content",
+    "settings": [],
+    "blocks": [
+      {
+        "name": "Hero section",
+		"type": "hero",
+        "settings": [
+          {
+            "id": "bgColor",
+            "type": "color",
+            "label": "Background Color"
+          },
+          {
+            "id": "headingSmall",
+            "type": "text",
+            "label": "Small Heading"
+          },
+          {
+            "id": "headingLarge",
+            "type": "text",
+            "label": "Large Heading"
+          },
+          {
+            "id": "bodyText",
+            "type": "html",
+            "label": "Body Text"
+          },
+          {
+            "id": "bodyImage",
+            "type": "image_picker",
+            "label": "Image"
+          }
+        ]
+      },
+      {
+        "name": "Sixty Forty section",
+		"type": "sixty-forty",
+        "settings": [
+          {
+            "id": "bgColor",
+            "type": "color",
+            "label": "Background Color"
+          },
+          {
+            "id": "headingSmall",
+            "type": "text",
+            "label": "Small Heading"
+          },
+          {
+            "id": "headingLarge",
+            "type": "text",
+            "label": "Large Heading"
+          },
+          {
+            "id": "bodyText",
+            "type": "richtext",
+            "label": "Body Text"
+          },
+          {
+            "id": "bodyImage",
+            "type": "image_picker",
+            "label": "Image"
+          },
+          {
+            "id": "bodyImageAlign",
+            "type": "select",
+            "label": "Image Alignment",
+            "options": [
+              { "value": "right", "label": "Right"},
+              { "value": "left", "label": "Left"}
+            ],
+			"default": "right"
+          }
+        ]
+      },
+      {
+        "name": "Sixty Forty HTML section",
+		"type": "sixty-forty-html",
+        "settings": [
+          {
+            "id": "bgColor",
+            "type": "color",
+            "label": "Background Color (Optional)"
+          },
+          {
+            "id": "headingSmall",
+            "type": "text",
+            "label": "Small Heading"
+          },
+          {
+            "id": "headingLarge",
+            "type": "text",
+            "label": "Large Heading"
+          },
+          {
+            "id": "bodyBgColor",
+            "type": "color",
+            "label": "Sixty Background Color (Optional)"
+          },
+          {
+            "id": "bodyText",
+            "type": "html",
+            "label": "Body Text"
+          },
+          {
+            "id": "bodyImageBgColor",
+            "type": "color",
+            "label": "Forty Background Color (Optional)"
+		  },
+          {
+            "id": "bodyImageHeading",
+            "type": "text",
+            "label": "Image Heading"
+          },
+		  {
+			"id": "bodyImageContent",
+			"type": "html",
+			"label": "Text content"
+		  },
+          {
+            "id": "bodyImage",
+            "type": "image_picker",
+            "label": "Image"
+          },
+          {
+            "id": "bodyImageAlign",
+            "type": "select",
+            "label": "Image Alignment",
+            "options": [
+              { "value": "right", "label": "Right"},
+              { "value": "left", "label": "Left"}
+            ],
+			"default": "right"
+          }
+        ]
+      },
+      {
+        "name": "Versus section",
+		"type": "versus",
+        "settings": [
+          {
+            "id": "heading",
+            "type": "text",
+            "label": "Heading"
+          },
+          {
+            "id": "bodyText",
+            "type": "richtext",
+            "label": "Body Text"
+          },
+          {
+            "id": "versusHeading1",
+            "type": "text",
+            "label": "Column 1 Heading"
+          },
+          {
+            "id": "versusContent1",
+            "type": "richtext",
+            "label": "Column 1 Content"
+          },
+          {
+            "id": "versusHeading2",
+            "type": "text",
+            "label": "Column 2 Heading"
+          },
+          {
+            "id": "versusContent2",
+            "type": "richtext",
+            "label": "Column 2 Content"
+          }
+        ]
+      },
+      {
+        "name": "Icon with text columns",
+        "type": "icon-with-text",
+        "settings": [
+          {
+            "id": "bgColor",
+            "type": "color",
+            "label": "Background Color (Optional)"
+          },
+          {
+            "id": "heading",
+            "type": "text",
+            "label": "Heading"
+          },
+          {
+            "id": "bodyText",
+            "type": "richtext",
+            "label": "Body Text"
+          },
+          {
+            "id": "icon1",
+            "type": "image_picker",
+            "label": "Column 1 Image/Icon"
+          },
+          {
+            "id": "heading1",
+            "type": "text",
+            "label": "Column 1 Heading"
+          },
+          {
+            "id": "content1",
+            "type": "richtext",
+            "label": "Column 1 Content"
+          },
+          {
+            "id": "icon2",
+            "type": "image_picker",
+            "label": "Column 2 Image/Icon"
+          },
+          {
+            "id": "heading2",
+            "type": "text",
+            "label": "Column 2 Heading"
+          },
+          {
+            "id": "content2",
+            "type": "richtext",
+            "label": "Column 2 Content"
+          },
+          {
+            "id": "icon3",
+            "type": "image_picker",
+            "label": "Column 3 Image/Icon"
+          },
+          {
+            "id": "heading3",
+            "type": "text",
+            "label": "Column 3 Heading"
+          },
+          {
+            "id": "content3",
+            "type": "richtext",
+            "label": "Column 3 Content"
+          },
+          {
+            "id": "icon4",
+            "type": "image_picker",
+            "label": "Column 4 Image/Icon"
+          },
+          {
+            "id": "heading4",
+            "type": "text",
+            "label": "Column 4 Heading"
+          },
+          {
+            "id": "content4",
+            "type": "richtext",
+            "label": "Column 4 Content"
+          },
+          {
+            "id": "icon5",
+            "type": "image_picker",
+            "label": "Column 5 Image/Icon"
+          },
+          {
+            "id": "heading5",
+            "type": "text",
+            "label": "Column 5 Heading"
+          },
+          {
+            "id": "content5",
+            "type": "richtext",
+            "label": "Column 5 Content"
+          },
+          {
+            "id": "icon6",
+            "type": "image_picker",
+            "label": "Column 6 Image/Icon"
+          },
+          {
+            "id": "heading6",
+            "type": "text",
+            "label": "Column 6 Heading"
+          },
+          {
+            "id": "content6",
+            "type": "richtext",
+            "label": "Column 6 Content"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}
+
+{% stylesheet %}
+{% endstylesheet %}
+
+{% javascript %}
+{% endjavascript %}

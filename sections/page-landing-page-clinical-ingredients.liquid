@@ -1,0 +1,221 @@
+<div class="clinicals-ingredients-wrapper">
+  <div class="product-results animate">
+    <div class="container">
+      <h6>CLINICAL RESULTS</h6>
+      <div class="clinicals-percent-wrapper">
+        {% for block in section.blocks %}
+          {% if block.type == 'clinical' %}
+            <div class="clinicals-wrapper">
+              <h4 class="clinicals-percent">{{block.settings.percent}}</h4>
+              <p>{{block.settings.text}}</p>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="clinicals-fineprint">
+        <p>{{section.settings.clinical_fineprint}}</p>
+      </div>
+    </div><!-- /.container -->
+  </div><!-- /.product-results -->
+  <div class="key-ingredients" id="key-ingredients">
+    <div class="container">
+      <h6>KEY INGREDIENTS</h6>
+      <div class="key-ingredients-wrapper">
+        {% for block in section.blocks %}
+          {% if block.type == 'ingredients' %}
+            <div class="ingredients-block">
+              <img src="{{block.settings.image | img_url: 'master'}}" />
+              <p>{{block.settings.text}}</p>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      <div class="key-ingredients-fineprint">
+        <p>{{section.settings.ingredients_fineprint}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% stylesheet %}
+.clinicals-ingredients-wrapper {
+	display: flex;
+	text-align: center;
+}
+
+.clinicals-ingredients-wrapper .product-results {
+	width: 60%;
+	flex-basis: 60%;
+}
+
+.clinicals-ingredients-wrapper .product-results .clinicals-percent-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.clinicals-ingredients-wrapper .product-results .clinicals-wrapper {
+	flex-basis: 50%;
+	width: 50%;
+	padding: 20px;
+}
+
+.clinicals-ingredients-wrapper .product-results .clinicals-wrapper p {
+	font-size: 18px;
+}
+
+.clinicals-ingredients-wrapper .product-results .clinicals-percent {
+	font-size: 100px;
+	font-family: "Recoleta", arial, sans-serif;
+	margin-bottom: 10px;
+}
+
+.clinicals-ingredients-wrapper .clinicals-fineprint {
+	margin-top: 100px;
+}
+
+.clinicals-ingredients-wrapper .key-ingredients {
+	width: 40%;
+	flex-basis: 40%;
+	padding: 144px 20px 74px;
+	background: #edf2ed;
+}
+
+.clinicals-ingredients-wrapper .key-ingredients h6 {
+	margin-bottom: 40px;
+}
+
+.clinicals-ingredients-wrapper .key-ingredients .key-ingredients-wrapper {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.clinicals-ingredients-wrapper .key-ingredients .ingredients-block {
+	flex-basis: 50%;
+	width: 50%;
+	padding: 20px;
+}
+
+.clinicals-ingredients-wrapper .key-ingredients .ingredients-block img {
+	width: 100%;
+	max-width: 150px;
+	border-radius: 100%;
+}
+
+.clinicals-ingredients-wrapper .key-ingredients .ingredients-block p {
+	font-family: Recoleta;
+	font-size: 1.5rem;
+}
+
+.clinicals-ingredients-wrapper .key-ingredients .key-ingredients-fineprint {
+	margin-top: 70px;
+}
+
+@media screen and (max-width: 1023px) {
+	.clinicals-ingredients-wrapper {
+		display: block;
+	}
+
+	.clinicals-ingredients-wrapper .product-results {
+		width: 100%;
+		flex-basis: 100%;
+		display: block;
+		padding-top: 4em;
+		padding-bottom: 4em;
+	}
+
+	.clinicals-ingredients-wrapper .product-results .clinicals-percent {
+		font-size: 14vw;
+	}
+
+	.clinicals-ingredients-wrapper .key-ingredients {
+		width: 100%;
+		flex-basis: 100%;
+		padding-top: 4em;
+		padding-bottom: 4em;
+	}
+}
+
+@media screen and (max-width: 499px) {
+	.clinicals-ingredients-wrapper {
+		display: block;
+	}
+
+	.clinicals-ingredients-wrapper .product-results {
+		width: 100%;
+		flex-basis: 100%;
+		display: block;
+	}
+
+	.clinicals-ingredients-wrapper .product-results .clinicals-wrapper {
+		flex-basis: 100%;
+		width: 100%;
+	}
+
+	.clinicals-ingredients-wrapper .product-results .clinicals-percent {
+		font-size: 90px;
+	}
+
+	.clinicals-ingredients-wrapper .key-ingredients .ingredients-block {
+		width: 100%;
+		flex-basis: 100%;
+	}
+}
+{% endstylesheet %}
+  
+{% schema %}
+{
+  "name": "Carousel + Ingredients",
+  "settings": [
+    {
+      "id": "clinical_fineprint",
+      "type": "textarea",
+      "label": "Clinical Fineprint"
+    },
+    {
+      "id": "ingredients_fineprint",
+      "type": "textarea",
+      "label": "Ingredients Fineprint"
+    }
+  ],
+  "blocks": [
+    {
+      "name": "Clinical Results",
+      "type": "clinical",
+      "settings": [
+        {
+          "id": "percent",
+          "type": "text",
+          "label": "Percent"
+        },
+        {
+          "id": "text",
+          "type": "text",
+          "label": "Text"
+        }
+      ]
+    },
+    {
+      "name": "Ingredients",
+      "type": "ingredients",
+      "settings": [
+        {
+          "id": "image",
+          "type": "image_picker",
+          "label": "Image"
+        },
+        {
+          "id": "text",
+          "type": "text",
+          "label": "Text"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Clinical + Ingredients",
+      "category": "Dynamic"
+    }
+  ]
+}
+{% endschema %}

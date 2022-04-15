@@ -1,0 +1,204 @@
+{% for block in section.blocks %}
+  {% assign _block = block.settings %}
+  <div class="offers bestsellers animate"{% if _block.bgColor != empty %} style="background:{{ _block.bgColor }}"{% endif %} id="section{{ block.id }}">
+    <div class="container">
+      <div class="offers__header">
+        {%- if _block.heading != blank -%}
+          <h2>{{_block.heading}}</h2>
+        {% endif %}
+      </div>
+        {% assign bestSellers = collections[_block.collection].products %}
+          <div id="bestsellersCarousel" class="bestsellers-slider">
+            {%- for _product in bestSellers -%}
+              <div class="product__item {% unless _product.available %}product__item--sold-out{% endunless %}">
+                <a href="{% if override_url %}{{override_url}}{% else %}{{ _product.url | within: collection }}{% endif %}" class="product__item-link">
+                  <div class="product__icons">
+                    {%- for icon in _product.metafields.product.icon limit: 1 -%}
+                      {{ icon | img_tag }}
+                    {%- endfor -%}
+                  </div>
+                  {% if _product.metafields.product.badge != blank %}
+                    <h6 class="product__badge {{_product.metafields.product.badge}}">
+                      {% assign badgeName = _product.metafields.product.badge | replace: '-', ' ' %}
+                      {{badgeName}}{%- if _product.metafields.product.badge == 'new' -%}!{%- endif -%}
+                    </h6>
+                  {% endif %}
+                  <div class="product__item-image">
+                    <img class="bestseller-img tns-lazy-img" src="{{ _product.featured_image | img_url: '600x' }}" data-src="{{ _product.featured_image | img_url: '600x' }}" alt="{{ _product.featured_image.alt | escape }}" />
+                  </div>
+                  <h4 class="product__item-title">
+                    {{- _product.title -}}
+                  </h4>
+                  <span class="stamped-product-reviews-badge stamped-main-badge" data-id="{% if override_id %}{{override_id}}{%else%}{{_product.id}}{% endif %}" style="display: block;"></span>
+                  <p class="product__item-price">
+                    {%- include 'price' with _product -%}
+                  </p><!-- /.price -->
+                </a>
+                  <div class="overlay-product">
+                    {% if override_handle != blank %}
+                      {% assign _product = all_products[override_handle] %}
+                    {% endif %}
+                    {%- if _product.available -%}
+                      {%- form 'product', _product -%}
+                        <div class="qty">
+                          <a href="#!" class="qty-minus qty-edit" aria-label="Decrease quantity">
+                            <span tabindex="0"></span>
+                          </a>
+                          <input type="text" name="quantity" data-mirror="true" value="1" aria-label="quantity value" />
+                          <a href="#!" class="qty-plus qty-edit" aria-label="Increase quantity">
+                            <span tabindex="0"></span>
+                          </a>
+                        </div><!-- /.qty -->
+                        {% assign variantID = _product.first_available_variant.id %}
+                        {% assign variantSku = _product.first_available_variant.sku %}
+                        {% assign variantPrice = _product.first_available_variant.price %}
+
+                        {% if override_variant %}
+                          {% case override_variant %}
+                            {% when 1 %}
+                              {% assign variantID = _product.variants[1].id %}
+                              {% assign variantSku = _product.variants[1].sku %}
+                              {% assign variantPrice = _product.variants[1].price %}
+                            {% when 2 %}
+                              {% assign variantID = _product.variants[2].id %}
+                              {% assign variantSku = _product.variants[2].sku %}
+                              {% assign variantPrice = _product.variants[2].price %}
+                            {% else %}
+                              {% assign variantID = _product.first_available_variant.id %}
+                              {% assign variantSku = _product.first_available_variant.sku %}
+                              {% assign variantPrice = _product.first_available_variant.price %}
+                          {% endcase %}
+                        {% endif %}
+                        <input type="hidden" name="id" value="{{ variantID }}">
+                        <input type="hidden" name="product_name" value="{{ _product.title }}">
+                        <input type="hidden" name="product_sku" value="{{ variantSku }}">
+                        <input type="hidden" name="product_price" value="{{ variantPrice }}">
+
+                        {% assign _tags = _product.tags %}
+
+                        {% if override_handle %}
+                          <button type="submit" class="btn btn--border cart">
+                            {% if settings.enable_custom_cta %}
+                              <!-- SITE-WIDE PROMO TEXT -->
+                              	<!-- CTA global tag exclusion -->
+                                {% if _tags contains "cta-exclude" %}
+                                  {{- 'products.product.add_to_cart' | t -}}
+                                {% else %}
+                                <!-- SITE-WIDE PROMO TEXT -->
+                                  {{settings.cta_text}}
+                                {% endif %}
+                            {% else %}
+                              Add to Cart
+                            {% endif %}
+                          </button>
+                        {% else %}
+                          {% if _product.variants.size > 1 %}
+                            <a aria-label="Add {{ _product.title }} to cart" href="{% if override_url %}{{override_url}}{% else %}{{ _product.url | within: collection }}{% endif %}" class="btn btn--border cart">
+                              {% if settings.enable_custom_cta %}
+                                <!-- SITE-WIDE PROMO TEXT -->
+                              	<!-- CTA global tag exclusion -->
+                                {% if _tags contains "cta-exclude" %}
+                                  {{- 'products.product.add_to_cart' | t -}}
+                                {% else %}
+                                  <!-- SITE-WIDE PROMO TEXT -->
+                                  {{settings.cta_text}}
+                              {% endif %}
+                            {% else %}
+                              Add to Cart
+                            {% endif %}
+                            </a>
+                          {% else %}
+                            <button type="submit" class="btn btn--border cart">
+                              {% if settings.enable_custom_cta %}
+                              <!-- SITE-WIDE PROMO TEXT -->
+                              	<!-- CTA global tag exclusion -->
+                                {% if _tags contains "cta-exclude" %}
+                                  {{- 'products.product.add_to_cart' | t -}}
+                                {% else %}
+                                <!-- SITE-WIDE PROMO TEXT -->
+                                  {{settings.cta_text}}
+                              {% endif %}
+                            {% else %}
+                              Add to Cart
+                            {% endif %}
+                            </button>
+                          {% endif %}
+                        {% endif %}
+                      {%- endform -%}
+                    {%- else -%}
+                      <p>
+                          {{ 'products.product.sold_out' | t }}
+                      </p>
+                    {%- endif -%}
+                  </div><!-- /.overlay -->
+              </div><!-- /.product__item -->
+            {%- endfor -%}
+          </div>
+    </div>
+  </div>
+{% endfor %}
+
+<style>
+
+</style>
+
+{% schema %}
+  {
+  "name": "Bestsellers",
+  "blocks": [
+    {
+      "type": "bestsellers",
+      "name": "Bestsellers",
+      "settings": [
+      {
+        "id": "bgColor",
+        "type": "color",
+        "label": "Background Color",
+        "default": "#fffefb"
+      },
+      {
+        "id": "heading",
+        "type": "text",
+        "label": "Heading",
+        "default": "Bestsellers"
+      },
+      {
+        "id": "collection",
+        "type": "collection",
+        "label": "Collection to display"
+      }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Bestsellers",
+      "category": "Dynamic"
+    }
+  ]
+  }
+{% endschema %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/tiny-slider.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/min/tiny-slider.js"></script>
+<script>
+$(document).ready(function(){
+  const productReviewSlider = tns({
+    container: '#bestsellersCarousel',
+    items: 1,
+    responsive: {
+      500: {
+        items: 2,
+      },
+      1000: {
+        items: 4,
+      }
+    },
+    lazyload: true,
+    controls: true,
+    controlsText: ['<i class="bestseller--arrow left" aria-label="Previous"></i>', '<i class="bestseller--arrow right" aria-label="Next"></i>'],
+    nav: false
+  });
+});
+</script>

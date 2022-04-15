@@ -1,0 +1,160 @@
+<div class="flex-row">
+	{%- include 'breadcrumbs' -%}
+</div>
+
+{%- if collection.image -%}
+	<div class="collection__head lazyload{% if collection.metafields.collection.mobile_image %} hidden-xs{% endif %}" data-bg="url({{ collection.image | img_url: '2048x' }})">
+		{{collection.description}}
+	</div><!-- /.collection__head -->
+{%- endif -%}
+
+{%- if collection.metafields.collection.mobile_image -%}
+	<div class="collection__head lazyload visible-xs-block" data-bg="url({{ collection.metafields.collection.mobile_image }})">
+		{% assign descriptionSplit = collection.description | split: '<span style="color: #ffffff;">' %}
+			{% if collection.handle == 'secret-sale' %}
+				{{descriptionSplit[1]}}
+			{% elsif collection.handle == 'last-chance' %}
+				LAST CHANCE
+			{% else %}
+				{{descriptionSplit[0]}}
+			{% endif %}
+	</div><!-- /.collection__head -->
+{%- endif -%}
+
+{%- paginate collection.products by 50 -%}
+	<div class="filter-row">
+		<div class="flex-row justify">
+			{%- assign tag_meta = collection.metafields.collection.tags -%}
+			{%- include 'collection-filter-tags' with 'hidden-xs' -%}
+			{%- include 'collection-sorting'  -%}
+			{%- if collection.metafields.collection.filter_title.size > 0 -%}
+				<a href="#" class="btn btn--border js-filter-btn">{{ 'collections.filters.filters' | t }}</a>
+				<div class="filter-dropdown">
+					<div class="filter-dropdown__close"></div><!-- /.filter-dropdown__close -->
+					{%- include 'collection-filter-tags' with 'visible-xs-block' -%}
+					{%- for filter_title in collection.metafields.collection.filter_title -%}
+						<div class="box">
+							<h5>{{filter_title}}</h5>
+							{%- assign tag_arr = collection.metafields.collection.filter_tag[forloop.index0] | split: '|' -%}
+							<ul>
+								{%- for filter_tag in tag_arr -%}
+									{%- assign filter_tag_handle = filter_tag | handle -%}
+									{%- if current_tags contains filter_tag_handle -%}
+										<li class="active" data-tag="{{filter_tag_handle}}">
+											{{ filter_tag | link_to_remove_tag: filter_tag_handle }}
+										</li>
+									{%- else -%}
+										<li data-tag="{{filter_tag_handle}}">
+											{{ filter_tag | link_to_add_tag: filter_tag_handle }}
+										</li>
+									{%- endif -%}
+								{%- endfor -%}
+							</ul>
+						</div><!-- /.box -->
+					{%- endfor -%}
+					<div class="apply-holder visible-xs-block">
+						<a href="" class="apply-filters js-apply-filters btn btn-block" data-collection="{{ collection.url }}">{{ 'collections.filters.apply_filters' | t }}</a><!-- /.apply-filters -->
+					</div><!-- /.apply-holder -->
+				</div><!-- /.filter-dropdown -->
+			{%- endif -%}
+		</div><!-- /.flex-row -->
+	</div><!-- /.filter-row -->
+
+	<div class="collection__items">
+		{%- assign meta_positions = collection.metafields.collection.number -%}
+		{% capture collection-promo-banner %}
+			{% if collection.metafields.collection.image != blank %}
+				{% assign doubleSlot = false %}
+				{% if collection.metafields.collection.image_double_slot == true %} 
+					{% assign doubleSlot = true %}
+				{% endif %}
+				<div class="product__item animate product__item-content-block {% if doubleSlot == true %}double-slot{% endif %} collection__banner">
+					<a href="{{collection.metafields.collection.box_link[0]}}">
+						<img src="{{collection.metafields.collection.image}}" alt="{{collection.metafields.collection.image_alt_text | "default": "collection-item"}}" class="collection__content-block"/>
+						{% comment %}
+						{% if collection.metafields.collection.image_mobile %} 
+							<img src="{{collection.metafields.collection.image_mobile}}" alt="{{collection.metafields.collection.image_alt_text}}" class="collection__content-block visible-xs-block"/>
+						{% else %}
+							<img src="{{collection.metafields.collection.image}}" alt="{{collection.metafields.collection.image_alt_text}}" class="collection__content-block visible-xs-block"/>
+						{% endif %}
+						{% endcomment %}
+					</a>
+				</div>
+			{% endif %}
+		{% endcapture %}
+
+		{%- for _product in collection.products -%}
+			{%- assign main_index = forloop.index -%}
+
+			{% if collection.metafields.collection.image[1] %}
+				{% if main_index == 11 %}
+					<div class="product__item animate product__item-content-block {% if doubleSlot == true %}double-slot{% endif %} collection__banner">
+						<a href="{{collection.metafields.collection.box_link[1]}}">
+							<img src="{{collection.metafields.collection.image[1]}}" alt="{{collection.metafields.collection.image_alt_text[1]}}" class="collection__content-block"/>
+							{% comment %}
+							{% if collection.metafields.collection.image_mobile[1] != 'blank' %} 
+								<img src="{{collection.metafields.collection.image_mobile[1]}}" alt="{{collection.metafields.collection.image_alt_text[1]}}" class="collection__content-block visible-xs-block"/>
+							{% else %}
+								<img src="{{collection.metafields.collection.image[1]}}" alt="{{collection.metafields.collection.image_alt_text[1]}}" class="collection__content-block visible-xs-block"/>
+							{% endif %}
+							{% endcomment %}
+						</a>
+					</div>
+				{% endif %}
+			{% endif %}
+
+			{%- if main_index == 1 -%}
+				{%- include 'product-banner' -%}
+			{%- endif -%}
+			{% unless _product.type == 'hidden' or _product.type == 'hidden-displayATC'%}
+				{% if main_index == 1 %}
+					{{ collection-promo-banner }}
+				{% endif %}
+				{%- include 'product-item' with _product -%}
+			{% endunless %}
+
+			{%- if main_index > 1 -%}
+				{%- include 'product-banner', minus: true -%}
+			{%- endif -%}
+		{%- endfor -%}
+	</div><!-- /.collection__items -->
+
+	{%- include 'pagination' -%}
+{%- endpaginate -%}
+
+{%- assign bottom_subtitle = collection.metafields.collection.bottom_subtitle -%}
+{%- assign bottom_title = collection.metafields.collection.bottom_title -%}
+{%- assign bottom_content = collection.metafields.collection.bottom_content -%}
+{%- assign bottom_image = collection.metafields.collection.bottom_image -%}
+{%- assign btn_text = collection.metafields.collection.btn_text -%}
+{%- assign meta_url = collection.metafields.collection.url -%}
+
+{%- if bottom_content != blank -%}
+<div class="bottom-section animate">
+	<div class="flex-row">
+		<div class="image lazyload" style="background-image: url({{bottom_image}})">
+
+		</div><!-- /.image -->
+		<div class="content">
+			{%- if bottom_subtitle != blank -%}
+				<h6>{{bottom_subtitle}}</h6>
+			{%- endif -%}
+			{%- if bottom_title != blank -%}
+				<h2>{{bottom_title}}</h2>
+			{%- endif -%}
+			{{ bottom_content }}
+			{%- if btn_text != blank and meta_url != blank -%}
+				<a href="{{meta_url}}" class="btn">{{btn_text}}</a><!-- /.btn -->
+			{%- endif -%}
+		</div><!-- /.content -->
+	</div><!-- /.flex-row -->
+</div><!-- /.bottom-section -->
+{%- endif -%}
+
+{%- if collection.metafields.collection.bottom_text != blank -%}
+	<div class="bottom-text-collection animate">
+		<div class="container">
+			{{ collection.metafields.collection.bottom_text }}
+		</div><!-- /.container -->
+	</div><!-- /.bottom-text-collection -->
+{%- endif -%}

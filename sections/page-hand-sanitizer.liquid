@@ -1,0 +1,218 @@
+{% assign priceLimit1 = section.settings.price_limit_1 | times: 100 %}
+{% assign priceLimit2 = section.settings.price_limit_2 | times: 100 %}
+{% assign priceLimit3 = section.settings.price_limit_3 | times: 100 %}
+
+{% assign collectionSorted = collections[section.settings.collection].products | sort: 'price' %}
+
+<div class="flex-row">
+  {%- include 'breadcrumbs' -%}
+</div>
+{%- if section.settings.banner -%}
+  <div class="hidden-xs hslp__header">
+    <img src="{{section.settings.banner | img_url: '2048x'}}" alt="Hand Sanitizer" class="lazyload" >
+  </div>
+{%- endif -%}
+
+{%- if section.settings.banner_mobile -%}
+  <div class="visible-xs-block hslp__header-mobile">
+    <img src="{{section.settings.banner_mobile | img_url: '600x'}}" alt="Hand Sanitizer" class="lazyload" />
+  </div>
+{%- endif -%}
+
+<div class="price-banner pink" id="8_oz">
+  <p class="price-text">{{section.settings.category_1}}</p>
+</div>
+
+<div class="collection__items hand-sanitizer">
+  {% for _block in section.blocks %}
+    {% if _block.type == '8_oz' %}
+      {%- assign block_product = all_products[_block.settings.product] -%}
+      {% if block_product.title contains '6 Pack' %}
+        {% assign override_variant = 1 %}
+      {% else %}
+        {% assign override_variant = 0 %}
+      {% endif %}
+      {%- include 'product-item' with block_product, override_id: 4845950107734, override_url: '/products/hand-sanitizer', override_variant: override_variant, override_handle: 'hand-sanitizer' -%}
+    {% endif %}
+  {% endfor %}
+</div><!-- /.collection__items -->
+
+<div class="price-banner blue" id="2_oz">
+  <p class="price-text">{{section.settings.category_2}}</p>
+</div>
+
+<div class="collection__items">
+  {% for _block in section.blocks %}
+    {% if _block.type == '2_oz' %}
+      {%- assign block_product = all_products[_block.settings.product] -%}
+      {% if block_product.title contains '6 Pack' %}
+        {% assign override_variant = 1 %}
+      {% elsif block_product.title contains '12 Pack' %}
+        {% assign override_variant = 2 %}
+      {% else %}
+        {% assign override_variant = 0 %}
+      {% endif %}
+      {%- include 'product-item' with block_product, override_id: 4753106993238, override_url: '/products/travel-hand-sanitizer', override_variant: override_variant, override_handle: 'travel-hand-sanitizer' -%}
+    {% endif %}
+  {% endfor %}
+</div><!-- /.collection__items -->
+
+<div class="price-banner yellow" id="32_oz">
+  <p class="price-text">{{section.settings.category_3}}</p>
+</div>
+
+<div class="collection__items">
+  {% for _block in section.blocks %}
+    {% if _block.type == '32_oz' %}
+      {%- assign block_product = all_products[_block.settings.product] -%}
+      {% assign override_variant = 0 %}
+      {%- include 'product-item' with block_product, override_variant: override_variant -%}
+    {% endif %}
+  {% endfor %}
+</div><!-- /.collection__items -->
+
+{% stylesheet %}
+#shopify-section-page-hand-sanitizer .hslp__header img {
+	margin: 0;
+	width: 100%;
+}
+
+#shopify-section-page-hand-sanitizer .hslp__header-mobile img {
+	margin: 0;
+	width: 100%;
+}
+
+#shopify-section-page-hand-sanitizer .collection__items {
+	padding-bottom: 50px;
+}
+
+#shopify-section-page-hand-sanitizer .collection__items:before {
+	content: "";
+	display: block;
+	height: 100px;
+	margin: -100px 0 0;
+}
+
+#shopify-section-page-hand-sanitizer .collection__head {
+	color: #fff;
+}
+
+.price-banner {
+	text-align: center;
+	padding: 25px;
+	font-size: 25px;
+	font-family: 'Recoleta', serif;
+}
+
+.blue {
+	background: #f2f7fa;
+}
+
+.pink {
+	background: #faede5;
+}
+
+.yellow {
+	background: #fffde6;
+}
+
+@media screen and (min-width: 769px) {
+	.collection__items.hand-sanitizer .product__item {
+		flex-basis: 33.33%;
+		max-width: 33.33%;
+	}
+
+	.collection__items.hand-sanitizer .product__item .overlay-product {
+		bottom: 12px;
+	}
+}
+
+@media screen and (max-width: 768px) {
+	.collection__items .product__item .overlay-product {
+		bottom: 0;
+	}
+}
+
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Hand Sanitizer",
+  "class": "page-hand-sanitizer",
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "banner",
+      "label": "Banner (Desktop)"
+    },
+    {
+      "type": "image_picker",
+      "id": "banner_mobile",
+      "label": "Banner (Mobile)"
+    },
+    {
+      "type": "text",
+      "id": "banner_text",
+      "label": "Banner Text"
+    },
+    {
+      "type": "checkbox",
+      "id": "hide_text_desktop",
+      "label": "Hide Banner Text on Desktop"
+    },
+    {
+      "type": "text",
+      "id": "category_1",
+      "label": "Category 1",
+      "default": "Travel Hand Sanitizer (2 oz)"
+    },
+    {
+      "type": "text",
+      "id": "category_2",
+      "label": "Category 2",
+      "default": "Hand Sanitizer (8 oz)"
+    },
+    {
+      "type": "text",
+      "id": "category_3",
+      "label": "Category 3",
+      "default": "Hand Sanitizer (32 oz)"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "2_oz",
+      "name": "2 oz",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product (2 oz)"
+        }
+      ]
+    },
+    {
+      "type": "8_oz",
+      "name": "8 oz",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product (8 oz)"
+        }
+      ]
+    },
+    {
+      "type": "32_oz",
+      "name": "32 oz",
+      "settings": [
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product (32 oz)"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

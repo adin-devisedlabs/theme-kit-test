@@ -1,0 +1,48 @@
+{%- assign address_first_name = address.first_name -%}
+{%- assign address_last_name = address.last_name -%}
+
+<div class="address {% if address.id == customer.default_address.id %}address--default{% endif %}">
+  <div class="address__view" id="view_address_{{ address.id }}">
+    <div class="address__head">
+      <h6>
+        {%- if address.id == customer.default_address.id -%}
+          {{ 'customer.addresses.default' | t }}
+        {%- endif -%}
+      </h6>
+      <div class="address_details">
+        {{- address | format_address -}}
+      </div><!-- /.address_details -->
+    </div><!-- /.address__head -->
+    <div class="address__actions">
+      {{- 'customer.addresses.edit' | t | edit_customer_address_link: address.id | replace_first: '<a', '<a class="edit-address-link" ' -}}
+
+      {{- 'customer.addresses.delete' | t | delete_customer_address_link: address.id -}}
+    </div><!-- /.address__actions -->
+  </div><!-- /.address__view -->
+
+  <div class="address__body">
+    <div class="form form--address" id="edit_address_{{address.id}}" style="display: none;">
+      {%- form 'customer_address', address -%}
+        {%- if form.errors -%}
+          <div class="form__error">
+            {{- form.errors | default_errors -}}
+          </div><!-- /.form__error -->
+        {%- endif -%}
+
+        <div class="form__body">
+          {%- include 'form-address-body', index: form.id -%}
+        </div><!-- /.form__body -->
+
+        <div class="form__actions">
+
+
+          <a href="#" class="btn--cancel" onclick="Shopify.CustomerAddress.toggleForm({{address.id}});return false" onkeyup="Shopify.CustomerAddress.toggleForm({{address.id}});return false">
+            {{- 'customer.addresses.cancel' | t -}}
+          </a>
+
+        </div><!-- /.form__actions -->
+      {%- endform -%}
+    </div><!-- /.form -->
+  </div><!-- /.address__body -->
+
+</div><!-- /.address -->

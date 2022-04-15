@@ -1,0 +1,25 @@
+{%- assign inline_styles = 'style="' -%}
+
+{%- if bgcolor -%}
+  {%- capture style -%}
+    background-color: {{bgcolor}};
+  {%- endcapture -%}
+  {%- assign inline_styles = inline_styles | append: style -%}
+{%- endif -%}
+
+{%- if bgimage -%}
+  {%- capture style -%}
+    background-image: url({{bgimage | img_url: wh }});
+  {%- endcapture -%}
+  {%- assign inline_styles = inline_styles | append: style -%}
+{% endif %}
+
+{%- if color -%}
+  {%- capture style -%}
+    color: {{bgcolor}};
+  {%- endcapture -%}
+  {%- assign inline_styles = inline_styles | append: style -%}
+{%- endif -%}
+
+{%- assign inline_styles = inline_styles | append: '"' -%}
+{{inline_styles}}

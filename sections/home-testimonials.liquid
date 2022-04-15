@@ -1,0 +1,447 @@
+{%- assign _section = section.settings -%}
+
+<div class="testimonials animate"{% if _section.bgColor != empty %} style="background:{{ _section.bgColor }}"{% endif %} id="section{{ block.id }}">
+    <div class="container">
+      <div class="reviews__header">
+        <h2>{{_section.heading}}</h2>
+      </div>
+      <div id="homeTestimonialsSlider" class="review-slider">
+        {% for block in section.blocks %}
+          {% if block.type == 'testimonial' %}
+            {% assign block_product = all_products[block.settings.product_handle] %}
+            <div class="review__container" style="background: url('https://cdn.shopify.com/s/files/1/0140/8847/0614/files/review_bg.png?v=1619547395');background-repeat: no-repeat;background-size: contain;">
+              <img class="visible-xs-block" src="https://cdn.shopify.com/s/files/1/0140/8847/0614/files/review_bg_mobile.png?v=1619547412">
+              <div class="content__wrapper">
+                <h3>{{block_product.title}}</h3>
+                <span class="stamped-product-reviews-badge stamped-main-badge" data-id="{{block_product.id}}" style="display: block;"></span>
+                <p class="review__text">{{block.settings.review_text}}</p>
+                <p class="reviewer">-&nbsp;&nbsp;{{block.settings.reviewer}}</p>
+                {%- include 'link' url: block.settings.link_url, text: block.settings.link_text, tabindex: true, btn_border: true, custom_class: 'hidden-xs' -%}
+              </div>
+              <div class="image__wrapper">
+                <img src="{{ block.settings.product_image | img_url: 'master' }}" class="{{block.settings.product_image.alt}}" alt="{{block.settings.product_image.alt}}">
+                {%- include 'link' url: block.settings.link_url, text: block.settings.link_text, tabindex: true, btn_border: true, custom_class: 'visible-xs-block' -%}
+              </div>
+            </div>
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+</div>
+
+<style>
+  .testimonials.animate {
+    overflow: hidden;
+  }
+   .testimonials.animate .tns-outer {
+    max-width: 980px;
+    height: 600px;
+    margin-top: -0.7rem;
+  }
+  .testimonials.animate .review__container.tns-item {
+    height: 100%;
+    display: inline-flex;
+    justify-content: center;
+  }
+  #homeTestimonialsSlider-mw, #homeTestimonialsSlider-iw, #homeTestimonialsSlider {
+    height: 100%;
+  }
+  .testimonials.animate .content__wrapper {
+    height: 100%;
+    flex-basis: 47%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-left: 2.5rem;
+  }
+  .testimonials.animate .image__wrapper {
+    height: 100%;
+    flex-basis: 45%;
+    padding-bottom: 1.5rem;
+  }
+  .testimonials.animate .image__wrapper.obm {
+    padding-bottom: 0;
+    padding-top: 3rem;
+  }
+  .testimonials.animate .image__wrapper img {
+    object-fit: cover;
+    object-position: center;
+    height: 100%;
+  }
+  .testimonials.animate [data-controls] {
+    border: 0;
+    padding: 0 2rem;
+    position: absolute;
+    height: 100%;
+    margin-top: 0;
+    top: 0;
+    z-index: 1;
+    background: transparent;
+  }
+  .testimonials.animate [data-controls="prev"] {
+    left: -7rem;
+  }
+  .testimonials.animate [data-controls="next"] {
+    right: -7rem;
+  }
+  .testimonials.animate .testimonial--arrow {
+    border: solid #004c70;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 10px;
+  }
+  .testimonial--arrow.right {
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+  }
+  .testimonial--arrow.left {
+    transform: rotate(135deg);
+    -webkit-transform: rotate(135deg);
+  }
+  .testimonials.animate .container {
+    padding: 4rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .testimonials.animate .review__container h3 {
+    font-size: 40px;
+    font-weight: 400;
+    margin-bottom: 0.3rem;
+  }
+  .testimonials.animate .review__text {
+    padding-top: 2rem;
+  }
+  .testimonials.animate p.review__text + p {
+    font-size: 26px;
+    line-height: 1.2;
+    margin-bottom: 0;
+  }
+  .testimonials.animate p.reviewer {
+    font-size: 24px;
+    font-weight: 600;
+    margin: 0.5rem 0 1.5rem;
+  }
+  .testimonials.animate .stamped-badge-text, .testimonials.animate .stamped-badge-caption, .testimonials.animate .stamped-product-reviews-badge {
+    font-size: 20px;
+  }
+  .testimonials.animate .stamped-badge-starrating .stamped-fa {
+    padding-top: 4px;
+  }
+  .testimonials.animate .stamped-fa-star:before, .testimonials.animate .stamped-fa-star-half-o:before {
+    font-size: 24px;
+  }
+  .testimonials.animate .stamped-badge {
+    display: flex;
+  }
+  .testimonials.animate .stamped-badge-caption {
+    padding-left: 0.8rem;
+  }
+  .testimonials.animate .btn--border {
+    background: #084b6d;
+    color: #fffefb !important;
+    font-size: 17px;
+    width: 320px;
+    margin-top: 0.5rem;
+  }
+  .paid-search .btn--border:hover {
+    background: none !important;
+    color: #084b6d !important;
+  }
+
+  @media screen and (min-width: 768px) {
+    .testimonials.animate .review__container img.visible-xs-block {
+      display: none;
+    }
+  }
+  @media screen and (max-width: 1250px) {
+    .testimonials.animate .tns-outer {
+      max-width: 800px;
+      height: 500px;
+    }
+    .testimonials.animate [data-controls="prev"] {
+      left: -6rem;
+    }
+    .testimonials.animate [data-controls="next"] {
+      right: -6rem;
+    }
+    .testimonials.animate .review__text {
+      padding-top: 0.5rem;
+    }
+    .testimonials.animate .content__wrapper {
+      flex-basis: 55%;
+      padding-left: 0;
+      margin-left: 4rem;
+    }
+    .testimonials.animate .image__wrapper {
+      flex-basis: 40%;
+    }
+    .testimonials.animate p.review__text + p {
+      font-size: 24px;
+    }
+    .testimonials.animate .btn--border {
+      margin-top: 0;
+      width: 300px;
+    }
+  }
+  @media screen and (max-width: 1000px) {
+    .testimonials.animate .image__wrapper {
+      flex-basis: 45%;
+    }
+    .testimonials.animate [data-controls="prev"] {
+      left: -5rem;
+    }
+    .testimonials.animate [data-controls="next"] {
+      right: -5rem;
+    }
+  }
+  @media screen and (max-width: 950px) {
+    .testimonials.animate .tns-outer {
+      max-width: 700px;
+      height: 450px;
+    }
+    .testimonials.animate .review__container h3 {
+      font-size: 32px;
+    }
+    .testimonials.animate p.review__text + p {
+      font-size: 22px;
+    }
+    .testimonials.animate .review__text {
+      padding-top: 0;
+      margin-bottom: 0.5rem;
+    }
+    .testimonials.animate p.reviewer {
+      margin: 0.4rem 0 0.8rem;
+    }
+    .testimonials.animate .btn--border {
+      width: 250px;
+    }
+  }
+  @media screen and (max-width: 850px) {
+    .testimonials.animate [data-controls="prev"] {
+      left: -3.5rem;
+    }
+    .testimonials.animate [data-controls="next"] {
+      right: -3.5rem;
+    }
+  }
+  @media screen and (max-width: 767px) {
+    .testimonials.animate .review__container {
+      background: none !important;
+    }
+    .testimonials.animate .review__container img.visible-xs-block {
+      display: block;
+    }
+    .testimonials.animate .tns-outer {
+      width: 500px;
+      height: 800px;
+    }
+    .testimonials.animate .content__wrapper {
+      flex-basis: unset;
+      margin-left: unset;
+      height: unset;
+      max-width: 350px;
+      position: absolute;
+      padding-top: 2.2rem;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    .testimonials.animate .image__wrapper {
+      flex-basis: unset;
+      position: absolute;
+      bottom: 5rem;
+      height: 60%;
+    }
+    .testimonials.animate .image__wrapper.obm {
+      height: 50%;
+      padding-bottom: 1.5rem;
+      padding-top: 0;
+    }
+    .reviews__header {
+      margin-bottom: 2.3rem;
+    }
+    .testimonials.animate .review__text {
+      margin-bottom: 1.4rem;
+    }
+    .testimonials.animate .review__container h3 {
+      font-size: 30px;
+    }
+    .testimonials.animate .stamped-badge-text, .testimonials.animate .stamped-badge-caption, .testimonials.animate .stamped-product-reviews-badge {
+      font-size: 18px;
+    }
+    .testimonials.animate .stamped-badge-starrating .stamped-fa {
+      padding-top: 2px;
+    }
+    .testimonials.animate .btn--border {
+      width: 90%;
+      margin: 0 auto;
+      margin-top: -1.5rem;
+      font-size: 16px;
+    }
+    .testimonials.animate [data-controls="prev"] {
+      left: -2.5rem;
+    }
+    .testimonials.animate [data-controls="next"] {
+      right: -2.5rem;
+    }
+  }
+  @media screen and (max-width: 600px) {
+    .testimonials.animate [data-controls="prev"] {
+      left: -1rem;
+    }
+    .testimonials.animate [data-controls="next"] {
+      right: -1rem;
+    }
+  }
+  @media screen and (max-width: 500px) {
+    .testimonials.animate .container {
+      padding: 2rem 1rem 2.5rem;
+      align-items: flex-start;
+    }
+    .testimonials.animate .reviews__header {
+      padding-left: 2.5rem;
+    }
+    .testimonials.animate .review__text {
+      margin-bottom: 0.5rem;
+    }
+    .testimonials.animate .image__wrapper {
+      bottom: 4.5rem;
+    }
+    .testimonials.animate .image__wrapper img {
+      height: 100%;
+      margin-left: 1rem;
+      margin-bottom: 0;
+    }
+    .testimonials.animate .tns-outer {
+      width: 100%;
+      height: 650px;
+    }
+    .testimonials.animate .content__wrapper {
+      padding-top: 1.5rem;
+      padding-left: 2rem;
+      padding-right: 2rem;
+      max-width: 330px;
+    }
+    .testimonials.animate .btn--border {
+      max-width: 275px;
+      margin-top: -0.8rem;
+    }
+    .testimonials.animate .review__container h3 {
+      font-size: 25px;
+    }
+    .testimonials.animate .stamped-badge-text, .testimonials.animate .stamped-badge-caption, .testimonials.animate .stamped-product-reviews-badge {
+      font-size: 16px;
+    }
+    .testimonials.animate p.review__text + p, .testimonials.animate p.reviewer {
+      font-size: 19px;
+      line-height: 1.1;
+    }
+    .testimonials.animate .stamped-fa-star:before, .testimonials.animate .stamped-fa-star-half-o:before {
+      font-size: 18px;
+    }
+    .testimonials.animate .stamped-badge-starrating .stamped-fa {
+      padding-top: 1px;
+    }
+    .testimonials.animate p.reviewer {
+      margin: 0;
+    }
+  }
+  @media screen and (max-width: 450px) {
+    .testimonials.animate [data-controls="prev"] {
+      left: -1.5rem;
+    }
+    .testimonials.animate [data-controls="next"] {
+      right: -1.5rem;
+    }
+  }
+  @media screen and (max-width: 400px) {
+    .testimonials.animate [data-controls="prev"] {
+      left: -2.2rem;
+    }
+    .testimonials.animate [data-controls="next"] {
+      right: -2.2rem;
+    }
+  }
+</style>
+
+{% schema %}
+  {
+    "name": "Testimonials",
+    "settings": [
+    {
+      "id": "bgColor",
+      "type": "color",
+      "label": "Background Color"
+    },
+      {
+        "id": "heading",
+        "type": "text",
+        "label": "Heading"
+      }
+    ],
+	"blocks": [
+	  {
+        "name": "Parent Testimonial",
+	      "type": "testimonial",
+        "settings": [
+        {
+            "id": "product_handle",
+            "type": "product",
+            "label": "Product"
+          },
+          {
+            "id": "product_image",
+            "type": "image_picker",
+            "label": "Product Image"
+          },
+          {
+            "id": "review_text",
+            "type": "richtext",
+            "label": "Review Text"
+          },
+          {
+            "id": "reviewer",
+            "type": "text",
+            "label": "Reviewer's Name"
+          },
+          {
+            "type": "url",
+            "id": "link_url",
+            "label": "Link URL"
+          },
+          {
+            "type": "text",
+            "id": "link_text",
+            "label": "Link Text",
+            "default": "Learn more"
+          }
+        ]
+      }
+    ],
+    "presets": [
+      {
+        "name": "Testimonials",
+        "category": "Dynamic"
+      }
+    ]
+  }
+{% endschema %}
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/tiny-slider.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.3/min/tiny-slider.js"></script>
+<script>
+  $(document).ready(function(){
+    const homeTestimonialsSlider = tns({
+      container: '#homeTestimonialsSlider',
+      items: 1,
+      controls: true,
+      controlsText: ['<i class="testimonial--arrow left" aria-label="Previous"></i>', '<i class="testimonial--arrow right" aria-label="Next"></i>'],
+      nav: false
+    });
+
+  const obmTestimonialImage = $('#homeTestimonialsSlider .review__container.tns-item .image__wrapper img.brightening');
+  $(obmTestimonialImage).parent().last().addClass('obm');
+  });
+</script>

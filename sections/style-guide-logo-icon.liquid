@@ -1,0 +1,60 @@
+{% for block in section.blocks %}
+    <div class="box">
+      {% if block.settings.title %} <div class="box-title"> {{ block.settings.title }} </div> {% endif %}
+      <div class="horizontal-center">
+          {% if block.settings.content_html %} {{ block.settings.content_html }} {% endif %}
+        <div>
+          {% if block.settings.image %} <img class="style-guide-image" src="{{block.settings.image | img_url: 'master' }}" /> {% endif %}
+        </div>
+      </div>
+    </div>
+{% endfor %}
+
+{% stylesheet %}
+  .horizontal-center {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+  .style-guide-image {
+    min-height: 40px;
+    max-width: 200px;
+  }
+  @media screen and (min-width: 451px) {
+    .style-guide-image {
+      margin-left: 200px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+  {
+    "name": "Logo & Icon Sections",
+    "settings": [],
+	  "blocks": [
+      {
+        "name": "Logo & Icon",
+		    "type": "logo-icon",
+        "settings": [
+          {
+            "id": "title",
+            "type": "text",
+            "label": "Title"
+          },
+          {
+            "id": "image",
+            "type": "image_picker",
+            "label": "Images"
+          },
+          {
+            "id": "content_html",
+            "type": "html",
+            "label": "Content HTML"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

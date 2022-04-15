@@ -1,0 +1,231 @@
+{%- assign _section = section.settings -%}
+{%- assign section_background_color = _section.background_color -%}
+{%- assign section_content = _section.content -%}
+{%- assign section_link_text = _section.link_text -%}
+{%- assign section_link_url = _section.link_url -%}
+{%- assign section_media_left = _section.media_left -%}
+{%- assign section_media_left_mobile = _section.media_left_mobile -%}
+{%- assign section_video_left = _section.video_left -%}
+{%- assign section_media_center = _section.media_center -%}
+{%- assign section_video_center = _section.video_center -%}
+{%- assign section_media_center_mobile = _section.media_center_mobile -%}
+
+<div class="media-text animate" {%- include "inline-style" bgcolor: section_background_color -%}>
+  <div class="flex-row justify media">
+    {%- if section_video_left != blank -%}
+      <div class="media-text__media video left">
+        {%- if section_video_left contains 'vimeo' -%}
+          {%- assign video_id = section_video_left | split: "/video/" | last -%}
+          <iframe src="https://player.vimeo.com/video/{{video_id}}?badge=0&amp;autoplay=1&amp;loop=1&amp;muted=1&amp;autopause=0&amp;player_id=0&amp;app_id=58479" id="video-player-hp" class="vimeo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Video Player"></iframe>
+        {%- elsif section_video_left contains 'youtu' -%}
+          {%- assign video_id = section_video_left | split: "?v=" | last -%}
+          <iframe src="https://www.youtube.com/embed/{{video_id}}?enablejsapi=1&controls=0&autoplay=1&loop=1&muted=1&modestbranding=0" id="video-player-hp" class="yt" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Video Player"></iframe>
+        {%- else -%}
+          <video
+            id="video-player-hp"
+            playsinline="true"
+            controls
+            loop
+            muted
+            autoplay
+            style="
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+            ">
+            <source src="{{ section_video_left }}" type="video/mp4">
+          </video>
+        {%- endif -%}
+      </div>
+    {% else %}
+      <div class="media-text__media left lazyload" data-bg="url({{section_media_left | img_url: '1024x'}})">
+        <span class="mobile-image visible-sm-block visible-xs-block">
+          {%- include 'lazyload-image' _image: section_media_left_mobile, original_width: '600' -%}
+        </span>
+      </div>
+    {% endif %}
+    {%- if section_video_center != blank -%}
+      <div class="media-text__media video center">
+        {%- if section_video_center contains 'vimeo' -%}
+          {%- assign video_id = section_video_center | split: "/video/" | last -%}
+          <iframe src="https://player.vimeo.com/video/{{video_id}}?badge=0&amp;autoplay=1&amp;loop=1&amp;muted=1&amp;autopause=0&amp;player_id=0&amp;app_id=58479" id="video-player-hp" class="vimeo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Video Player"></iframe>
+        {%- elsif section_video_center contains 'youtu' -%}
+          {%- assign video_id = section_video_center | split: "?v=" | last -%}
+          <iframe src="https://www.youtube.com/embed/{{video_id}}?enablejsapi=1&controls=0&autoplay=1&loop=1&muted=1&modestbranding=0" id="video-player-hp" class="yt" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen aria-label="Video Player"></iframe>
+        {%- else -%}
+          <video
+            id="video-player-hp"
+            playsinline="true"
+            controls
+            loop
+            muted
+            autoplay
+            preload="auto"
+            style="
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+            ">
+            <source src="{{ section_video_center }}" type="video/mp4">
+          </video>
+        {%- endif -%}
+      </div>
+    {% else %}
+      <div class="media-text__media center lazyload" data-bg="url({{section_media_center | img_url: '1024x'}})">
+        <span class="mobile-image visible-sm-block visible-xs-block">
+          {%- include 'lazyload-image' _image: section_media_center_mobile, original_width: '600' -%}
+        </span>
+      </div>
+    {% endif %}
+    <div class="media-text__text">   
+      {{ section_content }}
+      {%- include 'link' url: section_link_url, text: section_link_text, btn_border: true -%}
+    </div><!-- /.text-image__content -->
+  </div><!-- /.flex-row -->
+</div><!-- /.text-image -->
+
+<style>
+  .media-text__media {
+    flex-basis: 33%;
+    max-width: 33%;
+    background-size: cover;
+    background-position: center center;
+  }
+  .media-text__media.video {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  .media-text__media.video #video-player-hp {
+    object-fit: cover;
+  }
+  .media-text__text {
+    flex-basis: 33%;
+    max-width: 33%;
+    min-height: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 3rem 2rem 3rem 1rem;
+    font-size: 24px; 
+  }
+  .media-text__text .btn--border {
+    margin-top: 0.5rem;
+  }
+  @media (max-width: 1023px) {
+    .flex-row.media {
+      flex-direction: column;
+    }
+    .media-text__media {
+      flex-basis: unset;
+      max-width: unset;
+      background-image: none !important;
+    }
+    .media-text__media.video {
+      min-height: 500px;
+    }
+    .media-text__media img {
+      width: 100%;
+      margin-bottom: 0;
+    }
+    .media-text__text {
+      flex-basis: unset;
+      max-width: unset;
+      min-height: unset;
+      font-size: 22px;
+      padding: 0 3rem 3rem 3rem;
+    }
+  }
+  @media (max-width: 800px) {
+    .media-text__media.video {
+      min-height: 400px;
+    }
+  }
+  @media (max-width: 600px) {
+    .media-text__media.video {
+      min-height: 300px;
+    }
+  }
+  @media (max-width: 500px) {
+    .media-text__text {
+      font-size: 20px;
+      padding: 0 32px 40px;
+    }
+    .media-text__media.video {
+      min-height: 250px;
+    }
+  }
+  @media (max-width: 500px) {
+    .media-text__text {
+      font-size: 19px;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Media Media Text",
+  "settings": [
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background Color"
+    },
+    {
+      "type": "image_picker",
+      "id": "media_left",
+      "label": "Media - Left (image)"
+    },
+    {
+      "type": "image_picker",
+      "id": "media_left_mobile",
+      "label": "Media Mobile - Left (image)"
+    },
+    {
+      "type": "url",
+      "id": "video_left",
+      "label": "Media - Left (video url)"
+    },
+    {
+      "type": "image_picker",
+      "id": "media_center",
+      "label": "Media - Center (image)"
+    },
+    {
+      "type": "image_picker",
+      "id": "media_center_mobile",
+      "label": "Media Mobile - Center (image)"
+    },
+    {
+      "type": "url",
+      "id": "video_center",
+      "label": "Media - Center (video url)"
+    },
+    {
+      "type": "html",
+      "id": "content",
+      "label": "Content (html)"
+    },
+    {
+      "type": "text",
+      "id": "link_text",
+      "label": "Link Text"
+    },
+    {
+      "type": "url",
+      "id": "link_url",
+      "label": "Link URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Media Media Text",
+      "category": "Dynamic"
+    }
+  ]
+}
+{% endschema %}

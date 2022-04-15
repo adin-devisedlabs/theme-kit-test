@@ -1,0 +1,31 @@
+<div class="flex-row">
+	{%- include 'breadcrumbs' -%}
+</div>
+
+<div class="">
+  {%- section 'page-landing-page-hero-carousel-alt' -%}
+  {%- section 'page-landing-page-text-image' -%}
+  {%- section 'page-landing-page-testimonials' -%}
+  {%- section 'page-landing-page-clinical-ingredients' -%}
+  {%- section 'page-landing-page-community' -%}
+</div><!-- /.container --> 
+
+<style>
+span, p {
+  font-size: 20px;
+}
+
+.footer p {
+  font-size: 16px;
+}
+
+.product-results p {
+  font-size: 14px;
+}
+
+@media screen and (max-width: 767px) {
+  span, p , .clinicals-ingredients-wrapper .product-results .clinicals-wrapper p{ 
+    font-size: 18px; 
+  }
+}
+</style>

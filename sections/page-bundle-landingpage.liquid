@@ -1,0 +1,118 @@
+{%- assign _section = section.settings -%}
+
+<div class="bundle-landingpage__wrapper">
+  <div 
+    class="intro animate animated lazyload" 
+    data-bg="url({{_section.image | img_url: '2048x'}})" 
+    style="justify-content: flex-end"
+  >
+    {%- if _section.imageMob -%}
+      <div class="mobile-image visible-xs-block">
+        {%- include 'lazyload-image' _image: _section.imageMob, original_width: '600' -%}
+      </div><!-- /.mobile-image -->
+    {%- endif -%}
+
+    <div 
+      class="intro__content right-padding right-text-align"
+      style="color: {{_section.text_color}};"
+    >
+      {%- if _section.eyebrow != blank -%}
+        <h6>{{_section.eyebrow}}</h6>
+      {%- endif -%}
+      {%- if _section.title != blank -%}
+        <h2 class="title--large">{{_section.title}}</h2>
+      {%- endif -%}
+      {%- if _section.subheader_text != blank -%}
+        <h3>{{_section.subheader_text}}</h3>
+      {%- endif -%}
+      {%- if _section.content != blank -%}
+        <p class="right-float">{{ _section.content }}</p> 
+      {%- endif -%}
+
+      <div class="clear-both"></div>
+
+      <a href="/pages/build-your-bundle" class="btn btn--border">Get Started</a>
+    
+    </div>
+
+  </div>
+</div>
+
+{% stylesheet %}
+.bundle-landingpage__wrapper .intro {
+	display: flex;
+	height: calc(100vh - 137px);
+	padding: 0;
+}
+
+.bundle-landingpage__wrapper .intro__content {
+	padding-right: 5vw;
+	align-self: center;
+	max-width: 50%;
+}
+
+.bundle-landingpage__wrapper .intro__content h2 {
+	margin-bottom: 45px;
+	font-size: 3em;
+}
+
+.bundle-landingpage__wrapper .intro__content h6 {
+	margin-bottom: 45px;
+}
+
+.bundle-landingpage__wrapper .intro__content p {
+	font-size: .8em;
+}
+
+@media screen and (max-width: 767px) {
+	.bundle-landingpage__wrapper .intro {
+		display: block;
+		height: auto;
+		margin-bottom: 50px;
+	}
+
+	.bundle-landingpage__wrapper .intro__content {
+		align-self: center;
+		max-width: 100%;
+	}
+}
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Bundle Landing Page",
+  "settings": [
+    {
+      "id": "image",
+      "type": "image_picker",
+      "label": "Image"
+    },
+    {
+      "id": "imageMob",
+      "type": "image_picker",
+      "label": "Image (Mobile)"
+    },
+    {
+      "id": "text_color",
+      "type": "color",
+      "label": "Text Color",
+      "default": "#ffffff" 
+    },
+    {
+      "id": "eyebrow",
+      "type": "text",
+      "label": "Eyebrow Text"
+    },
+    {
+      "id": "title",
+      "type": "text",
+      "label": "Title"
+    },
+    {
+      "id": "content",
+      "type": "textarea",
+      "label": "Content"
+    }
+  ]
+}
+{% endschema %}
